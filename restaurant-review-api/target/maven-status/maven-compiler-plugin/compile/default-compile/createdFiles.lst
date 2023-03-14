@@ -66,7 +66,6 @@ org/openapitools/client/JSON$OffsetDateTimeTypeAdapter.class
 org/openapitools/client/api/UpdateApi$1.class
 org/openapitools/client/api/GetByIdApi$1.class
 org/openapitools/client/JSON$ByteArrayAdapter.class
-org/openapitools/client/api/UserApi.class
 org/openapitools/client/api/GetAllApi.class
 org/openapitools/client/auth/HttpBearerAuth.class
 org/openapitools/client/api/AddNewApi.class

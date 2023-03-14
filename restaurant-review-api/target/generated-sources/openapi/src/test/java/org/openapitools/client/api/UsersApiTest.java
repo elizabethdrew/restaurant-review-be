@@ -49,6 +49,18 @@ public class UsersApiTest {
     }
 
     /**
+     * Delete a user by ID
+     *
+     * @throws ApiException if the Api call fails
+     */
+    @Test
+    public void deleteUserByIdTest() throws ApiException {
+        String userId = null;
+        api.deleteUserById(userId);
+        // TODO: test validations
+    }
+
+    /**
      * Get a user by ID or name
      *
      * Returns a single user by ID or name.

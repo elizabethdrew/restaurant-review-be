@@ -425,7 +425,7 @@ paths:
           description: Internal server error
       summary: Delete a user by ID
       tags:
-      - User
+      - Users
       - Delete
       x-accepts: application/json
     get:

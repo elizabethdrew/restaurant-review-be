@@ -415,7 +415,7 @@ paths:
       summary: Delete a user by ID
       operationId: deleteUserById
       tags:
-        - User
+        - Users
         - Delete
       responses:
         '204':

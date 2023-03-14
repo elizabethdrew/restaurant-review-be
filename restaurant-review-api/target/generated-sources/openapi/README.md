@@ -2,7 +2,7 @@
 
 Restaurant Review API
 - API version: 1.0.0
-  - Build date: 2023-03-14T13:54:35.293849Z[Europe/London]
+  - Build date: 2023-03-14T16:13:50.797745Z[Europe/London]
 
 An API for managing restaurant reviews
 
@@ -142,8 +142,8 @@ Class | Method | HTTP request | Description
 *UpdateApi* | [**updateRestaurantById**](docs/UpdateApi.md#updateRestaurantById) | **PUT** /restaurants/{restaurantId} | Update a restaurant
 *UpdateApi* | [**updateReviewById**](docs/UpdateApi.md#updateReviewById) | **PUT** /reviews/{reviewId} | Update a review
 *UpdateApi* | [**updateUserById**](docs/UpdateApi.md#updateUserById) | **PUT** /users/{userId} | Update a user
-*UserApi* | [**deleteUserById**](docs/UserApi.md#deleteUserById) | **DELETE** /users/{userId} | Delete a user by ID
 *UsersApi* | [**addNewUser**](docs/UsersApi.md#addNewUser) | **POST** /users | Add a new user
+*UsersApi* | [**deleteUserById**](docs/UsersApi.md#deleteUserById) | **DELETE** /users/{userId} | Delete a user by ID
 *UsersApi* | [**getUserByIdOrName**](docs/UsersApi.md#getUserByIdOrName) | **GET** /users/{userId} | Get a user by ID or name
 *UsersApi* | [**updateUserById**](docs/UsersApi.md#updateUserById) | **PUT** /users/{userId} | Update a user
 
