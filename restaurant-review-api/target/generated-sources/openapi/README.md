@@ -2,7 +2,7 @@
 
 Restaurant Review API
 - API version: 1.0.0
-  - Build date: 2023-03-14T16:13:50.797745Z[Europe/London]
+  - Build date: 2023-03-14T16:31:29.240527Z[Europe/London]
 
 An API for managing restaurant reviews
 
@@ -84,20 +84,19 @@ import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
 import org.openapitools.client.Configuration;
 import org.openapitools.client.models.*;
-import org.openapitools.client.api.AddNewApi;
+import org.openapitools.client.api.GetAllApi;
 
 public class Example {
   public static void main(String[] args) {
     ApiClient defaultClient = Configuration.getDefaultApiClient();
     defaultClient.setBasePath("http://localhost");
 
-    AddNewApi apiInstance = new AddNewApi(defaultClient);
-    RestaurantInput restaurantInput = new RestaurantInput(); // RestaurantInput | The restaurant to add.
+    GetAllApi apiInstance = new GetAllApi(defaultClient);
     try {
-      RestaurantResponse result = apiInstance.addNewRestaurant(restaurantInput);
+      List<Restaurant> result = apiInstance.getAllRestaurants();
       System.out.println(result);
     } catch (ApiException e) {
-      System.err.println("Exception when calling AddNewApi#addNewRestaurant");
+      System.err.println("Exception when calling GetAllApi#getAllRestaurants");
       System.err.println("Status code: " + e.getCode());
       System.err.println("Reason: " + e.getResponseBody());
       System.err.println("Response headers: " + e.getResponseHeaders());
@@ -114,52 +113,15 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*AddNewApi* | [**addNewRestaurant**](docs/AddNewApi.md#addNewRestaurant) | **POST** /restaurants | Add a new restaurant
-*AddNewApi* | [**addNewReview**](docs/AddNewApi.md#addNewReview) | **POST** /reviews | Add a new review
-*AddNewApi* | [**addNewUser**](docs/AddNewApi.md#addNewUser) | **POST** /users | Add a new user
-*DeleteApi* | [**deleteRestaurantById**](docs/DeleteApi.md#deleteRestaurantById) | **DELETE** /restaurants/{restaurantId} | Delete a restaurant by ID
-*DeleteApi* | [**deleteReviewByID**](docs/DeleteApi.md#deleteReviewByID) | **DELETE** /reviews/{reviewId} | Delete a review by ID
-*DeleteApi* | [**deleteUserById**](docs/DeleteApi.md#deleteUserById) | **DELETE** /users/{userId} | Delete a user by ID
 *GetAllApi* | [**getAllRestaurants**](docs/GetAllApi.md#getAllRestaurants) | **GET** /restaurants | Get all restaurants
-*GetAllApi* | [**getAllReviews**](docs/GetAllApi.md#getAllReviews) | **GET** /reviews | Get all reviews
-*GetByIdApi* | [**getRestaurantById**](docs/GetByIdApi.md#getRestaurantById) | **GET** /restaurants/{restaurantId} | Get a restaurant by ID
-*GetByIdApi* | [**getReviewById**](docs/GetByIdApi.md#getReviewById) | **GET** /reviews/{reviewId} | Get a review by ID
-*GetByIdApi* | [**getUserByIdOrName**](docs/GetByIdApi.md#getUserByIdOrName) | **GET** /users/{userId} | Get a user by ID or name
-*RestaurantsApi* | [**addNewRestaurant**](docs/RestaurantsApi.md#addNewRestaurant) | **POST** /restaurants | Add a new restaurant
-*RestaurantsApi* | [**deleteRestaurantById**](docs/RestaurantsApi.md#deleteRestaurantById) | **DELETE** /restaurants/{restaurantId} | Delete a restaurant by ID
 *RestaurantsApi* | [**getAllRestaurants**](docs/RestaurantsApi.md#getAllRestaurants) | **GET** /restaurants | Get all restaurants
-*RestaurantsApi* | [**getRestaurantById**](docs/RestaurantsApi.md#getRestaurantById) | **GET** /restaurants/{restaurantId} | Get a restaurant by ID
-*RestaurantsApi* | [**searchRestaurantsByRatingOrCity**](docs/RestaurantsApi.md#searchRestaurantsByRatingOrCity) | **GET** /search/restaurants | Search restaurants by review rating or city
-*RestaurantsApi* | [**updateRestaurantById**](docs/RestaurantsApi.md#updateRestaurantById) | **PUT** /restaurants/{restaurantId} | Update a restaurant
-*ReviewApi* | [**deleteReviewByID**](docs/ReviewApi.md#deleteReviewByID) | **DELETE** /reviews/{reviewId} | Delete a review by ID
-*ReviewsApi* | [**addNewReview**](docs/ReviewsApi.md#addNewReview) | **POST** /reviews | Add a new review
-*ReviewsApi* | [**getAllReviews**](docs/ReviewsApi.md#getAllReviews) | **GET** /reviews | Get all reviews
-*ReviewsApi* | [**getReviewById**](docs/ReviewsApi.md#getReviewById) | **GET** /reviews/{reviewId} | Get a review by ID
-*ReviewsApi* | [**searchReviewByRating**](docs/ReviewsApi.md#searchReviewByRating) | **GET** /search/reviews | Search reviews by rating
-*ReviewsApi* | [**updateReviewById**](docs/ReviewsApi.md#updateReviewById) | **PUT** /reviews/{reviewId} | Update a review
-*SearchApi* | [**searchRestaurantsByRatingOrCity**](docs/SearchApi.md#searchRestaurantsByRatingOrCity) | **GET** /search/restaurants | Search restaurants by review rating or city
-*SearchApi* | [**searchReviewByRating**](docs/SearchApi.md#searchReviewByRating) | **GET** /search/reviews | Search reviews by rating
-*UpdateApi* | [**updateRestaurantById**](docs/UpdateApi.md#updateRestaurantById) | **PUT** /restaurants/{restaurantId} | Update a restaurant
-*UpdateApi* | [**updateReviewById**](docs/UpdateApi.md#updateReviewById) | **PUT** /reviews/{reviewId} | Update a review
-*UpdateApi* | [**updateUserById**](docs/UpdateApi.md#updateUserById) | **PUT** /users/{userId} | Update a user
-*UsersApi* | [**addNewUser**](docs/UsersApi.md#addNewUser) | **POST** /users | Add a new user
-*UsersApi* | [**deleteUserById**](docs/UsersApi.md#deleteUserById) | **DELETE** /users/{userId} | Delete a user by ID
-*UsersApi* | [**getUserByIdOrName**](docs/UsersApi.md#getUserByIdOrName) | **GET** /users/{userId} | Get a user by ID or name
-*UsersApi* | [**updateUserById**](docs/UsersApi.md#updateUserById) | **PUT** /users/{userId} | Update a user
 
 
 ## Documentation for Models
 
  - [Error](docs/Error.md)
  - [Restaurant](docs/Restaurant.md)
- - [RestaurantInput](docs/RestaurantInput.md)
  - [RestaurantResponse](docs/RestaurantResponse.md)
- - [Review](docs/Review.md)
- - [ReviewInput](docs/ReviewInput.md)
- - [ReviewResponse](docs/ReviewResponse.md)
- - [User](docs/User.md)
- - [UserInput](docs/UserInput.md)
- - [UserResponse](docs/UserResponse.md)
 
 
 ## Documentation for Authorization

@@ -16,7 +16,6 @@ package org.openapitools.client.api;
 import org.openapitools.client.ApiException;
 import org.openapitools.client.model.Error;
 import org.openapitools.client.model.Restaurant;
-import org.openapitools.client.model.Review;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -43,19 +42,6 @@ public class GetAllApiTest {
     @Test
     public void getAllRestaurantsTest() throws ApiException {
         List<Restaurant> response = api.getAllRestaurants();
-        // TODO: test validations
-    }
-
-    /**
-     * Get all reviews
-     *
-     * Returns a list of all reviews.
-     *
-     * @throws ApiException if the Api call fails
-     */
-    @Test
-    public void getAllReviewsTest() throws ApiException {
-        List<Review> response = api.getAllReviews();
         // TODO: test validations
     }
 

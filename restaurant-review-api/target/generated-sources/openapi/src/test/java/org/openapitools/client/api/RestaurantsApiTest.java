@@ -16,8 +16,6 @@ package org.openapitools.client.api;
 import org.openapitools.client.ApiException;
 import org.openapitools.client.model.Error;
 import org.openapitools.client.model.Restaurant;
-import org.openapitools.client.model.RestaurantInput;
-import org.openapitools.client.model.RestaurantResponse;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -35,32 +33,6 @@ public class RestaurantsApiTest {
     private final RestaurantsApi api = new RestaurantsApi();
 
     /**
-     * Add a new restaurant
-     *
-     * Adds a new restaurant to the database.
-     *
-     * @throws ApiException if the Api call fails
-     */
-    @Test
-    public void addNewRestaurantTest() throws ApiException {
-        RestaurantInput restaurantInput = null;
-        RestaurantResponse response = api.addNewRestaurant(restaurantInput);
-        // TODO: test validations
-    }
-
-    /**
-     * Delete a restaurant by ID
-     *
-     * @throws ApiException if the Api call fails
-     */
-    @Test
-    public void deleteRestaurantByIdTest() throws ApiException {
-        Integer restaurantId = null;
-        api.deleteRestaurantById(restaurantId);
-        // TODO: test validations
-    }
-
-    /**
      * Get all restaurants
      *
      * Returns a list of all restaurants.
@@ -70,50 +42,6 @@ public class RestaurantsApiTest {
     @Test
     public void getAllRestaurantsTest() throws ApiException {
         List<Restaurant> response = api.getAllRestaurants();
-        // TODO: test validations
-    }
-
-    /**
-     * Get a restaurant by ID
-     *
-     * Returns a single restaurant by ID.
-     *
-     * @throws ApiException if the Api call fails
-     */
-    @Test
-    public void getRestaurantByIdTest() throws ApiException {
-        Integer restaurantId = null;
-        RestaurantResponse response = api.getRestaurantById(restaurantId);
-        // TODO: test validations
-    }
-
-    /**
-     * Search restaurants by review rating or city
-     *
-     * Returns a list of restaurants matching the specified search criteria.
-     *
-     * @throws ApiException if the Api call fails
-     */
-    @Test
-    public void searchRestaurantsByRatingOrCityTest() throws ApiException {
-        Integer rating = null;
-        String city = null;
-        List<Restaurant> response = api.searchRestaurantsByRatingOrCity(rating, city);
-        // TODO: test validations
-    }
-
-    /**
-     * Update a restaurant
-     *
-     * Updates a restaurant by ID.
-     *
-     * @throws ApiException if the Api call fails
-     */
-    @Test
-    public void updateRestaurantByIdTest() throws ApiException {
-        Integer restaurantId = null;
-        RestaurantInput restaurantInput = null;
-        RestaurantResponse response = api.updateRestaurantById(restaurantId, restaurantInput);
         // TODO: test validations
     }
 
