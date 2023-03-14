@@ -1,0 +1,860 @@
+openapi: 3.0.3
+info:
+  description: An API for managing restaurant reviews
+  title: Restaurant Review API
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /restaurants:
+    get:
+      description: Returns a list of all restaurants.
+      operationId: getAllRestaurants
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Restaurant'
+                type: array
+          description: A list of restaurants.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Internal server error
+      summary: Get all restaurants
+      tags:
+      - Restaurants
+      - Get All
+      x-accepts: application/json
+    post:
+      description: Adds a new restaurant to the database.
+      operationId: addNewRestaurant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestaurantInput'
+        description: The restaurant to add.
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestaurantResponse'
+          description: The new restaurant
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid input
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Internal server error
+      summary: Add a new restaurant
+      tags:
+      - Restaurants
+      - Add New
+      x-content-type: application/json
+      x-accepts: application/json
+  /restaurants/{restaurantId}:
+    delete:
+      operationId: deleteRestaurantById
+      parameters:
+      - description: The ID of the restaurant to retrieve.
+        explode: false
+        in: path
+        name: restaurantId
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+        style: simple
+      responses:
+        "204":
+          description: Restaurant deleted
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Restaurant not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Internal server error
+      summary: Delete a restaurant by ID
+      tags:
+      - Restaurants
+      - Delete
+      x-accepts: application/json
+    get:
+      description: Returns a single restaurant by ID.
+      operationId: getRestaurantById
+      parameters:
+      - description: The ID of the restaurant to retrieve.
+        explode: false
+        in: path
+        name: restaurantId
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestaurantResponse'
+          description: The restaurant
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Restaurant not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Internal server error
+      summary: Get a restaurant by ID
+      tags:
+      - Restaurants
+      - Get By ID
+      x-accepts: application/json
+    put:
+      description: Updates a restaurant by ID.
+      operationId: updateRestaurantById
+      parameters:
+      - description: The ID of the restaurant to retrieve.
+        explode: false
+        in: path
+        name: restaurantId
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestaurantInput'
+        description: The updated restaurant.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestaurantResponse'
+          description: The updated restaurant
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid input
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Restaurant not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Internal server error
+      summary: Update a restaurant
+      tags:
+      - Restaurants
+      - Update
+      x-content-type: application/json
+      x-accepts: application/json
+  /reviews:
+    get:
+      description: Returns a list of all reviews.
+      operationId: getAllReviews
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Review'
+                type: array
+          description: A list of reviews
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Internal server error
+      summary: Get all reviews
+      tags:
+      - Reviews
+      - Get All
+      x-accepts: application/json
+    post:
+      description: Adds a new review to the database.
+      operationId: addNewReview
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewInput'
+        description: The review to add.
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewResponse'
+          description: The new review
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid input
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Internal server error
+      summary: Add a new review
+      tags:
+      - Reviews
+      - Add New
+      x-content-type: application/json
+      x-accepts: application/json
+  /reviews/{reviewId}:
+    delete:
+      operationId: deleteReviewByID
+      parameters:
+      - description: The ID of the review to retrieve.
+        explode: false
+        in: path
+        name: reviewId
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+        style: simple
+      responses:
+        "204":
+          description: Review deleted
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Review not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Internal server error
+      summary: Delete a review by ID
+      tags:
+      - Review
+      - Delete
+      x-accepts: application/json
+    get:
+      description: Returns a single review by ID.
+      operationId: getReviewById
+      parameters:
+      - description: The ID of the review to retrieve.
+        explode: false
+        in: path
+        name: reviewId
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewResponse'
+          description: The review
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Review not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Internal server error
+      summary: Get a review by ID
+      tags:
+      - Reviews
+      - Get By ID
+      x-accepts: application/json
+    put:
+      description: Updates a review by ID.
+      operationId: updateReviewById
+      parameters:
+      - description: The ID of the review to retrieve.
+        explode: false
+        in: path
+        name: reviewId
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewInput'
+        description: The updated review.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewResponse'
+          description: The updated review
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid input
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Review not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Internal server error
+      summary: Update a review
+      tags:
+      - Reviews
+      - Update
+      x-content-type: application/json
+      x-accepts: application/json
+  /users:
+    post:
+      description: Adds a new user to the database.
+      operationId: addNewUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInput'
+        description: The user to add.
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: The newly created user.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Internal server error
+      summary: Add a new user
+      tags:
+      - Users
+      - Add New
+      x-content-type: application/json
+      x-accepts: application/json
+  /users/{userId}:
+    delete:
+      operationId: deleteUserById
+      parameters:
+      - description: The ID or name of the user to retrieve.
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: User deleted
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: User not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Internal server error
+      summary: Delete a user by ID
+      tags:
+      - User
+      - Delete
+      x-accepts: application/json
+    get:
+      description: Returns a single user by ID or name.
+      operationId: getUserByIdOrName
+      parameters:
+      - description: The ID or name of the user to retrieve.
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+          description: The user
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: User not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Internal server error
+      summary: Get a user by ID or name
+      tags:
+      - Users
+      - Get By ID
+      x-accepts: application/json
+    put:
+      description: Updates a user by ID.
+      operationId: updateUserById
+      parameters:
+      - description: The ID or name of the user to retrieve.
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInput'
+        description: The updated user.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+          description: The updated user
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid input
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: User not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Internal server error
+      summary: Update a user
+      tags:
+      - Users
+      - Update
+      x-content-type: application/json
+      x-accepts: application/json
+  /search/restaurants:
+    get:
+      description: Returns a list of restaurants matching the specified search criteria.
+      operationId: searchRestaurantsByRatingOrCity
+      parameters:
+      - description: The minimum rating of the restaurants to search for.
+        explode: true
+        in: query
+        name: rating
+        required: false
+        schema:
+          maximum: 5
+          minimum: 1
+          type: integer
+        style: form
+      - description: The city of the restaurants to search for.
+        explode: true
+        in: query
+        name: city
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Restaurant'
+                type: array
+          description: A list of restaurants matching the search criteria.
+      summary: Search restaurants by review rating or city
+      tags:
+      - Restaurants
+      - Search
+      x-accepts: application/json
+  /search/reviews:
+    get:
+      description: Returns a list of reviews with the specified rating.
+      operationId: searchReviewByRating
+      parameters:
+      - description: The rating of the reviews to search for.
+        explode: true
+        in: query
+        name: rating
+        required: false
+        schema:
+          maximum: 5
+          minimum: 1
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Review'
+                type: array
+          description: A list of reviews matching the search criteria.
+      summary: Search reviews by rating
+      tags:
+      - Reviews
+      - Search
+      x-accepts: application/json
+components:
+  parameters:
+    idParam:
+      description: The ID of the resource to retrieve or update.
+      explode: false
+      in: path
+      name: id
+      required: true
+      schema:
+        format: int64
+        type: integer
+      style: simple
+    nameParam:
+      description: The name of the resource to search for.
+      explode: true
+      in: query
+      name: name
+      required: false
+      schema:
+        type: string
+      style: form
+    cityParam:
+      description: The city of the resource to search for.
+      explode: true
+      in: query
+      name: city
+      required: false
+      schema:
+        type: string
+      style: form
+    ratingParam:
+      description: The rating of the resource to search for.
+      explode: true
+      in: query
+      name: rating
+      required: false
+      schema:
+        maximum: 5
+        minimum: 1
+        type: integer
+      style: form
+  schemas:
+    User:
+      example:
+        name: name
+        created_at: 2000-01-23T04:56:07.000+00:00
+        id: 0
+        email: email
+      properties:
+        id:
+          description: The unique identifier of the user.
+          format: int64
+          type: integer
+        name:
+          description: The name of the user.
+          type: string
+        email:
+          description: The email address of the user.
+          format: email
+          type: string
+        created_at:
+          description: The date and time the user was created.
+          format: date-time
+          type: string
+      required:
+      - email
+      - name
+      type: object
+    UserInput:
+      example:
+        name: name
+        email: email
+      properties:
+        name:
+          description: The name of the user.
+          type: string
+        email:
+          description: The email address of the user.
+          format: email
+          type: string
+      required:
+      - email
+      - name
+      type: object
+    Restaurant:
+      example:
+        city: city
+        name: name
+        rating: 3
+        created_at: 2000-01-23T04:56:07.000+00:00
+        id: 0
+      properties:
+        id:
+          description: The unique identifier of the restaurant.
+          format: int64
+          type: integer
+        name:
+          description: The name of the restaurant.
+          type: string
+        city:
+          description: The city where the restaurant is located.
+          type: string
+        rating:
+          description: The rating of the restaurant.
+          maximum: 5
+          minimum: 1
+          type: integer
+        created_at:
+          description: The date and time the restaurant was created.
+          format: date-time
+          type: string
+      required:
+      - city
+      - name
+      - rating
+      type: object
+    RestaurantInput:
+      example:
+        city: city
+        name: name
+        rating: 1
+      properties:
+        name:
+          description: The name of the restaurant.
+          type: string
+        city:
+          description: The city where the restaurant is located.
+          type: string
+        rating:
+          description: The rating of the restaurant.
+          maximum: 5
+          minimum: 1
+          type: integer
+      required:
+      - city
+      - name
+      - rating
+      type: object
+    Review:
+      example:
+        user_id: 1
+        restaurant_id: 6
+        rating: 3
+        created_at: 2000-01-23T04:56:07.000+00:00
+        comment: comment
+        id: 0
+      properties:
+        id:
+          description: The unique identifier of the review.
+          format: int64
+          type: integer
+        restaurant_id:
+          description: The ID of the restaurant that the review is for.
+          format: int64
+          type: integer
+        user_id:
+          description: The ID of the user who wrote the review.
+          format: int64
+          type: integer
+        rating:
+          description: The rating of the restaurant.
+          maximum: 5
+          minimum: 1
+          type: integer
+        comment:
+          description: The comment of the review.
+          type: string
+        created_at:
+          description: The date and time the review was created.
+          format: date-time
+          type: string
+      required:
+      - comment
+      - rating
+      - restaurant_id
+      - user_id
+      type: object
+    ReviewInput:
+      example:
+        user_id: 6
+        restaurant_id: 0
+        rating: 1
+        comment: comment
+      properties:
+        restaurant_id:
+          description: The ID of the restaurant that the review is for.
+          format: int64
+          type: integer
+        user_id:
+          description: The ID of the user who wrote the review.
+          format: int64
+          type: integer
+        rating:
+          description: The rating of the restaurant.
+          maximum: 5
+          minimum: 1
+          type: integer
+        comment:
+          description: The comment of the review.
+          type: string
+      required:
+      - comment
+      - rating
+      - restaurant_id
+      - user_id
+      type: object
+    Error:
+      example:
+        code: 0
+        message: message
+      properties:
+        code:
+          format: int32
+          type: integer
+        message:
+          type: string
+      type: object
+    RestaurantResponse:
+      example:
+        success: true
+        restaurant:
+          city: city
+          name: name
+          rating: 3
+          created_at: 2000-01-23T04:56:07.000+00:00
+          id: 0
+        error:
+          code: 0
+          message: message
+      properties:
+        success:
+          type: boolean
+        restaurant:
+          $ref: '#/components/schemas/Restaurant'
+        error:
+          $ref: '#/components/schemas/Error'
+      type: object
+    ReviewResponse:
+      example:
+        success: true
+        restaurant:
+          user_id: 1
+          restaurant_id: 6
+          rating: 3
+          created_at: 2000-01-23T04:56:07.000+00:00
+          comment: comment
+          id: 0
+        error:
+          code: 0
+          message: message
+      properties:
+        success:
+          type: boolean
+        restaurant:
+          $ref: '#/components/schemas/Review'
+        error:
+          $ref: '#/components/schemas/Error'
+      type: object
+    UserResponse:
+      example:
+        success: true
+        restaurant:
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          id: 0
+          email: email
+        error:
+          code: 0
+          message: message
+      properties:
+        success:
+          type: boolean
+        restaurant:
+          $ref: '#/components/schemas/User'
+        error:
+          $ref: '#/components/schemas/Error'
+      type: object
+
