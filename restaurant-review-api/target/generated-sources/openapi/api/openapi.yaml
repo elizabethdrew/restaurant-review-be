@@ -28,7 +28,6 @@ paths:
       summary: Get all restaurants
       tags:
       - Restaurants
-      - Get All
       x-accepts: application/json
 components:
   parameters:

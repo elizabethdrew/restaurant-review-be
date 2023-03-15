@@ -48,7 +48,7 @@ import org.openapitools.client.JSON;
 /**
  * RestaurantResponse
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2023-03-14T16:31:29.240527Z[Europe/London]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2023-03-15T09:43:18.000627Z[Europe/London]")
 public class RestaurantResponse {
   public static final String SERIALIZED_NAME_SUCCESS = "success";
   @SerializedName(SERIALIZED_NAME_SUCCESS)

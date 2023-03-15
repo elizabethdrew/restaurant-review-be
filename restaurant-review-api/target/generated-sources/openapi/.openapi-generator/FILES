@@ -7,7 +7,6 @@ api/openapi.yaml
 build.gradle
 build.sbt
 docs/Error.md
-docs/GetAllApi.md
 docs/Restaurant.md
 docs/RestaurantResponse.md
 docs/RestaurantsApi.md
@@ -32,7 +31,6 @@ src/gen/java/main/org/openapitools/client/ProgressResponseBody.java
 src/gen/java/main/org/openapitools/client/ServerConfiguration.java
 src/gen/java/main/org/openapitools/client/ServerVariable.java
 src/gen/java/main/org/openapitools/client/StringUtil.java
-src/gen/java/main/org/openapitools/client/api/GetAllApi.java
 src/gen/java/main/org/openapitools/client/api/RestaurantsApi.java
 src/gen/java/main/org/openapitools/client/auth/ApiKeyAuth.java
 src/gen/java/main/org/openapitools/client/auth/Authentication.java
@@ -43,7 +41,6 @@ src/gen/java/main/org/openapitools/client/model/Error.java
 src/gen/java/main/org/openapitools/client/model/Restaurant.java
 src/gen/java/main/org/openapitools/client/model/RestaurantResponse.java
 src/main/AndroidManifest.xml
-src/test/java/org/openapitools/client/api/GetAllApiTest.java
 src/test/java/org/openapitools/client/api/RestaurantsApiTest.java
 src/test/java/org/openapitools/client/model/ErrorTest.java
 src/test/java/org/openapitools/client/model/RestaurantResponseTest.java

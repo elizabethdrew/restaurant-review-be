@@ -10,7 +10,6 @@ paths:
       operationId: getAllRestaurants
       tags:
         - Restaurants
-        - Get All
       description: Returns a list of all restaurants.
       responses:
         '200':

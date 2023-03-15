@@ -2,7 +2,7 @@
 
 Restaurant Review API
 - API version: 1.0.0
-  - Build date: 2023-03-14T16:31:29.240527Z[Europe/London]
+  - Build date: 2023-03-15T09:43:18.000627Z[Europe/London]
 
 An API for managing restaurant reviews
 
@@ -84,19 +84,19 @@ import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
 import org.openapitools.client.Configuration;
 import org.openapitools.client.models.*;
-import org.openapitools.client.api.GetAllApi;
+import org.openapitools.client.api.RestaurantsApi;
 
 public class Example {
   public static void main(String[] args) {
     ApiClient defaultClient = Configuration.getDefaultApiClient();
     defaultClient.setBasePath("http://localhost");
 
-    GetAllApi apiInstance = new GetAllApi(defaultClient);
+    RestaurantsApi apiInstance = new RestaurantsApi(defaultClient);
     try {
       List<Restaurant> result = apiInstance.getAllRestaurants();
       System.out.println(result);
     } catch (ApiException e) {
-      System.err.println("Exception when calling GetAllApi#getAllRestaurants");
+      System.err.println("Exception when calling RestaurantsApi#getAllRestaurants");
       System.err.println("Status code: " + e.getCode());
       System.err.println("Reason: " + e.getResponseBody());
       System.err.println("Response headers: " + e.getResponseHeaders());
@@ -113,7 +113,6 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*GetAllApi* | [**getAllRestaurants**](docs/GetAllApi.md#getAllRestaurants) | **GET** /restaurants | Get all restaurants
 *RestaurantsApi* | [**getAllRestaurants**](docs/RestaurantsApi.md#getAllRestaurants) | **GET** /restaurants | Get all restaurants
 
 
