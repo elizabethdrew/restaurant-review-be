@@ -2,7 +2,7 @@
 
 Restaurant Review API
 - API version: 1.0.0
-  - Build date: 2023-03-15T14:58:05.026435Z[Europe/London]
+  - Build date: 2023-03-15T16:57:55.114098Z[Europe/London]
 
 An API for managing restaurant reviews
 
@@ -84,20 +84,20 @@ import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
 import org.openapitools.client.Configuration;
 import org.openapitools.client.models.*;
-import org.openapitools.client.api.AddNewApi;
+import org.openapitools.client.api.RestaurantsApi;
 
 public class Example {
   public static void main(String[] args) {
     ApiClient defaultClient = Configuration.getDefaultApiClient();
     defaultClient.setBasePath("http://localhost");
 
-    AddNewApi apiInstance = new AddNewApi(defaultClient);
+    RestaurantsApi apiInstance = new RestaurantsApi(defaultClient);
     RestaurantInput restaurantInput = new RestaurantInput(); // RestaurantInput | The restaurant to add.
     try {
       RestaurantResponse result = apiInstance.addNewRestaurant(restaurantInput);
       System.out.println(result);
     } catch (ApiException e) {
-      System.err.println("Exception when calling AddNewApi#addNewRestaurant");
+      System.err.println("Exception when calling RestaurantsApi#addNewRestaurant");
       System.err.println("Status code: " + e.getCode());
       System.err.println("Reason: " + e.getResponseBody());
       System.err.println("Response headers: " + e.getResponseHeaders());
@@ -114,7 +114,6 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*AddNewApi* | [**addNewRestaurant**](docs/AddNewApi.md#addNewRestaurant) | **POST** /restaurants | Add a new restaurant
 *RestaurantsApi* | [**addNewRestaurant**](docs/RestaurantsApi.md#addNewRestaurant) | **POST** /restaurants | Add a new restaurant
 *RestaurantsApi* | [**getAllRestaurants**](docs/RestaurantsApi.md#getAllRestaurants) | **GET** /restaurants | Get all restaurants
 

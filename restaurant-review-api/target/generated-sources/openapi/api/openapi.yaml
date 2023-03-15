@@ -61,7 +61,6 @@ paths:
       summary: Add a new restaurant
       tags:
       - Restaurants
-      - Add New
       x-content-type: application/json
       x-accepts: application/json
 components:

@@ -10,11 +10,11 @@ import java.time.OffsetDateTime;
 @Table(name = "RESTAURANT")
 @Getter
 @Setter
-public class RestaurantEntity {
+public class RestaurantModel {
 
     @Id
     @Column(name="ID")
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
 
     @Column(name = "NAME")
@@ -28,4 +28,14 @@ public class RestaurantEntity {
 
     @Column(name = "CREATED_AT")
     private OffsetDateTime createdAt;
+
+    protected RestaurantModel(){}
+
+    public RestaurantModel(String name,String city, Integer rating) {
+        this.name = name;
+        this.city = city;
+        this.rating = rating;
+    }
+
+
 }

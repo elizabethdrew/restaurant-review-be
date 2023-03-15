@@ -7,8 +7,6 @@ org/openapitools/client/Pair.class
 org/openapitools/client/model/RestaurantResponse.class
 org/openapitools/client/model/RestaurantResponse$CustomTypeAdapterFactory.class
 org/openapitools/client/auth/HttpBearerAuth.class
-org/openapitools/client/api/AddNewApi.class
-org/openapitools/client/api/AddNewApi$1.class
 org/openapitools/client/auth/Authentication.class
 org/openapitools/client/ApiResponse.class
 org/openapitools/client/GzipRequestInterceptor$1.class
@@ -43,7 +41,6 @@ org/openapitools/client/api/RestaurantsApi.class
 org/openapitools/client/JSON$DateTypeAdapter.class
 org/openapitools/client/api/RestaurantsApi$4.class
 org/openapitools/client/model/RestaurantResponse$CustomTypeAdapterFactory$1.class
-org/openapitools/client/api/AddNewApi$2.class
 org/openapitools/client/model/Restaurant$CustomTypeAdapterFactory.class
 org/openapitools/client/ApiClient.class
 org/openapitools/client/model/RestaurantInput.class

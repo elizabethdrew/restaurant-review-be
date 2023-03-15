@@ -31,7 +31,6 @@ paths:
       operationId: addNewRestaurant
       tags:
         - Restaurants
-        - Add New
       description: Adds a new restaurant to the database.
       requestBody:
         description: The restaurant to add.
