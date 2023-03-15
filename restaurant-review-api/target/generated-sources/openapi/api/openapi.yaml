@@ -29,6 +29,41 @@ paths:
       tags:
       - Restaurants
       x-accepts: application/json
+    post:
+      description: Adds a new restaurant to the database.
+      operationId: addNewRestaurant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestaurantInput'
+        description: The restaurant to add.
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestaurantResponse'
+          description: The new restaurant
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid input
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Internal server error
+      summary: Add a new restaurant
+      tags:
+      - Restaurants
+      - Add New
+      x-content-type: application/json
+      x-accepts: application/json
 components:
   parameters:
     idParam:
@@ -103,7 +138,32 @@ components:
       - name
       - rating
       type: object
+    RestaurantInput:
+      example:
+        city: city
+        name: name
+        rating: 1
+      properties:
+        name:
+          description: The name of the restaurant.
+          type: string
+        city:
+          description: The city where the restaurant is located.
+          type: string
+        rating:
+          description: The rating of the restaurant.
+          maximum: 5
+          minimum: 1
+          type: integer
+      required:
+      - city
+      - name
+      - rating
+      type: object
     Error:
+      example:
+        code: 0
+        message: message
       properties:
         code:
           format: int32
@@ -112,6 +172,17 @@ components:
           type: string
       type: object
     RestaurantResponse:
+      example:
+        success: true
+        restaurant:
+          city: city
+          name: name
+          rating: 3
+          created_at: 2000-01-23T04:56:07.000+00:00
+          id: 0
+        error:
+          code: 0
+          message: message
       properties:
         success:
           type: boolean

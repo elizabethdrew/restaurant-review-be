@@ -16,6 +16,8 @@ package org.openapitools.client.api;
 import org.openapitools.client.ApiException;
 import org.openapitools.client.model.Error;
 import org.openapitools.client.model.Restaurant;
+import org.openapitools.client.model.RestaurantInput;
+import org.openapitools.client.model.RestaurantResponse;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -31,6 +33,20 @@ import java.util.Map;
 public class RestaurantsApiTest {
 
     private final RestaurantsApi api = new RestaurantsApi();
+
+    /**
+     * Add a new restaurant
+     *
+     * Adds a new restaurant to the database.
+     *
+     * @throws ApiException if the Api call fails
+     */
+    @Test
+    public void addNewRestaurantTest() throws ApiException {
+        RestaurantInput restaurantInput = null;
+        RestaurantResponse response = api.addNewRestaurant(restaurantInput);
+        // TODO: test validations
+    }
 
     /**
      * Get all restaurants

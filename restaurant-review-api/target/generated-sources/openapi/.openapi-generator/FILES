@@ -6,8 +6,10 @@ README.md
 api/openapi.yaml
 build.gradle
 build.sbt
+docs/AddNewApi.md
 docs/Error.md
 docs/Restaurant.md
+docs/RestaurantInput.md
 docs/RestaurantResponse.md
 docs/RestaurantsApi.md
 git_push.sh
@@ -31,6 +33,7 @@ src/gen/java/main/org/openapitools/client/ProgressResponseBody.java
 src/gen/java/main/org/openapitools/client/ServerConfiguration.java
 src/gen/java/main/org/openapitools/client/ServerVariable.java
 src/gen/java/main/org/openapitools/client/StringUtil.java
+src/gen/java/main/org/openapitools/client/api/AddNewApi.java
 src/gen/java/main/org/openapitools/client/api/RestaurantsApi.java
 src/gen/java/main/org/openapitools/client/auth/ApiKeyAuth.java
 src/gen/java/main/org/openapitools/client/auth/Authentication.java
@@ -39,9 +42,12 @@ src/gen/java/main/org/openapitools/client/auth/HttpBearerAuth.java
 src/gen/java/main/org/openapitools/client/model/AbstractOpenApiSchema.java
 src/gen/java/main/org/openapitools/client/model/Error.java
 src/gen/java/main/org/openapitools/client/model/Restaurant.java
+src/gen/java/main/org/openapitools/client/model/RestaurantInput.java
 src/gen/java/main/org/openapitools/client/model/RestaurantResponse.java
 src/main/AndroidManifest.xml
+src/test/java/org/openapitools/client/api/AddNewApiTest.java
 src/test/java/org/openapitools/client/api/RestaurantsApiTest.java
 src/test/java/org/openapitools/client/model/ErrorTest.java
+src/test/java/org/openapitools/client/model/RestaurantInputTest.java
 src/test/java/org/openapitools/client/model/RestaurantResponseTest.java
 src/test/java/org/openapitools/client/model/RestaurantTest.java

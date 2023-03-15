@@ -1,1 +1,5 @@
-org/example/Main.class
+org/example/repository/RestaurantRepository.class
+org/example/controller/RestaurantController.class
+org/example/RestaurantReviewApplication.class
+org/example/model/RestaurantEntity.class
+org/example/ApplicationConfig.class

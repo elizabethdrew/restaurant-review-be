@@ -1,2 +1,5 @@
+/Users/dreweb/IdeaProjects/restaurant-review/restaurant-review-service/src/main/java/org/example/ApplicationConfig.java
+/Users/dreweb/IdeaProjects/restaurant-review/restaurant-review-service/src/main/java/org/example/repository/RestaurantRepository.java
 /Users/dreweb/IdeaProjects/restaurant-review/restaurant-review-service/src/main/java/org/example/controller/RestaurantController.java
-/Users/dreweb/IdeaProjects/restaurant-review/restaurant-review-service/src/main/java/org/example/Main.java
+/Users/dreweb/IdeaProjects/restaurant-review/restaurant-review-service/src/main/java/org/example/model/RestaurantEntity.java
+/Users/dreweb/IdeaProjects/restaurant-review/restaurant-review-service/src/main/java/org/example/RestaurantReviewApplication.java

@@ -2,7 +2,7 @@
 
 Restaurant Review API
 - API version: 1.0.0
-  - Build date: 2023-03-15T09:43:18.000627Z[Europe/London]
+  - Build date: 2023-03-15T14:58:05.026435Z[Europe/London]
 
 An API for managing restaurant reviews
 
@@ -84,19 +84,20 @@ import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
 import org.openapitools.client.Configuration;
 import org.openapitools.client.models.*;
-import org.openapitools.client.api.RestaurantsApi;
+import org.openapitools.client.api.AddNewApi;
 
 public class Example {
   public static void main(String[] args) {
     ApiClient defaultClient = Configuration.getDefaultApiClient();
     defaultClient.setBasePath("http://localhost");
 
-    RestaurantsApi apiInstance = new RestaurantsApi(defaultClient);
+    AddNewApi apiInstance = new AddNewApi(defaultClient);
+    RestaurantInput restaurantInput = new RestaurantInput(); // RestaurantInput | The restaurant to add.
     try {
-      List<Restaurant> result = apiInstance.getAllRestaurants();
+      RestaurantResponse result = apiInstance.addNewRestaurant(restaurantInput);
       System.out.println(result);
     } catch (ApiException e) {
-      System.err.println("Exception when calling RestaurantsApi#getAllRestaurants");
+      System.err.println("Exception when calling AddNewApi#addNewRestaurant");
       System.err.println("Status code: " + e.getCode());
       System.err.println("Reason: " + e.getResponseBody());
       System.err.println("Response headers: " + e.getResponseHeaders());
@@ -113,6 +114,8 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*AddNewApi* | [**addNewRestaurant**](docs/AddNewApi.md#addNewRestaurant) | **POST** /restaurants | Add a new restaurant
+*RestaurantsApi* | [**addNewRestaurant**](docs/RestaurantsApi.md#addNewRestaurant) | **POST** /restaurants | Add a new restaurant
 *RestaurantsApi* | [**getAllRestaurants**](docs/RestaurantsApi.md#getAllRestaurants) | **GET** /restaurants | Get all restaurants
 
 
@@ -120,6 +123,7 @@ Class | Method | HTTP request | Description
 
  - [Error](docs/Error.md)
  - [Restaurant](docs/Restaurant.md)
+ - [RestaurantInput](docs/RestaurantInput.md)
  - [RestaurantResponse](docs/RestaurantResponse.md)
 
 

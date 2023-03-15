@@ -26,6 +26,39 @@ paths:
                 application/json:
                   schema:
                     $ref: '#/components/schemas/Error'
+    post:
+      summary: Add a new restaurant
+      operationId: addNewRestaurant
+      tags:
+        - Restaurants
+        - Add New
+      description: Adds a new restaurant to the database.
+      requestBody:
+        description: The restaurant to add.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestaurantInput'
+      responses:
+        '201':
+          description: The new restaurant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestaurantResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 components:
   parameters:
@@ -88,6 +121,25 @@ components:
           type: string
           format: date-time
           description: The date and time the restaurant was created.
+      required:
+        - name
+        - city
+        - rating
+
+    RestaurantInput:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the restaurant.
+        city:
+          type: string
+          description: The city where the restaurant is located.
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+          description: The rating of the restaurant.
       required:
         - name
         - city
