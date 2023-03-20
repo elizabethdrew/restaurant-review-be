@@ -1,26 +1,28 @@
 package dev.drew.restaurantreview.controller;
 
-import dev.drew.restaurantreview.model.Restaurant;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.openapitools.model.Restaurant;
+import org.openapitools.model.RestaurantInput;
+import org.openapitools.model.RestaurantResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/restaurants")
-public class RestaurantController {
-    private final RestaurantRepository repository;
+@RequestMapping
+public class RestaurantController implements org.openapitools.api.RestaurantsApi {
 
-    @Autowired
-    public RestaurantController(RestaurantRepository repository) {
-        this.repository = repository;
+    private RestaurantRepository repository;
+    @Override
+    public ResponseEntity<RestaurantResponse> addNewRestaurant(RestaurantInput restaurantInput) {
+        return null;
     }
 
-    @GetMapping
-    public List<Restaurant> findAll() {
-        return repository.findAll();
+    @Override
+    public ResponseEntity<List<Restaurant>> getAllRestaurants() {
+        return ResponseEntity.ok(new ArrayList<>());
     }
 }
