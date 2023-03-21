@@ -66,4 +66,14 @@ public class RestaurantController implements org.openapitools.api.RestaurantsApi
         List<Restaurant> restaurants = (List<Restaurant>) (List<?>) restaurantRepository.findAll();
         return ResponseEntity.ok(restaurants);
     }
+
+    @Override
+    public ResponseEntity<Restaurant> restaurantsRestaurantIdGet(Integer restaurantId) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Restaurant> restaurantsRestaurantIdPut(Integer restaurantId, RestaurantInput restaurantInput) {
+        return null;
+    }
 }

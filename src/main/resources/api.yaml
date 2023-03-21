@@ -58,6 +58,50 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /restaurants/{restaurantId}:
+    get:
+      summary: Get a restaurant by ID
+      description: Returns a single restaurant by ID.
+      parameters:
+        - name: restaurantId
+          in: path
+          description: The ID of the restaurant to retrieve.
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: The restaurant.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Restaurant'
+    put:
+      summary: Update a restaurant
+      description: Updates a restaurant by ID.
+      parameters:
+        - name: restaurantId
+          in: path
+          description: The ID of the restaurant to update.
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      requestBody:
+        description: The updated restaurant.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestaurantInput'
+      responses:
+        '200':
+          description: The updated restaurant.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Restaurant'
 
 components:
   parameters:

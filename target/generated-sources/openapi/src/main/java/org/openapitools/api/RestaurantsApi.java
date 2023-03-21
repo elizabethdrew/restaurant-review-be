@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-21T12:52:31.816960Z[Europe/London]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-21T14:40:25.089212Z[Europe/London]")
 @Validated
 @Tag(name = "restaurants", description = "the restaurants API")
 public interface RestaurantsApi {
@@ -105,6 +105,63 @@ public interface RestaurantsApi {
     )
     ResponseEntity<List<Restaurant>> getAllRestaurants(
         
+    );
+
+
+    /**
+     * GET /restaurants/{restaurantId} : Get a restaurant by ID
+     * Returns a single restaurant by ID.
+     *
+     * @param restaurantId The ID of the restaurant to retrieve. (required)
+     * @return The restaurant. (status code 200)
+     */
+    @Operation(
+        operationId = "restaurantsRestaurantIdGet",
+        summary = "Get a restaurant by ID",
+        description = "Returns a single restaurant by ID.",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The restaurant.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = Restaurant.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/restaurants/{restaurantId}",
+        produces = { "application/json" }
+    )
+    ResponseEntity<Restaurant> restaurantsRestaurantIdGet(
+        @Min(1) @Parameter(name = "restaurantId", description = "The ID of the restaurant to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("restaurantId") Integer restaurantId
+    );
+
+
+    /**
+     * PUT /restaurants/{restaurantId} : Update a restaurant
+     * Updates a restaurant by ID.
+     *
+     * @param restaurantId The ID of the restaurant to update. (required)
+     * @param restaurantInput The updated restaurant. (required)
+     * @return The updated restaurant. (status code 200)
+     */
+    @Operation(
+        operationId = "restaurantsRestaurantIdPut",
+        summary = "Update a restaurant",
+        description = "Updates a restaurant by ID.",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The updated restaurant.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = Restaurant.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.PUT,
+        value = "/restaurants/{restaurantId}",
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    ResponseEntity<Restaurant> restaurantsRestaurantIdPut(
+        @Min(1) @Parameter(name = "restaurantId", description = "The ID of the restaurant to update.", required = true, in = ParameterIn.PATH) @PathVariable("restaurantId") Integer restaurantId,
+        @Parameter(name = "RestaurantInput", description = "The updated restaurant.", required = true) @Valid @RequestBody RestaurantInput restaurantInput
     );
 
 }

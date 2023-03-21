@@ -18,7 +18,7 @@ import javax.annotation.Generated;
  * RestaurantInput
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-21T12:52:31.816960Z[Europe/London]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-21T14:40:25.089212Z[Europe/London]")
 public class RestaurantInput {
 
   @JsonProperty("name")
