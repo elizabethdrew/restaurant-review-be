@@ -1,12 +1,11 @@
 package dev.drew.restaurantreview.repository;
 
-import org.openapitools.model.Restaurant;
+import dev.drew.restaurantreview.entity.Restaurant;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Repository
-public class RestaurantRepository {
+public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
+
 
 }
