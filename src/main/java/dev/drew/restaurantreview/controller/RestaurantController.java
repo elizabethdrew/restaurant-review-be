@@ -3,6 +3,7 @@ package dev.drew.restaurantreview.controller;
 import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
 
+import jakarta.validation.Valid;
 import org.openapitools.model.Error;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
@@ -12,6 +13,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -81,8 +83,19 @@ public class RestaurantController implements org.openapitools.api.RestaurantsApi
         }
     }
 
+
     @Override
     public ResponseEntity<Restaurant> restaurantsRestaurantIdPut(Integer restaurantId, RestaurantInput restaurantInput) {
-        return null;
+        Optional<RestaurantEntity> restaurantEntityOptional = restaurantRepository.findById(restaurantId.longValue());
+
+        if (restaurantEntityOptional.isPresent()) {
+            Restaurant restaurant = (Restaurant) restaurantEntityOptional.get();
+            restaurant.setName(restaurantInput.getName());
+            restaurant.setCity(restaurantInput.getCity());
+            restaurant.setRating(restaurantInput.getRating());
+            return ResponseEntity.ok(restaurant);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 }
