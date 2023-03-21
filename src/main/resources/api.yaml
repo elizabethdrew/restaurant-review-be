@@ -102,6 +102,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Restaurant'
+    delete:
+      summary: Delete a restaurant
+      operationId: deleteRestaurantById
+      tags:
+        - Restaurants
+      description: Deletes a restaurant by ID.
+      parameters:
+        - name: restaurantId
+          in: path
+          description: The ID of the restaurant to delete.
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '204':
+          description: Restaurant deleted successfully.
+        '404':
+          description: Restaurant not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 components:
   parameters:

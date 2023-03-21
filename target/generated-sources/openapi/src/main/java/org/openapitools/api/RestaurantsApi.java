@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-21T15:29:43.742997Z[Europe/London]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-21T16:03:29.864035Z[Europe/London]")
 @Validated
 @Tag(name = "restaurants", description = "the restaurants API")
 public interface RestaurantsApi {
@@ -74,6 +74,40 @@ public interface RestaurantsApi {
     )
     ResponseEntity<RestaurantResponse> addNewRestaurant(
         @Parameter(name = "RestaurantInput", description = "The restaurant to add.", required = true) @Valid @RequestBody RestaurantInput restaurantInput
+    );
+
+
+    /**
+     * DELETE /restaurants/{restaurantId} : Delete a restaurant
+     * Deletes a restaurant by ID.
+     *
+     * @param restaurantId The ID of the restaurant to delete. (required)
+     * @return Restaurant deleted successfully. (status code 204)
+     *         or Restaurant not found. (status code 404)
+     *         or Internal server error (status code 500)
+     */
+    @Operation(
+        operationId = "deleteRestaurantById",
+        summary = "Delete a restaurant",
+        description = "Deletes a restaurant by ID.",
+        tags = { "Restaurants" },
+        responses = {
+            @ApiResponse(responseCode = "204", description = "Restaurant deleted successfully."),
+            @ApiResponse(responseCode = "404", description = "Restaurant not found.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
+            }),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.DELETE,
+        value = "/restaurants/{restaurantId}",
+        produces = { "application/json" }
+    )
+    ResponseEntity<Void> deleteRestaurantById(
+        @Min(1) @Parameter(name = "restaurantId", description = "The ID of the restaurant to delete.", required = true, in = ParameterIn.PATH) @PathVariable("restaurantId") Integer restaurantId
     );
 
 
