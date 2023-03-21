@@ -22,6 +22,12 @@ public class RestaurantController implements org.openapitools.api.RestaurantsApi
 
     @Override
     public ResponseEntity<RestaurantResponse> addNewRestaurant(RestaurantInput restaurantInput) {
+        Restaurant restaurant = new Restaurant();
+        restaurant.setName(restaurantInput.getName());
+        restaurant.setCity(restaurantInput.getCity());
+        restaurant.setRating(restaurantInput.getRating());
+
+        restaurantRepository.save(restaurant);
         return null;
     }
 
