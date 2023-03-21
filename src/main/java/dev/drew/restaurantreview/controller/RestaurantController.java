@@ -11,12 +11,14 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping
@@ -68,8 +70,15 @@ public class RestaurantController implements org.openapitools.api.RestaurantsApi
     }
 
     @Override
-    public ResponseEntity<Restaurant> restaurantsRestaurantIdGet(Integer restaurantId) {
-        return null;
+    public ResponseEntity<Restaurant> restaurantsRestaurantIdGet(@PathVariable("restaurantId") Integer restaurantId) {
+        Optional<RestaurantEntity> restaurantEntityOptional = restaurantRepository.findById(restaurantId.longValue());
+
+        if (restaurantEntityOptional.isPresent()) {
+            Restaurant restaurant = (Restaurant) restaurantEntityOptional.get();
+            return ResponseEntity.ok(restaurant);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @Override
