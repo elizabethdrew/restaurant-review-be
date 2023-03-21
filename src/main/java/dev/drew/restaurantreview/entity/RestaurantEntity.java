@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class Restaurant extends org.openapitools.model.Restaurant {
+public class RestaurantEntity extends org.openapitools.model.Restaurant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,9 +1,10 @@
 package dev.drew.restaurantreview.controller;
 
-import dev.drew.restaurantreview.entity.Restaurant;
+import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
 
 import org.openapitools.model.Error;
+import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
 import org.openapitools.model.RestaurantResponse;
 import org.springframework.dao.DataAccessException;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -28,7 +30,7 @@ public class RestaurantController implements org.openapitools.api.RestaurantsApi
 
     @Override
     public ResponseEntity<RestaurantResponse> addNewRestaurant(RestaurantInput restaurantInput) {
-        Restaurant restaurant = new Restaurant();
+        RestaurantEntity restaurant = new RestaurantEntity();
         restaurant.setName(restaurantInput.getName());
         restaurant.setCity(restaurantInput.getCity());
         restaurant.setRating(restaurantInput.getRating());
@@ -37,7 +39,7 @@ public class RestaurantController implements org.openapitools.api.RestaurantsApi
         RestaurantResponse restaurantResponse = new RestaurantResponse();
 
         try {
-            Restaurant savedRestaurant = restaurantRepository.save(restaurant);
+            RestaurantEntity savedRestaurant = restaurantRepository.save(restaurant);
             restaurantResponse.setRestaurant(savedRestaurant);
             restaurantResponse.setSuccess(true);
             return new ResponseEntity<>(restaurantResponse, HttpStatus.CREATED);
@@ -60,7 +62,8 @@ public class RestaurantController implements org.openapitools.api.RestaurantsApi
     }
 
     @Override
-    public List<Restaurant> getAllRestaurants() {
-        return restaurantRepository.findAll();
+    public ResponseEntity<List<Restaurant>> getAllRestaurants() {
+        List<Restaurant> restaurants = (List<Restaurant>) (List<?>) restaurantRepository.findAll();
+        return ResponseEntity.ok(restaurants);
     }
 }
