@@ -1,6 +1,7 @@
 package dev.drew.restaurantreview.controller;
 
 import dev.drew.restaurantreview.entity.RestaurantEntity;
+import dev.drew.restaurantreview.mapper.RestaurantMapper;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
 
 import org.openapitools.model.Error;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping
@@ -31,39 +33,38 @@ public class RestaurantController implements org.openapitools.api.RestaurantsApi
     /*
     Add a new restaurant to the database
     Example curl command: curl -X POST http://localhost:8080/restaurants -H "Content-Type: application/json" -d '{"name": "Restaurant Name", "city": "City Name", "rating": 4}'
-    */
+*/
     @Override
-        public ResponseEntity<RestaurantResponse> addNewRestaurant(RestaurantInput restaurantInput) {
-            RestaurantEntity restaurant = new RestaurantEntity();
-            restaurant.setName(restaurantInput.getName());
-            restaurant.setCity(restaurantInput.getCity());
-            restaurant.setRating(restaurantInput.getRating());
-            restaurant.setCreatedAt(OffsetDateTime.now());
+    public ResponseEntity<RestaurantResponse> addNewRestaurant(RestaurantInput restaurantInput) {
+        RestaurantMapper mapper = RestaurantMapper.INSTANCE;
+        RestaurantEntity restaurant = mapper.toRestaurantEntity(restaurantInput);
+        restaurant.setCreatedAt(OffsetDateTime.now());
 
-            RestaurantResponse restaurantResponse = new RestaurantResponse();
+        RestaurantResponse restaurantResponse = new RestaurantResponse();
 
-            try {
-                RestaurantEntity savedRestaurant = restaurantRepository.save(restaurant);
-                restaurantResponse.setRestaurant(savedRestaurant);
-                restaurantResponse.setSuccess(true);
-                return new ResponseEntity<>(restaurantResponse, HttpStatus.CREATED);
-            } catch (DataIntegrityViolationException e) {
-                // Handle database constraint violations, such as unique constraints
-                restaurantResponse.setSuccess(false);
-                restaurantResponse.setError(new Error().message("Invalid input: " + e.getMessage()));
-                return new ResponseEntity<>(restaurantResponse, HttpStatus.BAD_REQUEST);
-            } catch (DataAccessException e) {
-                // Handle other database-related exceptions
-                restaurantResponse.setSuccess(false);
-                restaurantResponse.setError(new Error().message("Database error: " + e.getMessage()));
-                return new ResponseEntity<>(restaurantResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-            } catch (Exception e) {
-                // Handle general exceptions
-                restaurantResponse.setSuccess(false);
-                restaurantResponse.setError(new Error().message("An unexpected error occurred: " + e.getMessage()));
-                return new ResponseEntity<>(restaurantResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+        try {
+            RestaurantEntity savedRestaurant = restaurantRepository.save(restaurant);
+            Restaurant savedApiRestaurant = mapper.toRestaurant(savedRestaurant);
+            restaurantResponse.setRestaurant(savedApiRestaurant);
+            restaurantResponse.setSuccess(true);
+            return new ResponseEntity<>(restaurantResponse, HttpStatus.CREATED);
+        } catch (DataIntegrityViolationException e) {
+            // Handle database constraint violations, such as unique constraints
+            restaurantResponse.setSuccess(false);
+            restaurantResponse.setError(new Error().message("Invalid input: " + e.getMessage()));
+            return new ResponseEntity<>(restaurantResponse, HttpStatus.BAD_REQUEST);
+        } catch (DataAccessException e) {
+            // Handle other database-related exceptions
+            restaurantResponse.setSuccess(false);
+            restaurantResponse.setError(new Error().message("Database error: " + e.getMessage()));
+            return new ResponseEntity<>(restaurantResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            // Handle general exceptions
+            restaurantResponse.setSuccess(false);
+            restaurantResponse.setError(new Error().message("An unexpected error occurred: " + e.getMessage()));
+            return new ResponseEntity<>(restaurantResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
 
     /*
     Get all restaurants from the database
@@ -71,7 +72,10 @@ public class RestaurantController implements org.openapitools.api.RestaurantsApi
     */
     @Override
     public ResponseEntity<List<Restaurant>> getAllRestaurants() {
-        List<Restaurant> restaurants = (List<Restaurant>) (List<?>) restaurantRepository.findAll();
+        List<RestaurantEntity> restaurantEntities = restaurantRepository.findAll();
+        List<Restaurant> restaurants = restaurantEntities.stream()
+                .map(RestaurantMapper.INSTANCE::toRestaurant)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(restaurants);
     }
 
@@ -80,11 +84,11 @@ public class RestaurantController implements org.openapitools.api.RestaurantsApi
     Example curl command: curl -X GET http://localhost:8080/restaurants/{restaurantId}
     */
     @Override
-    public ResponseEntity<Restaurant> restaurantsRestaurantIdGet(Integer restaurantId) {
+    public ResponseEntity<Restaurant> getRestaurantById(Integer restaurantId) {
         Optional<RestaurantEntity> restaurantEntityOptional = restaurantRepository.findById(restaurantId.longValue());
 
         if (restaurantEntityOptional.isPresent()) {
-            Restaurant restaurant = restaurantEntityOptional.get();
+            Restaurant restaurant = RestaurantMapper.INSTANCE.toRestaurant(restaurantEntityOptional.get());
             return ResponseEntity.ok(restaurant);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -94,17 +98,32 @@ public class RestaurantController implements org.openapitools.api.RestaurantsApi
     /*
     Update a restaurant by ID
     Example curl command: curl -X PUT http://localhost:8080/restaurants/{restaurantId} -H "Content-Type: application/json" -d '{"name": "Updated Name", "city": "Updated City", "rating": 5}'
-    */
+*/
     @Override
-    public ResponseEntity<Restaurant> restaurantsRestaurantIdPut(Integer restaurantId, RestaurantInput restaurantInput) {
+    public ResponseEntity<Restaurant> updateRestaurantById(Integer restaurantId, RestaurantInput restaurantInput) {
+        RestaurantMapper mapper = RestaurantMapper.INSTANCE;
         Optional<RestaurantEntity> restaurantEntityOptional = restaurantRepository.findById(restaurantId.longValue());
 
         if (restaurantEntityOptional.isPresent()) {
-            Restaurant restaurant = restaurantEntityOptional.get();
-            restaurant.setName(restaurantInput.getName());
-            restaurant.setCity(restaurantInput.getCity());
-            restaurant.setRating(restaurantInput.getRating());
-            return ResponseEntity.ok(restaurant);
+            RestaurantEntity restaurantEntity = restaurantEntityOptional.get();
+            RestaurantEntity updatedEntity = mapper.toRestaurantEntity(restaurantInput);
+            updatedEntity.setId(restaurantEntity.getId());
+            updatedEntity.setCreatedAt(restaurantEntity.getCreatedAt());
+
+            try {
+                RestaurantEntity savedRestaurant = restaurantRepository.save(updatedEntity);
+                Restaurant savedApiRestaurant = mapper.toRestaurant(savedRestaurant);
+                return ResponseEntity.ok(savedApiRestaurant);
+            } catch (DataIntegrityViolationException e) {
+                // Handle database constraint violations, such as unique constraints
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            } catch (DataAccessException e) {
+                // Handle other database-related exceptions
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            } catch (Exception e) {
+                // Handle general exceptions
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

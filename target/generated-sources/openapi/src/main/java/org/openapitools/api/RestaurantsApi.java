@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-21T16:03:29.864035Z[Europe/London]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-23T12:57:09.232785Z[Europe/London]")
 @Validated
 @Tag(name = "restaurants", description = "the restaurants API")
 public interface RestaurantsApi {
@@ -150,9 +150,10 @@ public interface RestaurantsApi {
      * @return The restaurant. (status code 200)
      */
     @Operation(
-        operationId = "restaurantsRestaurantIdGet",
+        operationId = "getRestaurantById",
         summary = "Get a restaurant by ID",
         description = "Returns a single restaurant by ID.",
+        tags = { "Restaurants" },
         responses = {
             @ApiResponse(responseCode = "200", description = "The restaurant.", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Restaurant.class))
@@ -164,7 +165,7 @@ public interface RestaurantsApi {
         value = "/restaurants/{restaurantId}",
         produces = { "application/json" }
     )
-    ResponseEntity<Restaurant> restaurantsRestaurantIdGet(
+    ResponseEntity<Restaurant> getRestaurantById(
         @Min(1) @Parameter(name = "restaurantId", description = "The ID of the restaurant to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("restaurantId") Integer restaurantId
     );
 
@@ -178,9 +179,10 @@ public interface RestaurantsApi {
      * @return The updated restaurant. (status code 200)
      */
     @Operation(
-        operationId = "restaurantsRestaurantIdPut",
+        operationId = "updateRestaurantById",
         summary = "Update a restaurant",
         description = "Updates a restaurant by ID.",
+        tags = { "Restaurants" },
         responses = {
             @ApiResponse(responseCode = "200", description = "The updated restaurant.", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Restaurant.class))
@@ -193,7 +195,7 @@ public interface RestaurantsApi {
         produces = { "application/json" },
         consumes = { "application/json" }
     )
-    ResponseEntity<Restaurant> restaurantsRestaurantIdPut(
+    ResponseEntity<Restaurant> updateRestaurantById(
         @Min(1) @Parameter(name = "restaurantId", description = "The ID of the restaurant to update.", required = true, in = ParameterIn.PATH) @PathVariable("restaurantId") Integer restaurantId,
         @Parameter(name = "RestaurantInput", description = "The updated restaurant.", required = true) @Valid @RequestBody RestaurantInput restaurantInput
     );

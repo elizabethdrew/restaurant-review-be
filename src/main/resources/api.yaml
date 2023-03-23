@@ -61,7 +61,10 @@ paths:
   /restaurants/{restaurantId}:
     get:
       summary: Get a restaurant by ID
+      operationId: getRestaurantById
       description: Returns a single restaurant by ID.
+      tags:
+        - Restaurants
       parameters:
         - name: restaurantId
           in: path
@@ -79,7 +82,10 @@ paths:
                 $ref: '#/components/schemas/Restaurant'
     put:
       summary: Update a restaurant
+      operationId: updateRestaurantById
       description: Updates a restaurant by ID.
+      tags:
+        - Restaurants
       parameters:
         - name: restaurantId
           in: path
