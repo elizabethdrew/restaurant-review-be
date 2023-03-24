@@ -32,6 +32,8 @@ paths:
       tags:
         - Restaurants
       description: Adds a new restaurant to the database.
+      security:
+        - basicAuth: []
       requestBody:
         description: The restaurant to add.
         required: true
@@ -84,6 +86,8 @@ paths:
       summary: Update a restaurant
       operationId: updateRestaurantById
       description: Updates a restaurant by ID.
+      security:
+        - basicAuth: []
       tags:
         - Restaurants
       parameters:
@@ -114,6 +118,8 @@ paths:
       tags:
         - Restaurants
       description: Deletes a restaurant by ID.
+      security:
+        - basicAuth: []
       parameters:
         - name: restaurantId
           in: path
@@ -139,6 +145,11 @@ paths:
                 $ref: '#/components/schemas/Error'
 
 components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+
   parameters:
     idParam:
       name: id

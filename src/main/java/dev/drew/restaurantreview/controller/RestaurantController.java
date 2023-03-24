@@ -6,6 +6,7 @@ import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
 import org.openapitools.model.RestaurantResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping
+@PreAuthorize("isAuthenticated()")
 public class RestaurantController implements RestaurantsApi {
 
     private final RestaurantService restaurantService;
@@ -27,11 +29,13 @@ public class RestaurantController implements RestaurantsApi {
     }
 
     @Override
+    @PreAuthorize("permitAll()")
     public ResponseEntity<List<Restaurant>> getAllRestaurants() {
         return restaurantService.getAllRestaurants();
     }
 
     @Override
+    @PreAuthorize("permitAll()")
     public ResponseEntity<Restaurant> getRestaurantById(Integer restaurantId) {
         return restaurantService.getRestaurantById(restaurantId);
     }

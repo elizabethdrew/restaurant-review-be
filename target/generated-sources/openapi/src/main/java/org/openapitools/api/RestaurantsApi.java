@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-24T13:04:33.778142Z[Europe/London]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-24T13:54:03.068402Z[Europe/London]")
 @Validated
 @Tag(name = "restaurants", description = "the restaurants API")
 public interface RestaurantsApi {
@@ -64,6 +64,9 @@ public interface RestaurantsApi {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
             })
+        },
+        security = {
+            @SecurityRequirement(name = "basicAuth")
         }
     )
     @RequestMapping(
@@ -99,6 +102,9 @@ public interface RestaurantsApi {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
             })
+        },
+        security = {
+            @SecurityRequirement(name = "basicAuth")
         }
     )
     @RequestMapping(
@@ -187,6 +193,9 @@ public interface RestaurantsApi {
             @ApiResponse(responseCode = "200", description = "The updated restaurant.", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Restaurant.class))
             })
+        },
+        security = {
+            @SecurityRequirement(name = "basicAuth")
         }
     )
     @RequestMapping(
