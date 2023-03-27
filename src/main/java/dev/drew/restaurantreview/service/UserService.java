@@ -94,4 +94,37 @@ public class UserService {
         }
     }
 
+    public ResponseEntity<UserResponse> updateUserById(Integer userId, UserInput userInput) {
+        UserMapper mapper = UserMapper.INSTANCE;
+        Optional<UserEntity> userEntityOptional = userRepository.findById(userId.longValue());
+
+        if (userEntityOptional.isPresent()) {
+            UserEntity userEntity = userEntityOptional.get();
+            UserEntity updatedEntity = mapper.toUserEntity(userInput);
+            updatedEntity.setId(userEntity.getId());
+            updatedEntity.setCreatedAt(userEntity.getCreatedAt());
+
+            try {
+                UserEntity savedUser = userRepository.save(updatedEntity);
+                User savedApiUser = mapper.toUser(savedUser);
+
+                UserResponse userResponse = new UserResponse();
+                userResponse.setUser(savedApiUser);
+
+                return ResponseEntity.ok(userResponse);
+            } catch (DataIntegrityViolationException e) {
+                // Handle database constraint violations, such as unique constraints
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            } catch (DataAccessException e) {
+                // Handle other database-related exceptions
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            } catch (Exception e) {
+                // Handle general exceptions
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
 }

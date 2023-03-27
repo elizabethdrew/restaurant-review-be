@@ -38,6 +38,6 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<UserResponse> updateUserById(Integer userId, UserInput userInput) {
-        return null;
+        return userService.updateUserById(userId, userInput);
     }
 }
