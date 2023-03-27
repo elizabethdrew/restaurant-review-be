@@ -351,6 +351,9 @@ components:
           type: string
           format: email
           description: The email address of the user.
+        password:
+          type: string
+          description: The password of the user.
         created_at:
           type: string
           format: date-time
@@ -358,6 +361,7 @@ components:
       required:
         - name
         - email
+        - password
 
     UserInput:
       type: object
@@ -369,9 +373,13 @@ components:
           type: string
           format: email
           description: The email address of the user.
+        password:
+          type: string
+          description: The password of the user.
       required:
         - name
         - email
+        - password
 
     Restaurant:
       type: object
