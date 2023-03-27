@@ -5,8 +5,6 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.OffsetDateTime;
-
-import jakarta.validation.constraints.Email;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
@@ -22,7 +20,7 @@ import javax.annotation.Generated;
  * User
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-27T10:03:46.059374+01:00[Europe/London]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-27T10:45:28.992339+01:00[Europe/London]")
 public class User {
 
   @JsonProperty("id")
@@ -33,6 +31,9 @@ public class User {
 
   @JsonProperty("email")
   private String email;
+
+  @JsonProperty("password")
+  private String password;
 
   @JsonProperty("created_at")
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -85,7 +86,7 @@ public class User {
    * The email address of the user.
    * @return email
   */
-  @NotNull @Email
+  @NotNull 
   @Schema(name = "email", description = "The email address of the user.", requiredMode = Schema.RequiredMode.REQUIRED)
   public String getEmail() {
     return email;
@@ -93,6 +94,25 @@ public class User {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  public User password(String password) {
+    this.password = password;
+    return this;
+  }
+
+  /**
+   * The password of the user.
+   * @return password
+  */
+  @NotNull 
+  @Schema(name = "password", description = "The password of the user.", requiredMode = Schema.RequiredMode.REQUIRED)
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
   }
 
   public User createdAt(OffsetDateTime createdAt) {
@@ -126,12 +146,13 @@ public class User {
     return Objects.equals(this.id, user.id) &&
         Objects.equals(this.name, user.name) &&
         Objects.equals(this.email, user.email) &&
+        Objects.equals(this.password, user.password) &&
         Objects.equals(this.createdAt, user.createdAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, email, createdAt);
+    return Objects.hash(id, name, email, password, createdAt);
   }
 
   @Override
@@ -141,6 +162,7 @@ public class User {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    email: ").append(toIndentedString(email)).append("\n");
+    sb.append("    password: ").append(toIndentedString(password)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("}");
     return sb.toString();

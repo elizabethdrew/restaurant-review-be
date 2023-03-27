@@ -18,7 +18,7 @@ import javax.annotation.Generated;
  * UserInput
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-27T10:03:46.059374+01:00[Europe/London]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-27T10:45:28.992339+01:00[Europe/London]")
 public class UserInput {
 
   @JsonProperty("name")
@@ -26,6 +26,9 @@ public class UserInput {
 
   @JsonProperty("email")
   private String email;
+
+  @JsonProperty("password")
+  private String password;
 
   public UserInput name(String name) {
     this.name = name;
@@ -55,7 +58,7 @@ public class UserInput {
    * The email address of the user.
    * @return email
   */
-  @NotNull @Email
+  @NotNull 
   @Schema(name = "email", description = "The email address of the user.", requiredMode = Schema.RequiredMode.REQUIRED)
   public String getEmail() {
     return email;
@@ -63,6 +66,25 @@ public class UserInput {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  public UserInput password(String password) {
+    this.password = password;
+    return this;
+  }
+
+  /**
+   * The password of the user.
+   * @return password
+  */
+  @NotNull 
+  @Schema(name = "password", description = "The password of the user.", requiredMode = Schema.RequiredMode.REQUIRED)
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
   }
 
   @Override
@@ -75,12 +97,13 @@ public class UserInput {
     }
     UserInput userInput = (UserInput) o;
     return Objects.equals(this.name, userInput.name) &&
-        Objects.equals(this.email, userInput.email);
+        Objects.equals(this.email, userInput.email) &&
+        Objects.equals(this.password, userInput.password);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, email);
+    return Objects.hash(name, email, password);
   }
 
   @Override
@@ -89,6 +112,7 @@ public class UserInput {
     sb.append("class UserInput {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    email: ").append(toIndentedString(email)).append("\n");
+    sb.append("    password: ").append(toIndentedString(password)).append("\n");
     sb.append("}");
     return sb.toString();
   }
