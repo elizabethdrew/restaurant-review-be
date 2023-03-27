@@ -1,7 +1,7 @@
 package dev.drew.restaurantreview.controller;
 
 import dev.drew.restaurantreview.service.RestaurantService;
-import jakarta.validation.Valid;
+
 import org.openapitools.api.RestaurantsApi;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
@@ -34,7 +37,7 @@ public class RestaurantController implements RestaurantsApi {
     @PreAuthorize("permitAll()")
     public ResponseEntity<List<Restaurant>> getAllRestaurants(
             @Valid @RequestParam(value = "city", required = false) String city,
-            @Valid @RequestParam(value = "rating", required = false) Integer rating,
+            @Min(1) @Max(5) @Valid @RequestParam(value = "rating", required = false) Integer rating,
             @Valid @RequestParam(value = "user_id", required = false) Long userId) {
         return restaurantService.getAllRestaurants(city, rating, userId);
     }
