@@ -4,10 +4,11 @@ import dev.drew.restaurantreview.entity.UserEntity;
 import javax.annotation.processing.Generated;
 import org.openapitools.model.User;
 import org.openapitools.model.UserInput;
+import org.openapitools.model.UserInput.UserRoleEnum;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-03-27T12:40:35+0100",
+    date = "2023-03-27T13:18:13+0100",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.6 (Amazon.com Inc.)"
 )
 public class UserMapperImpl implements UserMapper {
@@ -24,6 +25,7 @@ public class UserMapperImpl implements UserMapper {
         user.setName( userEntity.getName() );
         user.setEmail( userEntity.getEmail() );
         user.setPassword( userEntity.getPassword() );
+        user.setUserRole( userEntity.getUserRole() );
         user.setCreatedAt( userEntity.getCreatedAt() );
 
         return user;
@@ -40,6 +42,7 @@ public class UserMapperImpl implements UserMapper {
         userEntity.setName( userInput.getName() );
         userEntity.setEmail( userInput.getEmail() );
         userEntity.setPassword( userInput.getPassword() );
+        userEntity.setUserRole( userRoleEnumToUserRoleEnum( userInput.getUserRole() ) );
 
         return userEntity;
     }
@@ -55,7 +58,44 @@ public class UserMapperImpl implements UserMapper {
         userInput.setName( userEntity.getName() );
         userInput.setEmail( userEntity.getEmail() );
         userInput.setPassword( userEntity.getPassword() );
+        userInput.setUserRole( userRoleEnumToUserRoleEnum1( userEntity.getUserRole() ) );
 
         return userInput;
+    }
+
+    protected org.openapitools.model.User.UserRoleEnum userRoleEnumToUserRoleEnum(UserRoleEnum userRoleEnum) {
+        if ( userRoleEnum == null ) {
+            return null;
+        }
+
+        org.openapitools.model.User.UserRoleEnum userRoleEnum1;
+
+        switch ( userRoleEnum ) {
+            case ADMIN: userRoleEnum1 = org.openapitools.model.User.UserRoleEnum.ADMIN;
+            break;
+            case REVIEWER: userRoleEnum1 = org.openapitools.model.User.UserRoleEnum.REVIEWER;
+            break;
+            default: throw new IllegalArgumentException( "Unexpected enum constant: " + userRoleEnum );
+        }
+
+        return userRoleEnum1;
+    }
+
+    protected UserRoleEnum userRoleEnumToUserRoleEnum1(org.openapitools.model.User.UserRoleEnum userRoleEnum) {
+        if ( userRoleEnum == null ) {
+            return null;
+        }
+
+        UserRoleEnum userRoleEnum1;
+
+        switch ( userRoleEnum ) {
+            case ADMIN: userRoleEnum1 = UserRoleEnum.ADMIN;
+            break;
+            case REVIEWER: userRoleEnum1 = UserRoleEnum.REVIEWER;
+            break;
+            default: throw new IllegalArgumentException( "Unexpected enum constant: " + userRoleEnum );
+        }
+
+        return userRoleEnum1;
     }
 }

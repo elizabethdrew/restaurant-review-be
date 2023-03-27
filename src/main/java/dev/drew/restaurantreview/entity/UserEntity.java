@@ -39,4 +39,8 @@ public class UserEntity extends org.openapitools.model.User {
     @Column(name = "created_at")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime createdAt;
+
+    @NotNull
+    @Column(name = "user_role")
+    private String user_role;
 }

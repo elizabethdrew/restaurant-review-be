@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.time.OffsetDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -20,7 +21,7 @@ import javax.annotation.Generated;
  * User
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-27T12:40:33.691456+01:00[Europe/London]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-27T13:18:10.696739+01:00[Europe/London]")
 public class User {
 
   @JsonProperty("id")
@@ -34,6 +35,44 @@ public class User {
 
   @JsonProperty("password")
   private String password;
+
+  /**
+   * The role of the user (admin or reviewer)
+   */
+  public enum UserRoleEnum {
+    ADMIN("admin"),
+    
+    REVIEWER("reviewer");
+
+    private String value;
+
+    UserRoleEnum(String value) {
+      this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static UserRoleEnum fromValue(String value) {
+      for (UserRoleEnum b : UserRoleEnum.values()) {
+        if (b.value.equals(value)) {
+          return b;
+        }
+      }
+      throw new IllegalArgumentException("Unexpected value '" + value + "'");
+    }
+  }
+
+  @JsonProperty("user_role")
+  private UserRoleEnum userRole;
 
   @JsonProperty("created_at")
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -115,6 +154,25 @@ public class User {
     this.password = password;
   }
 
+  public User userRole(UserRoleEnum userRole) {
+    this.userRole = userRole;
+    return this;
+  }
+
+  /**
+   * The role of the user (admin or reviewer)
+   * @return userRole
+  */
+  @NotNull 
+  @Schema(name = "user_role", description = "The role of the user (admin or reviewer)", requiredMode = Schema.RequiredMode.REQUIRED)
+  public UserRoleEnum getUserRole() {
+    return userRole;
+  }
+
+  public void setUserRole(UserRoleEnum userRole) {
+    this.userRole = userRole;
+  }
+
   public User createdAt(OffsetDateTime createdAt) {
     this.createdAt = createdAt;
     return this;
@@ -147,12 +205,13 @@ public class User {
         Objects.equals(this.name, user.name) &&
         Objects.equals(this.email, user.email) &&
         Objects.equals(this.password, user.password) &&
+        Objects.equals(this.userRole, user.userRole) &&
         Objects.equals(this.createdAt, user.createdAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, email, password, createdAt);
+    return Objects.hash(id, name, email, password, userRole, createdAt);
   }
 
   @Override
@@ -163,6 +222,7 @@ public class User {
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("    password: ").append(toIndentedString(password)).append("\n");
+    sb.append("    userRole: ").append(toIndentedString(userRole)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("}");
     return sb.toString();
