@@ -11,6 +11,28 @@ paths:
       tags:
         - Restaurants
       description: Returns a list of all restaurants.
+      parameters:
+        - name: city
+          in: query
+          description: The city to filter restaurants by.
+          required: false
+          schema:
+            type: string
+        - name: rating
+          in: query
+          description: The rating value to filter restaurants by.
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+        - name: user_id
+          in: query
+          description: The user ID to filter restaurants by.
+          required: false
+          schema:
+            type: integer
+            format: int64
       responses:
         '200':
           description: A list of restaurants.
@@ -143,11 +165,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /users:
+  /user:
     post:
       summary: Add a new user
       tags:
-        - Users
+        - User
       description: Adds a new user to the database.
       operationId: addUser
       security:
@@ -173,103 +195,103 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-    /users/{userId}:
-      parameters:
-        - name: userId
-          in: path
-          description: The ID or name of the user to retrieve.
-          required: true
-          schema:
-            type: string
-      get:
-        summary: Get a user by ID or name
-        tags:
-          - Users
-        description: Returns a single user by ID or name.
-        operationId: getUserById
-        security:
-          - basicAuth: []
-        responses:
-          '200':
-            description: The user
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/UserResponse'
-          '404':
-            description: User not found
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-          '500':
-            description: Internal server error
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-      put:
-        summary: Update a user
-        tags:
-          - Users
-        description: Updates a user by ID.
-        operationId: updateUserById
-        security:
-          - basicAuth: []
-        requestBody:
-          description: The updated user.
-          required: true
+  /user/{userId}:
+    parameters:
+      - name: userId
+        in: path
+        description: The ID or name of the user to retrieve.
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get a user by ID or name
+      tags:
+        - User
+      description: Returns a single user by ID or name.
+      operationId: getUserById
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: The user
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserInput'
-        responses:
-          '200':
-            description: The updated user
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/UserResponse'
-          '400':
-            description: Invalid input
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-          '404':
-            description: User not found
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-          '500':
-            description: Internal server error
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-      delete:
-        summary: Delete a user by ID
-        tags:
-          - User
-        operationId: deleteUserById
-        security:
-          - basicAuth: []
-        responses:
-          '204':
-            description: User deleted
-          '404':
-            description: User not found
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-          '500':
-            description: Internal server error
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/UserResponse'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Update a user
+      tags:
+        - User
+      description: Updates a user by ID.
+      operationId: updateUserById
+      security:
+        - basicAuth: []
+      requestBody:
+        description: The updated user.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInput'
+      responses:
+        '200':
+          description: The updated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete a user by ID
+      tags:
+        - User
+      operationId: deleteUserById
+      security:
+        - basicAuth: []
+      responses:
+        '204':
+          description: User deleted
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 components:
   securitySchemes:
@@ -337,19 +359,19 @@ components:
         - name
         - email
 
-      UserInput:
-        type: object
-        properties:
-          name:
-            type: string
-            description: The name of the user.
-          email:
-            type: string
-            format: email
-            description: The email address of the user.
-        required:
-          - name
-          - email
+    UserInput:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the user.
+        email:
+          type: string
+          format: email
+          description: The email address of the user.
+      required:
+        - name
+        - email
 
     Restaurant:
       type: object
