@@ -380,10 +380,10 @@ components:
         password:
           type: string
           description: The password of the user.
-        user_role:
+        role:
           type: string
           description: The role of the user (admin or reviewer)
-          enum: ['admin', 'reviewer']
+          enum: ['ADMIN', 'REVIEWER']
         created_at:
           type: string
           format: date-time
@@ -393,7 +393,7 @@ components:
         - name
         - email
         - password
-        - user_role
+        - role
 
     UserInput:
       type: object
@@ -410,17 +410,17 @@ components:
         password:
           type: string
           description: The password of the user.
-        user_role:
+        role:
           type: string
           description: The role of the user (admin or reviewer)
-          enum: [ 'admin', 'reviewer' ]
-          default: 'reviewer'
+          enum: [ 'ADMIN', 'REVIEWER' ]
+          default: 'REVIEWER'
       required:
         - name
         - email
         - password
         - username
-        - user_role
+        - role
 
     Restaurant:
       type: object

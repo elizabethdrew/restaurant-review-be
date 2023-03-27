@@ -21,7 +21,7 @@ import javax.annotation.Generated;
  * User
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-27T14:02:48.130213+01:00[Europe/London]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-27T15:55:15.147116+01:00[Europe/London]")
 public class User {
 
   @JsonProperty("id")
@@ -42,14 +42,14 @@ public class User {
   /**
    * The role of the user (admin or reviewer)
    */
-  public enum UserRoleEnum {
-    ADMIN("admin"),
+  public enum RoleEnum {
+    ADMIN("ADMIN"),
     
-    REVIEWER("reviewer");
+    REVIEWER("REVIEWER");
 
     private String value;
 
-    UserRoleEnum(String value) {
+    RoleEnum(String value) {
       this.value = value;
     }
 
@@ -64,8 +64,8 @@ public class User {
     }
 
     @JsonCreator
-    public static UserRoleEnum fromValue(String value) {
-      for (UserRoleEnum b : UserRoleEnum.values()) {
+    public static RoleEnum fromValue(String value) {
+      for (RoleEnum b : RoleEnum.values()) {
         if (b.value.equals(value)) {
           return b;
         }
@@ -74,8 +74,8 @@ public class User {
     }
   }
 
-  @JsonProperty("user_role")
-  private UserRoleEnum userRole;
+  @JsonProperty("role")
+  private RoleEnum role;
 
   @JsonProperty("created_at")
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -176,23 +176,23 @@ public class User {
     this.password = password;
   }
 
-  public User userRole(UserRoleEnum userRole) {
-    this.userRole = userRole;
+  public User role(RoleEnum role) {
+    this.role = role;
     return this;
   }
 
   /**
    * The role of the user (admin or reviewer)
-   * @return userRole
+   * @return role
   */
   @NotNull 
-  @Schema(name = "user_role", description = "The role of the user (admin or reviewer)", requiredMode = Schema.RequiredMode.REQUIRED)
-  public UserRoleEnum getUserRole() {
-    return userRole;
+  @Schema(name = "role", description = "The role of the user (admin or reviewer)", requiredMode = Schema.RequiredMode.REQUIRED)
+  public RoleEnum getRole() {
+    return role;
   }
 
-  public void setUserRole(UserRoleEnum userRole) {
-    this.userRole = userRole;
+  public void setRole(RoleEnum role) {
+    this.role = role;
   }
 
   public User createdAt(OffsetDateTime createdAt) {
@@ -228,13 +228,13 @@ public class User {
         Objects.equals(this.email, user.email) &&
         Objects.equals(this.username, user.username) &&
         Objects.equals(this.password, user.password) &&
-        Objects.equals(this.userRole, user.userRole) &&
+        Objects.equals(this.role, user.role) &&
         Objects.equals(this.createdAt, user.createdAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, email, username, password, userRole, createdAt);
+    return Objects.hash(id, name, email, username, password, role, createdAt);
   }
 
   @Override
@@ -246,7 +246,7 @@ public class User {
     sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("    username: ").append(toIndentedString(username)).append("\n");
     sb.append("    password: ").append(toIndentedString(password)).append("\n");
-    sb.append("    userRole: ").append(toIndentedString(userRole)).append("\n");
+    sb.append("    role: ").append(toIndentedString(role)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("}");
     return sb.toString();

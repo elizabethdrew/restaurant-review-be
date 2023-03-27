@@ -20,9 +20,11 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
     /*
@@ -30,15 +32,15 @@ public class UserService {
         Example curl command: curl -X POST http://localhost:8080/user -H "Content-Type: application/json" -d '{"name": "User Name", "city": "City Name", "rating": 4}'
     */
     public ResponseEntity<UserResponse> addNewUser(UserInput userInput) {
-        UserMapper mapper = UserMapper.INSTANCE;
-        UserEntity user = mapper.toUserEntity(userInput);
+        //UserMapper mapper = UserMapper.INSTANCE;
+        UserEntity user = userMapper.toUserEntity(userInput);
         user.setCreatedAt(OffsetDateTime.now());
 
         UserResponse userResponse = new UserResponse();
 
         try {
             UserEntity savedUser = userRepository.save(user);
-            User savedApiUser = mapper.toUser(savedUser);
+            User savedApiUser = userMapper.toUser(savedUser);
             userResponse.setUser(savedApiUser);
             userResponse.setSuccess(true);
             return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
@@ -70,7 +72,7 @@ public class UserService {
         Optional<UserEntity> userEntityOptional = userRepository.findById(userId.longValue());
 
         if (userEntityOptional.isPresent()) {
-            User user = UserMapper.INSTANCE.toUser(userEntityOptional.get());
+            User user = userMapper.toUser(userEntityOptional.get());
             UserResponse userResponse = new UserResponse();
             userResponse.setUser(user);
             return ResponseEntity.ok(userResponse);
@@ -95,18 +97,18 @@ public class UserService {
     }
 
     public ResponseEntity<UserResponse> updateUserById(Integer userId, UserInput userInput) {
-        UserMapper mapper = UserMapper.INSTANCE;
+        //UserMapper mapper = UserMapper.INSTANCE;
         Optional<UserEntity> userEntityOptional = userRepository.findById(userId.longValue());
 
         if (userEntityOptional.isPresent()) {
             UserEntity userEntity = userEntityOptional.get();
-            UserEntity updatedEntity = mapper.toUserEntity(userInput);
+            UserEntity updatedEntity = userMapper.toUserEntity(userInput);
             updatedEntity.setId(userEntity.getId());
             updatedEntity.setCreatedAt(userEntity.getCreatedAt());
 
             try {
                 UserEntity savedUser = userRepository.save(updatedEntity);
-                User savedApiUser = mapper.toUser(savedUser);
+                User savedApiUser = userMapper.toUser(savedUser);
 
                 UserResponse userResponse = new UserResponse();
                 userResponse.setUser(savedApiUser);

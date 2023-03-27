@@ -48,6 +48,6 @@ public class UserEntity extends org.openapitools.model.User {
     private OffsetDateTime createdAt;
 
     @NotNull
-    @Column(name = "user_role")
-    private String user_role;
+    @Column(name = "role")
+    private RoleEnum role;
 }

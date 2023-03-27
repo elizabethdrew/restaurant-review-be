@@ -24,9 +24,11 @@ import java.util.stream.Stream;
 public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
+    private final RestaurantMapper restaurantMapper;
 
-    public RestaurantService(RestaurantRepository restaurantRepository) {
+    public RestaurantService(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper) {
         this.restaurantRepository = restaurantRepository;
+        this.restaurantMapper = restaurantMapper;
     }
 
     /*
@@ -34,15 +36,14 @@ public class RestaurantService {
         Example curl command: curl -X POST http://localhost:8080/restaurants -H "Content-Type: application/json" -d '{"name": "Restaurant Name", "city": "City Name", "rating": 4}'
     */
         public ResponseEntity<RestaurantResponse> addNewRestaurant(RestaurantInput restaurantInput) {
-            RestaurantMapper mapper = RestaurantMapper.INSTANCE;
-            RestaurantEntity restaurant = mapper.toRestaurantEntity(restaurantInput);
+            RestaurantEntity restaurant = restaurantMapper.toRestaurantEntity(restaurantInput);
             restaurant.setCreatedAt(OffsetDateTime.now());
 
             RestaurantResponse restaurantResponse = new RestaurantResponse();
 
             try {
                 RestaurantEntity savedRestaurant = restaurantRepository.save(restaurant);
-                Restaurant savedApiRestaurant = mapper.toRestaurant(savedRestaurant);
+                Restaurant savedApiRestaurant = restaurantMapper.toRestaurant(savedRestaurant);
                 restaurantResponse.setRestaurant(savedApiRestaurant);
                 restaurantResponse.setSuccess(true);
                 return new ResponseEntity<>(restaurantResponse, HttpStatus.CREATED);
@@ -86,7 +87,7 @@ public class RestaurantService {
             }
 
             List<Restaurant> restaurants = filteredEntities
-                    .map(RestaurantMapper.INSTANCE::toRestaurant)
+                    .map(restaurantMapper::toRestaurant)
                     .collect(Collectors.toList());
             return ResponseEntity.ok(restaurants);
         }
@@ -100,7 +101,7 @@ public class RestaurantService {
             Optional<RestaurantEntity> restaurantEntityOptional = restaurantRepository.findById(restaurantId.longValue());
 
             if (restaurantEntityOptional.isPresent()) {
-                Restaurant restaurant = RestaurantMapper.INSTANCE.toRestaurant(restaurantEntityOptional.get());
+                Restaurant restaurant = restaurantMapper.toRestaurant(restaurantEntityOptional.get());
                 return ResponseEntity.ok(restaurant);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -112,18 +113,17 @@ public class RestaurantService {
         Example curl command: curl -X PUT http://localhost:8080/restaurants/{restaurantId} -H "Content-Type: application/json" -d '{"name": "Updated Name", "city": "Updated City", "rating": 5}'
     */
         public ResponseEntity<Restaurant> updateRestaurantById(Integer restaurantId, RestaurantInput restaurantInput) {
-            RestaurantMapper mapper = RestaurantMapper.INSTANCE;
             Optional<RestaurantEntity> restaurantEntityOptional = restaurantRepository.findById(restaurantId.longValue());
 
             if (restaurantEntityOptional.isPresent()) {
                 RestaurantEntity restaurantEntity = restaurantEntityOptional.get();
-                RestaurantEntity updatedEntity = mapper.toRestaurantEntity(restaurantInput);
+                RestaurantEntity updatedEntity = restaurantMapper.toRestaurantEntity(restaurantInput);
                 updatedEntity.setId(restaurantEntity.getId());
                 updatedEntity.setCreatedAt(restaurantEntity.getCreatedAt());
 
                 try {
                     RestaurantEntity savedRestaurant = restaurantRepository.save(updatedEntity);
-                    Restaurant savedApiRestaurant = mapper.toRestaurant(savedRestaurant);
+                    Restaurant savedApiRestaurant = restaurantMapper.toRestaurant(savedRestaurant);
                     return ResponseEntity.ok(savedApiRestaurant);
                 } catch (DataIntegrityViolationException e) {
                     // Handle database constraint violations, such as unique constraints

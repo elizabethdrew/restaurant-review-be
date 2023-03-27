@@ -4,12 +4,14 @@ import dev.drew.restaurantreview.entity.RestaurantEntity;
 import javax.annotation.processing.Generated;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
+import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-03-27T14:02:50+0100",
+    date = "2023-03-27T15:55:17+0100",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.6 (Amazon.com Inc.)"
 )
+@Component
 public class RestaurantMapperImpl implements RestaurantMapper {
 
     @Override

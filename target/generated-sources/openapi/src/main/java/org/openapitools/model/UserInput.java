@@ -19,7 +19,7 @@ import javax.annotation.Generated;
  * UserInput
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-27T14:02:48.130213+01:00[Europe/London]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-27T15:55:15.147116+01:00[Europe/London]")
 public class UserInput {
 
   @JsonProperty("name")
@@ -37,14 +37,14 @@ public class UserInput {
   /**
    * The role of the user (admin or reviewer)
    */
-  public enum UserRoleEnum {
-    ADMIN("admin"),
+  public enum RoleEnum {
+    ADMIN("ADMIN"),
     
-    REVIEWER("reviewer");
+    REVIEWER("REVIEWER");
 
     private String value;
 
-    UserRoleEnum(String value) {
+    RoleEnum(String value) {
       this.value = value;
     }
 
@@ -59,8 +59,8 @@ public class UserInput {
     }
 
     @JsonCreator
-    public static UserRoleEnum fromValue(String value) {
-      for (UserRoleEnum b : UserRoleEnum.values()) {
+    public static RoleEnum fromValue(String value) {
+      for (RoleEnum b : RoleEnum.values()) {
         if (b.value.equals(value)) {
           return b;
         }
@@ -69,8 +69,8 @@ public class UserInput {
     }
   }
 
-  @JsonProperty("user_role")
-  private UserRoleEnum userRole = UserRoleEnum.REVIEWER;
+  @JsonProperty("role")
+  private RoleEnum role = RoleEnum.REVIEWER;
 
   public UserInput name(String name) {
     this.name = name;
@@ -148,23 +148,23 @@ public class UserInput {
     this.password = password;
   }
 
-  public UserInput userRole(UserRoleEnum userRole) {
-    this.userRole = userRole;
+  public UserInput role(RoleEnum role) {
+    this.role = role;
     return this;
   }
 
   /**
    * The role of the user (admin or reviewer)
-   * @return userRole
+   * @return role
   */
   @NotNull 
-  @Schema(name = "user_role", description = "The role of the user (admin or reviewer)", requiredMode = Schema.RequiredMode.REQUIRED)
-  public UserRoleEnum getUserRole() {
-    return userRole;
+  @Schema(name = "role", description = "The role of the user (admin or reviewer)", requiredMode = Schema.RequiredMode.REQUIRED)
+  public RoleEnum getRole() {
+    return role;
   }
 
-  public void setUserRole(UserRoleEnum userRole) {
-    this.userRole = userRole;
+  public void setRole(RoleEnum role) {
+    this.role = role;
   }
 
   @Override
@@ -180,12 +180,12 @@ public class UserInput {
         Objects.equals(this.email, userInput.email) &&
         Objects.equals(this.username, userInput.username) &&
         Objects.equals(this.password, userInput.password) &&
-        Objects.equals(this.userRole, userInput.userRole);
+        Objects.equals(this.role, userInput.role);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, email, username, password, userRole);
+    return Objects.hash(name, email, username, password, role);
   }
 
   @Override
@@ -196,7 +196,7 @@ public class UserInput {
     sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("    username: ").append(toIndentedString(username)).append("\n");
     sb.append("    password: ").append(toIndentedString(password)).append("\n");
-    sb.append("    userRole: ").append(toIndentedString(userRole)).append("\n");
+    sb.append("    role: ").append(toIndentedString(role)).append("\n");
     sb.append("}");
     return sb.toString();
   }

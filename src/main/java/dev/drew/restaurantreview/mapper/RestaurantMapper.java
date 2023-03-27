@@ -7,9 +7,8 @@ import dev.drew.restaurantreview.entity.RestaurantEntity;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface RestaurantMapper {
-    RestaurantMapper INSTANCE = Mappers.getMapper(RestaurantMapper.class);
 
     Restaurant toRestaurant(RestaurantEntity restaurantEntity);
     RestaurantEntity toRestaurantEntity(RestaurantInput restaurantInput);

@@ -6,9 +6,8 @@ import org.mapstruct.factory.Mappers;
 import org.openapitools.model.UserInput;
 import org.openapitools.model.User;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface UserMapper {
-    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     User toUser(UserEntity userEntity);
     UserEntity toUserEntity(UserInput userInput);
