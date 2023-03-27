@@ -20,14 +20,14 @@ import javax.annotation.Generated;
  * UserResponse
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-27T11:00:08.506761+01:00[Europe/London]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-27T12:13:28.916070+01:00[Europe/London]")
 public class UserResponse {
 
   @JsonProperty("success")
   private Boolean success;
 
-  @JsonProperty("restaurant")
-  private User restaurant;
+  @JsonProperty("user")
+  private User user;
 
   @JsonProperty("error")
   private Error error;
@@ -51,23 +51,23 @@ public class UserResponse {
     this.success = success;
   }
 
-  public UserResponse restaurant(User restaurant) {
-    this.restaurant = restaurant;
+  public UserResponse user(User user) {
+    this.user = user;
     return this;
   }
 
   /**
-   * Get restaurant
-   * @return restaurant
+   * Get user
+   * @return user
   */
   @Valid 
-  @Schema(name = "restaurant", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  public User getRestaurant() {
-    return restaurant;
+  @Schema(name = "user", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  public User getUser() {
+    return user;
   }
 
-  public void setRestaurant(User restaurant) {
-    this.restaurant = restaurant;
+  public void setUser(User user) {
+    this.user = user;
   }
 
   public UserResponse error(Error error) {
@@ -99,13 +99,13 @@ public class UserResponse {
     }
     UserResponse userResponse = (UserResponse) o;
     return Objects.equals(this.success, userResponse.success) &&
-        Objects.equals(this.restaurant, userResponse.restaurant) &&
+        Objects.equals(this.user, userResponse.user) &&
         Objects.equals(this.error, userResponse.error);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(success, restaurant, error);
+    return Objects.hash(success, user, error);
   }
 
   @Override
@@ -113,7 +113,7 @@ public class UserResponse {
     StringBuilder sb = new StringBuilder();
     sb.append("class UserResponse {\n");
     sb.append("    success: ").append(toIndentedString(success)).append("\n");
-    sb.append("    restaurant: ").append(toIndentedString(restaurant)).append("\n");
+    sb.append("    user: ").append(toIndentedString(user)).append("\n");
     sb.append("    error: ").append(toIndentedString(error)).append("\n");
     sb.append("}");
     return sb.toString();

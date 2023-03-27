@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -1,6 +1,5 @@
 package dev.drew.restaurantreview.controller;
 
-import dev.drew.restaurantreview.service.RestaurantService;
 import dev.drew.restaurantreview.service.UserService;
 import org.openapitools.api.UserApi;
 import org.openapitools.model.User;
@@ -23,8 +22,8 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public ResponseEntity<User> addUser(UserInput userInput) {
-        return null;
+    public ResponseEntity<UserResponse> addUser(UserInput userInput) {
+        return userService.addNewUser(userInput);
     }
 
     @Override

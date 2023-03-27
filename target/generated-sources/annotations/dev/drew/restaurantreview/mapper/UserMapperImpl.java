@@ -7,7 +7,7 @@ import org.openapitools.model.UserInput;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-03-27T11:00:10+0100",
+    date = "2023-03-27T12:13:31+0100",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.6 (Amazon.com Inc.)"
 )
 public class UserMapperImpl implements UserMapper {

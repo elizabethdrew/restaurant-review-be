@@ -6,7 +6,6 @@
 package org.openapitools.api;
 
 import org.openapitools.model.Error;
-import org.openapitools.model.User;
 import org.openapitools.model.UserInput;
 import org.openapitools.model.UserResponse;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
@@ -35,7 +34,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-27T11:00:08.506761+01:00[Europe/London]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-27T12:13:28.916070+01:00[Europe/London]")
 @Validated
 @Tag(name = "user", description = "the user API")
 public interface UserApi {
@@ -45,7 +44,8 @@ public interface UserApi {
      * Adds a new user to the database.
      *
      * @param userInput The user to add. (required)
-     * @return The newly created user. (status code 201)
+     * @return The new user (status code 201)
+     *         or Invalid input (status code 400)
      *         or Internal server error (status code 500)
      */
     @Operation(
@@ -54,8 +54,11 @@ public interface UserApi {
         description = "Adds a new user to the database.",
         tags = { "User" },
         responses = {
-            @ApiResponse(responseCode = "201", description = "The newly created user.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))
+            @ApiResponse(responseCode = "201", description = "The new user", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Invalid input", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
             }),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
@@ -71,7 +74,7 @@ public interface UserApi {
         produces = { "application/json" },
         consumes = { "application/json" }
     )
-    ResponseEntity<User> addUser(
+    ResponseEntity<UserResponse> addUser(
         @Parameter(name = "UserInput", description = "The user to add.", required = true) @Valid @RequestBody UserInput userInput
     );
 

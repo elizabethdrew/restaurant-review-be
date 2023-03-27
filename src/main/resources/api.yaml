@@ -183,11 +183,17 @@ paths:
               $ref: '#/components/schemas/UserInput'
       responses:
         '201':
-          description: The newly created user.
+          description: The new user
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '500':
           description: Internal server error
           content:
@@ -449,7 +455,7 @@ components:
       properties:
         success:
           type: boolean
-        restaurant:
+        user:
           $ref: '#/components/schemas/User'
         error:
           $ref: '#/components/schemas/Error'
