@@ -18,6 +18,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class RestaurantService {
@@ -67,9 +68,24 @@ public class RestaurantService {
         Get all restaurants from the database
         Example curl command: curl -X GET http://localhost:8080/restaurants
         */
-        public ResponseEntity<List<Restaurant>> getAllRestaurants() {
+        public ResponseEntity<List<Restaurant>> getAllRestaurants(String city, Integer rating, Long userId) {
             List<RestaurantEntity> restaurantEntities = restaurantRepository.findAll();
-            List<Restaurant> restaurants = restaurantEntities.stream()
+
+            Stream<RestaurantEntity> filteredEntities = restaurantEntities.stream();
+
+            if (city != null) {
+                filteredEntities = filteredEntities.filter(r -> r.getCity().equalsIgnoreCase(city));
+            }
+
+            if (rating != null) {
+                filteredEntities = filteredEntities.filter(r -> r.getRating().equals(rating));
+            }
+
+            if (userId != null) {
+                filteredEntities = filteredEntities.filter(r -> r.getUserId().equals(userId));
+            }
+
+            List<Restaurant> restaurants = filteredEntities
                     .map(RestaurantMapper.INSTANCE::toRestaurant)
                     .collect(Collectors.toList());
             return ResponseEntity.ok(restaurants);

@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-24T13:54:03.068402Z[Europe/London]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-27T10:03:46.059374+01:00[Europe/London]")
 @Validated
 @Tag(name = "restaurants", description = "the restaurants API")
 public interface RestaurantsApi {
@@ -121,6 +121,9 @@ public interface RestaurantsApi {
      * GET /restaurants : Get all restaurants
      * Returns a list of all restaurants.
      *
+     * @param city The city to filter restaurants by. (optional)
+     * @param rating The rating value to filter restaurants by. (optional)
+     * @param userId The user ID to filter restaurants by. (optional)
      * @return A list of restaurants. (status code 200)
      *         or Internal server error (status code 500)
      */
@@ -144,7 +147,9 @@ public interface RestaurantsApi {
         produces = { "application/json" }
     )
     ResponseEntity<List<Restaurant>> getAllRestaurants(
-        
+        @Parameter(name = "city", description = "The city to filter restaurants by.", in = ParameterIn.QUERY) @Valid @RequestParam(value = "city", required = false) String city,
+        @Min(1) @Max(5) @Parameter(name = "rating", description = "The rating value to filter restaurants by.", in = ParameterIn.QUERY) @Valid @RequestParam(value = "rating", required = false) Integer rating,
+        @Parameter(name = "user_id", description = "The user ID to filter restaurants by.", in = ParameterIn.QUERY) @Valid @RequestParam(value = "user_id", required = false) Long userId
     );
 
 

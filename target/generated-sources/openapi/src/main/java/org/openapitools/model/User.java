@@ -17,11 +17,11 @@ import java.util.*;
 import javax.annotation.Generated;
 
 /**
- * Restaurant
+ * User
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-27T10:03:46.059374+01:00[Europe/London]")
-public class Restaurant {
+public class User {
 
   @JsonProperty("id")
   private Long id;
@@ -29,27 +29,24 @@ public class Restaurant {
   @JsonProperty("name")
   private String name;
 
-  @JsonProperty("city")
-  private String city;
-
-  @JsonProperty("rating")
-  private Integer rating;
+  @JsonProperty("email")
+  private String email;
 
   @JsonProperty("created_at")
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private OffsetDateTime createdAt;
 
-  public Restaurant id(Long id) {
+  public User id(Long id) {
     this.id = id;
     return this;
   }
 
   /**
-   * The unique identifier of the restaurant.
+   * The unique identifier of the user.
    * @return id
   */
   
-  @Schema(name = "id", description = "The unique identifier of the restaurant.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "id", description = "The unique identifier of the user.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   public Long getId() {
     return id;
   }
@@ -58,17 +55,17 @@ public class Restaurant {
     this.id = id;
   }
 
-  public Restaurant name(String name) {
+  public User name(String name) {
     this.name = name;
     return this;
   }
 
   /**
-   * The name of the restaurant.
+   * The name of the user.
    * @return name
   */
   @NotNull 
-  @Schema(name = "name", description = "The name of the restaurant.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "name", description = "The name of the user.", requiredMode = Schema.RequiredMode.REQUIRED)
   public String getName() {
     return name;
   }
@@ -77,57 +74,36 @@ public class Restaurant {
     this.name = name;
   }
 
-  public Restaurant city(String city) {
-    this.city = city;
+  public User email(String email) {
+    this.email = email;
     return this;
   }
 
   /**
-   * The city where the restaurant is located.
-   * @return city
+   * The email address of the user.
+   * @return email
   */
-  @NotNull 
-  @Schema(name = "city", description = "The city where the restaurant is located.", requiredMode = Schema.RequiredMode.REQUIRED)
-  public String getCity() {
-    return city;
+  @NotNull @Email
+  @Schema(name = "email", description = "The email address of the user.", requiredMode = Schema.RequiredMode.REQUIRED)
+  public String getEmail() {
+    return email;
   }
 
-  public void setCity(String city) {
-    this.city = city;
+  public void setEmail(String email) {
+    this.email = email;
   }
 
-  public Restaurant rating(Integer rating) {
-    this.rating = rating;
-    return this;
-  }
-
-  /**
-   * The rating of the restaurant.
-   * minimum: 1
-   * maximum: 5
-   * @return rating
-  */
-  @NotNull @Min(1) @Max(5) 
-  @Schema(name = "rating", description = "The rating of the restaurant.", requiredMode = Schema.RequiredMode.REQUIRED)
-  public Integer getRating() {
-    return rating;
-  }
-
-  public void setRating(Integer rating) {
-    this.rating = rating;
-  }
-
-  public Restaurant createdAt(OffsetDateTime createdAt) {
+  public User createdAt(OffsetDateTime createdAt) {
     this.createdAt = createdAt;
     return this;
   }
 
   /**
-   * The date and time the restaurant was created.
+   * The date and time the user was created.
    * @return createdAt
   */
   @Valid 
-  @Schema(name = "created_at", description = "The date and time the restaurant was created.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "created_at", description = "The date and time the user was created.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   public OffsetDateTime getCreatedAt() {
     return createdAt;
   }
@@ -144,27 +120,25 @@ public class Restaurant {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Restaurant restaurant = (Restaurant) o;
-    return Objects.equals(this.id, restaurant.id) &&
-        Objects.equals(this.name, restaurant.name) &&
-        Objects.equals(this.city, restaurant.city) &&
-        Objects.equals(this.rating, restaurant.rating) &&
-        Objects.equals(this.createdAt, restaurant.createdAt);
+    User user = (User) o;
+    return Objects.equals(this.id, user.id) &&
+        Objects.equals(this.name, user.name) &&
+        Objects.equals(this.email, user.email) &&
+        Objects.equals(this.createdAt, user.createdAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, city, rating, createdAt);
+    return Objects.hash(id, name, email, createdAt);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Restaurant {\n");
+    sb.append("class User {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    city: ").append(toIndentedString(city)).append("\n");
-    sb.append("    rating: ").append(toIndentedString(rating)).append("\n");
+    sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("}");
     return sb.toString();

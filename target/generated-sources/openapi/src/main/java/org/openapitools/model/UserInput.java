@@ -15,54 +15,54 @@ import java.util.*;
 import javax.annotation.Generated;
 
 /**
- * Error
+ * UserInput
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-27T10:03:46.059374+01:00[Europe/London]")
-public class Error {
+public class UserInput {
 
-  @JsonProperty("code")
-  private Integer code;
+  @JsonProperty("name")
+  private String name;
 
-  @JsonProperty("message")
-  private String message;
+  @JsonProperty("email")
+  private String email;
 
-  public Error code(Integer code) {
-    this.code = code;
+  public UserInput name(String name) {
+    this.name = name;
     return this;
   }
 
   /**
-   * Get code
-   * @return code
+   * The name of the user.
+   * @return name
   */
-  
-  @Schema(name = "code", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  public Integer getCode() {
-    return code;
+  @NotNull 
+  @Schema(name = "name", description = "The name of the user.", requiredMode = Schema.RequiredMode.REQUIRED)
+  public String getName() {
+    return name;
   }
 
-  public void setCode(Integer code) {
-    this.code = code;
+  public void setName(String name) {
+    this.name = name;
   }
 
-  public Error message(String message) {
-    this.message = message;
+  public UserInput email(String email) {
+    this.email = email;
     return this;
   }
 
   /**
-   * Get message
-   * @return message
+   * The email address of the user.
+   * @return email
   */
-  
-  @Schema(name = "message", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  public String getMessage() {
-    return message;
+  @NotNull @Email
+  @Schema(name = "email", description = "The email address of the user.", requiredMode = Schema.RequiredMode.REQUIRED)
+  public String getEmail() {
+    return email;
   }
 
-  public void setMessage(String message) {
-    this.message = message;
+  public void setEmail(String email) {
+    this.email = email;
   }
 
   @Override
@@ -73,22 +73,22 @@ public class Error {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Error error = (Error) o;
-    return Objects.equals(this.code, error.code) &&
-        Objects.equals(this.message, error.message);
+    UserInput userInput = (UserInput) o;
+    return Objects.equals(this.name, userInput.name) &&
+        Objects.equals(this.email, userInput.email);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(code, message);
+    return Objects.hash(name, email);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Error {\n");
-    sb.append("    code: ").append(toIndentedString(code)).append("\n");
-    sb.append("    message: ").append(toIndentedString(message)).append("\n");
+    sb.append("class UserInput {\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("}");
     return sb.toString();
   }

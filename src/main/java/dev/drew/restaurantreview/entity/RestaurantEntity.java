@@ -27,18 +27,17 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
     @Column(name = "city")
     private String city;
 
-    @NotNull
-    @Min(1)
-    @Max(5)
-    @Column(name = "rating")
-    private Integer rating;
+    @Column(name = "user_id")
+    private Long userId;
+
+     @NotNull
+     @Min(1)
+     @Max(5)
+     @Column(name = "rating")
+     private Integer rating;
 
     @Column(name = "created_at")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime createdAt;
 
-    // Getters and setters
-
-
-    // equals, hashCode, toString methods
 }

@@ -5,7 +5,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import org.openapitools.model.Error;
-import org.openapitools.model.Restaurant;
+import org.openapitools.model.User;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import javax.validation.Valid;
@@ -17,22 +17,22 @@ import java.util.*;
 import javax.annotation.Generated;
 
 /**
- * RestaurantResponse
+ * UserResponse
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-27T10:03:46.059374+01:00[Europe/London]")
-public class RestaurantResponse {
+public class UserResponse {
 
   @JsonProperty("success")
   private Boolean success;
 
   @JsonProperty("restaurant")
-  private Restaurant restaurant;
+  private User restaurant;
 
   @JsonProperty("error")
   private Error error;
 
-  public RestaurantResponse success(Boolean success) {
+  public UserResponse success(Boolean success) {
     this.success = success;
     return this;
   }
@@ -51,7 +51,7 @@ public class RestaurantResponse {
     this.success = success;
   }
 
-  public RestaurantResponse restaurant(Restaurant restaurant) {
+  public UserResponse restaurant(User restaurant) {
     this.restaurant = restaurant;
     return this;
   }
@@ -62,15 +62,15 @@ public class RestaurantResponse {
   */
   @Valid 
   @Schema(name = "restaurant", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  public Restaurant getRestaurant() {
+  public User getRestaurant() {
     return restaurant;
   }
 
-  public void setRestaurant(Restaurant restaurant) {
+  public void setRestaurant(User restaurant) {
     this.restaurant = restaurant;
   }
 
-  public RestaurantResponse error(Error error) {
+  public UserResponse error(Error error) {
     this.error = error;
     return this;
   }
@@ -97,10 +97,10 @@ public class RestaurantResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    RestaurantResponse restaurantResponse = (RestaurantResponse) o;
-    return Objects.equals(this.success, restaurantResponse.success) &&
-        Objects.equals(this.restaurant, restaurantResponse.restaurant) &&
-        Objects.equals(this.error, restaurantResponse.error);
+    UserResponse userResponse = (UserResponse) o;
+    return Objects.equals(this.success, userResponse.success) &&
+        Objects.equals(this.restaurant, userResponse.restaurant) &&
+        Objects.equals(this.error, userResponse.error);
   }
 
   @Override
@@ -111,7 +111,7 @@ public class RestaurantResponse {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class RestaurantResponse {\n");
+    sb.append("class UserResponse {\n");
     sb.append("    success: ").append(toIndentedString(success)).append("\n");
     sb.append("    restaurant: ").append(toIndentedString(restaurant)).append("\n");
     sb.append("    error: ").append(toIndentedString(error)).append("\n");
