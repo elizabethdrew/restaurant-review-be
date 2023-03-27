@@ -1,19 +1,20 @@
 package dev.drew.restaurantreview.service;
 
+import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.entity.UserEntity;
+import dev.drew.restaurantreview.mapper.RestaurantMapper;
 import dev.drew.restaurantreview.mapper.UserMapper;
 import dev.drew.restaurantreview.repository.UserRepository;
+import org.openapitools.model.*;
+import org.openapitools.model.Error;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.openapitools.model.UserResponse;
-import org.openapitools.model.User;
-import org.openapitools.model.UserInput;
-import org.openapitools.model.Error;
 
 import java.time.OffsetDateTime;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -58,4 +59,24 @@ public class UserService {
             return new ResponseEntity<>(userResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+    /*
+        Get a user by ID
+        Example curl command: curl -X GET http://localhost:8080/user/{userId}
+    */
+
+    public ResponseEntity<UserResponse> getUserById(Integer userId) {
+        Optional<UserEntity> userEntityOptional = userRepository.findById(userId.longValue());
+
+        if (userEntityOptional.isPresent()) {
+            User user = UserMapper.INSTANCE.toUser(userEntityOptional.get());
+            UserResponse userResponse = new UserResponse();
+            userResponse.setUser(user);
+            return ResponseEntity.ok(userResponse);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
 }

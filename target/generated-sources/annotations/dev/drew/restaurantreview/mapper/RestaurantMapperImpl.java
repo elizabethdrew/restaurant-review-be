@@ -7,7 +7,7 @@ import org.openapitools.model.RestaurantInput;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-03-27T12:13:31+0100",
+    date = "2023-03-27T12:40:35+0100",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.6 (Amazon.com Inc.)"
 )
 public class RestaurantMapperImpl implements RestaurantMapper {

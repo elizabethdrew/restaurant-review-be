@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-27T12:13:28.916070+01:00[Europe/London]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-27T12:40:33.691456+01:00[Europe/London]")
 @Validated
 @Tag(name = "user", description = "the user API")
 public interface UserApi {
@@ -110,13 +110,13 @@ public interface UserApi {
         produces = { "application/json" }
     )
     ResponseEntity<Void> deleteUserById(
-        @Parameter(name = "userId", description = "The ID or name of the user to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("userId") String userId
+        @Min(1) @Parameter(name = "userId", description = "The ID or name of the user to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("userId") Integer userId
     );
 
 
     /**
-     * GET /user/{userId} : Get a user by ID or name
-     * Returns a single user by ID or name.
+     * GET /user/{userId} : Get a user by ID
+     * Returns a single user by ID
      *
      * @param userId The ID or name of the user to retrieve. (required)
      * @return The user (status code 200)
@@ -125,8 +125,8 @@ public interface UserApi {
      */
     @Operation(
         operationId = "getUserById",
-        summary = "Get a user by ID or name",
-        description = "Returns a single user by ID or name.",
+        summary = "Get a user by ID",
+        description = "Returns a single user by ID",
         tags = { "User" },
         responses = {
             @ApiResponse(responseCode = "200", description = "The user", content = {
@@ -149,7 +149,7 @@ public interface UserApi {
         produces = { "application/json" }
     )
     ResponseEntity<UserResponse> getUserById(
-        @Parameter(name = "userId", description = "The ID or name of the user to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("userId") String userId
+        @Min(1) @Parameter(name = "userId", description = "The ID or name of the user to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("userId") Integer userId
     );
 
 
@@ -194,7 +194,7 @@ public interface UserApi {
         consumes = { "application/json" }
     )
     ResponseEntity<UserResponse> updateUserById(
-        @Parameter(name = "userId", description = "The ID or name of the user to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("userId") String userId,
+        @Min(1) @Parameter(name = "userId", description = "The ID or name of the user to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("userId") Integer userId,
         @Parameter(name = "UserInput", description = "The updated user.", required = true) @Valid @RequestBody UserInput userInput
     );
 

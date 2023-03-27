@@ -202,21 +202,23 @@ paths:
                 $ref: '#/components/schemas/Error'
 
   /user/{userId}:
-    parameters:
-      - name: userId
-        in: path
-        description: The ID or name of the user to retrieve.
-        required: true
-        schema:
-          type: string
+
     get:
-      summary: Get a user by ID or name
+      summary: Get a user by ID
       tags:
         - User
-      description: Returns a single user by ID or name.
+      description: Returns a single user by ID
       operationId: getUserById
       security:
         - basicAuth: []
+      parameters:
+        - name: userId
+          in: path
+          description: The ID or name of the user to retrieve.
+          required: true
+          schema:
+            type: integer
+            minimum: 1
       responses:
         '200':
           description: The user
@@ -244,6 +246,14 @@ paths:
       operationId: updateUserById
       security:
         - basicAuth: []
+      parameters:
+        - name: userId
+          in: path
+          description: The ID or name of the user to retrieve.
+          required: true
+          schema:
+            type: integer
+            minimum: 1
       requestBody:
         description: The updated user.
         required: true
@@ -283,6 +293,14 @@ paths:
       operationId: deleteUserById
       security:
         - basicAuth: []
+      parameters:
+        - name: userId
+          in: path
+          description: The ID or name of the user to retrieve.
+          required: true
+          schema:
+            type: integer
+            minimum: 1
       responses:
         '204':
           description: User deleted

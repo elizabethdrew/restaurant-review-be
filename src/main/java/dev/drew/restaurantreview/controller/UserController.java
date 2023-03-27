@@ -27,17 +27,17 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public ResponseEntity<Void> deleteUserById(String userId) {
+    public ResponseEntity<Void> deleteUserById(Integer userId) {
         return null;
     }
 
     @Override
-    public ResponseEntity<UserResponse> getUserById(String userId) {
-        return null;
+    public ResponseEntity<UserResponse> getUserById(Integer userId) {
+        return userService.getUserById(userId);
     }
 
     @Override
-    public ResponseEntity<UserResponse> updateUserById(String userId, UserInput userInput) {
+    public ResponseEntity<UserResponse> updateUserById(Integer userId, UserInput userInput) {
         return null;
     }
 }
