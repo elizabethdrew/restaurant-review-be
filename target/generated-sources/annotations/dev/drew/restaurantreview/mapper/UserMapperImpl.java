@@ -8,7 +8,7 @@ import org.openapitools.model.UserInput.UserRoleEnum;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-03-27T13:18:13+0100",
+    date = "2023-03-27T14:02:50+0100",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.6 (Amazon.com Inc.)"
 )
 public class UserMapperImpl implements UserMapper {
@@ -24,6 +24,7 @@ public class UserMapperImpl implements UserMapper {
         user.setId( userEntity.getId() );
         user.setName( userEntity.getName() );
         user.setEmail( userEntity.getEmail() );
+        user.setUsername( userEntity.getUsername() );
         user.setPassword( userEntity.getPassword() );
         user.setUserRole( userEntity.getUserRole() );
         user.setCreatedAt( userEntity.getCreatedAt() );
@@ -41,6 +42,7 @@ public class UserMapperImpl implements UserMapper {
 
         userEntity.setName( userInput.getName() );
         userEntity.setEmail( userInput.getEmail() );
+        userEntity.setUsername( userInput.getUsername() );
         userEntity.setPassword( userInput.getPassword() );
         userEntity.setUserRole( userRoleEnumToUserRoleEnum( userInput.getUserRole() ) );
 
@@ -57,6 +59,7 @@ public class UserMapperImpl implements UserMapper {
 
         userInput.setName( userEntity.getName() );
         userInput.setEmail( userEntity.getEmail() );
+        userInput.setUsername( userEntity.getUsername() );
         userInput.setPassword( userEntity.getPassword() );
         userInput.setUserRole( userRoleEnumToUserRoleEnum1( userEntity.getUserRole() ) );
 

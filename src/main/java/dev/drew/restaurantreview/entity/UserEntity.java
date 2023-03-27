@@ -12,7 +12,10 @@ import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "username"),
+        @UniqueConstraint(columnNames = "email")
+})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,6 +34,10 @@ public class UserEntity extends org.openapitools.model.User {
     @NotNull @Email
     @Column(name = "email")
     private String email;
+
+    @NotNull
+    @Column(name = "username")
+    private String username;
 
     @NotNull
     @Column(name="password")
