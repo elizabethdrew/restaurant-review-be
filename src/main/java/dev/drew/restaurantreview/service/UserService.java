@@ -79,4 +79,19 @@ public class UserService {
         }
     }
 
+
+    /*
+        Delete a user by ID
+        Example curl command: curl -X DELETE http://localhost:8080/user/{userId}
+        */
+    public ResponseEntity<Void> deleteUserById(Integer userId) {
+        Optional<UserEntity> userEntityOptional = userRepository.findById(userId.longValue());
+        if (userEntityOptional.isPresent()) {
+            userRepository.deleteById(userId.longValue());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
 }

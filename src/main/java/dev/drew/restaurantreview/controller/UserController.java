@@ -28,7 +28,7 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<Void> deleteUserById(Integer userId) {
-        return null;
+        return userService.deleteUserById(userId);
     }
 
     @Override
