@@ -3,16 +3,13 @@ package dev.drew.restaurantreview.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.drew.restaurantreview.config.SecurityConfig;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -186,6 +183,27 @@ public class RestaurantControllerIntegrationTest {
         Assertions.assertEquals(updatedRestaurantInput.getName(), updatedRestaurant.getName());
         Assertions.assertEquals(updatedRestaurantInput.getCity(), updatedRestaurant.getCity());
         Assertions.assertEquals(updatedRestaurantInput.getRating(), updatedRestaurant.getRating());
+    }
+
+    @Test
+    @WithAnonymousUser
+    public void testUpdateRestaurantById_unauthorized() throws Exception {
+        Integer restaurantId = createdRestaurantId.intValue();
+
+        // Create a new RestaurantInput object with the updated information
+        RestaurantInput updatedRestaurantInput = new RestaurantInput()
+                .name("Updated Restaurant")
+                .city("Updated City")
+                .rating(5);
+
+        // Convert the updated RestaurantInput object to a JSON string
+        String updatedRestaurantJson = objectMapper.writeValueAsString(updatedRestaurantInput);
+
+        // Attempt to update the restaurant using a PUT request and MockMvc as an anonymous user
+        mockMvc.perform(MockMvcRequestBuilders.put("/restaurants/{restaurantId}", restaurantId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updatedRestaurantJson))
+                        .andExpect(status().isUnauthorized()); // Expect an HTTP 401 Unauthorized status
     }
 
 }
