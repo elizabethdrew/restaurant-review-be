@@ -185,6 +185,8 @@ public class RestaurantControllerIntegrationTest {
         Assertions.assertEquals(updatedRestaurantInput.getRating(), updatedRestaurant.getRating());
     }
 
+
+    // This test should be expecting a 401 - not sure why it thinks I want a 201?
     @Test
     @WithAnonymousUser
     public void testUpdateRestaurantById_unauthorized() throws Exception {

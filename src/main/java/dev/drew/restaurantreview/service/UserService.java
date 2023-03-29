@@ -32,7 +32,6 @@ public class UserService {
         Example curl command: curl -X POST http://localhost:8080/user -H "Content-Type: application/json" -d '{"name": "User Name", "city": "City Name", "rating": 4}'
     */
     public ResponseEntity<UserResponse> addNewUser(UserInput userInput) {
-        //UserMapper mapper = UserMapper.INSTANCE;
         UserEntity user = userMapper.toUserEntity(userInput);
         user.setCreatedAt(OffsetDateTime.now());
 
@@ -68,14 +67,12 @@ public class UserService {
         Example curl command: curl -X GET http://localhost:8080/user/{userId}
     */
 
-    public ResponseEntity<UserResponse> getUserById(Integer userId) {
+    public ResponseEntity<User> getUserById(Integer userId) {
         Optional<UserEntity> userEntityOptional = userRepository.findById(userId.longValue());
 
         if (userEntityOptional.isPresent()) {
             User user = userMapper.toUser(userEntityOptional.get());
-            UserResponse userResponse = new UserResponse();
-            userResponse.setUser(user);
-            return ResponseEntity.ok(userResponse);
+            return ResponseEntity.ok(user);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

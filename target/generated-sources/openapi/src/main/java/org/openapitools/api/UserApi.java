@@ -6,6 +6,7 @@
 package org.openapitools.api;
 
 import org.openapitools.model.Error;
+import org.openapitools.model.User;
 import org.openapitools.model.UserInput;
 import org.openapitools.model.UserResponse;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
@@ -34,7 +35,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-27T15:55:15.147116+01:00[Europe/London]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-29T16:25:01.973910+01:00[Europe/London]")
 @Validated
 @Tag(name = "user", description = "the user API")
 public interface UserApi {
@@ -130,7 +131,7 @@ public interface UserApi {
         tags = { "User" },
         responses = {
             @ApiResponse(responseCode = "200", description = "The user", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))
             }),
             @ApiResponse(responseCode = "404", description = "User not found", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
@@ -148,7 +149,7 @@ public interface UserApi {
         value = "/user/{userId}",
         produces = { "application/json" }
     )
-    ResponseEntity<UserResponse> getUserById(
+    ResponseEntity<User> getUserById(
         @Min(1) @Parameter(name = "userId", description = "The ID or name of the user to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("userId") Integer userId
     );
 

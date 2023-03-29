@@ -32,7 +32,7 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public ResponseEntity<UserResponse> getUserById(Integer userId) {
+    public ResponseEntity<User> getUserById(Integer userId) {
         return userService.getUserById(userId);
     }
 
