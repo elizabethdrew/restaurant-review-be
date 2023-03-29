@@ -3,9 +3,7 @@ package dev.drew.restaurantreview.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
 
 import static junit.framework.Assert.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -155,4 +152,36 @@ public class RestaurantControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/restaurants/{restaurantId}", restaurantId))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    public void testUpdateRestaurantById() throws Exception {
+        Integer restaurantId = Integer.valueOf(createdRestaurantId.intValue());
+
+        // Create a new RestaurantInput object with the updated information
+        RestaurantInput updatedRestaurantInput = new RestaurantInput()
+                .name("Updated Restaurant")
+                .city("Updated City")
+                .rating(5);
+
+        // Convert the updated RestaurantInput object to a JSON string
+        String updatedRestaurantJson = objectMapper.writeValueAsString(updatedRestaurantInput);
+
+        // Update the restaurant using a PUT request and MockMvc
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/restaurants/{restaurantId}", restaurantId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updatedRestaurantJson))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        // Parse the JSON response
+        String jsonResponse = result.getResponse().getContentAsString();
+        Restaurant updatedRestaurant = objectMapper.readValue(jsonResponse, Restaurant.class);
+
+        // Check if the restaurant was updated successfully
+        Assertions.assertEquals(restaurantId.intValue(), updatedRestaurant.getId().intValue());
+        Assertions.assertEquals(updatedRestaurantInput.getName(), updatedRestaurant.getName());
+        Assertions.assertEquals(updatedRestaurantInput.getCity(), updatedRestaurant.getCity());
+        Assertions.assertEquals(updatedRestaurantInput.getRating(), updatedRestaurant.getRating());
+    }
+
 }

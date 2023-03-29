@@ -50,6 +50,7 @@ public class RestaurantController implements RestaurantsApi {
     }
 
     @Override
+    @PreAuthorize("permitAll()")
     public ResponseEntity<Restaurant> updateRestaurantById(Integer restaurantId, RestaurantInput restaurantInput) {
         return restaurantService.updateRestaurantById(restaurantId, restaurantInput);
     }
