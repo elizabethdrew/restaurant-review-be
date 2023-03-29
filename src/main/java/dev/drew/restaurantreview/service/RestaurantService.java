@@ -70,9 +70,8 @@ public class RestaurantService {
         Example curl command: curl -X GET http://localhost:8080/restaurants
         */
         public ResponseEntity<List<Restaurant>> getAllRestaurants(String city, Integer rating, Long userId) {
-            List<RestaurantEntity> restaurantEntities = restaurantRepository.findAll();
 
-            Stream<RestaurantEntity> filteredEntities = restaurantEntities.stream();
+            Stream<RestaurantEntity> filteredEntities = restaurantRepository.findAll().stream();
 
             if (city != null) {
                 filteredEntities = filteredEntities.filter(r -> r.getCity().equalsIgnoreCase(city));
