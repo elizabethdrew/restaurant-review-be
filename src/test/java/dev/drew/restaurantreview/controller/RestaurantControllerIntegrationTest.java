@@ -1,7 +1,10 @@
 package dev.drew.restaurantreview.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.drew.restaurantreview.entity.RestaurantEntity;
+import io.swagger.models.auth.In;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openapitools.model.Restaurant;
@@ -31,14 +34,17 @@ public class RestaurantControllerIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    String cityName = "Test City";
-    Integer ratingNumber = 4;
+    private String restaurantName = "Test Restaurant";
+    private String cityName = "Test City";
+    private Integer ratingNumber = 4;
+
+    private Long createdRestaurantId;
 
     @BeforeEach
     public void setup() throws Exception {
         // Create a new RestaurantInput object with the given information
         RestaurantInput restaurantInput = new RestaurantInput()
-                .name("Test Restaurant")
+                .name(restaurantName)
                 .city(cityName)
                 .rating(ratingNumber);
 
@@ -56,6 +62,18 @@ public class RestaurantControllerIntegrationTest {
         if (result.getResponse().getStatus() != HttpStatus.CREATED.value()) {
             throw new RuntimeException("Failed to add test restaurant.");
         }
+
+        // Parse the JSON response
+        String jsonResponse = result.getResponse().getContentAsString();
+        JsonNode jsonNode = objectMapper.readTree(jsonResponse);
+
+        // Extract the "restaurant" section
+        JsonNode restaurantNode = jsonNode.get("restaurant");
+
+        // Convert the "restaurant" JSON section to a Restaurant object
+        Restaurant restaurant = objectMapper.treeToValue(restaurantNode, Restaurant.class);
+
+        createdRestaurantId = restaurant.getId();
     }
 
     @Test
@@ -112,7 +130,7 @@ public class RestaurantControllerIntegrationTest {
 
     @Test
     public void testGetRestaurantById_exists() throws Exception {
-        Integer restaurantId = 17;
+        Integer restaurantId = Integer.valueOf(createdRestaurantId.intValue());
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/restaurants/{restaurantId}", restaurantId))
                 .andExpect(status().isOk())
