@@ -16,10 +16,9 @@ Project Objectives:
 - Leverage the convenience of Lombok
 - Use cURL to test your API scenarios
 
-Addional Challenge(set personally)
+Additional Challenge(set personally)
 - Use Contract First approach
 - Design yaml using Swagger Editor
-- Create a Maven multi module project
 
 Diary:
 - Tue 14th March: Restarted the project so I could take a contract first approach (different to the Codecademy project). Created the yaml file for the intended api, but am starting by implementing a small section of it at a time so I can understand how each part works without becoming confused. Used the OpenApi plugin to create the interfaces within the maven project - this took a while to get working as there were some dependancy issues. To implement this I have used a multi module setup (again, new to me today). I'm now at the stage where I can start building out some of the Api endpoints and will learn how to test with Postman as I go - that's the plan anyway!
