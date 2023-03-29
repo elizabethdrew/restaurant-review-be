@@ -29,7 +29,6 @@ public class RestaurantController implements RestaurantsApi {
     }
 
     @Override
-    //@PreAuthorize("permitAll()")
     public ResponseEntity<RestaurantResponse> addNewRestaurant(RestaurantInput restaurantInput) {
         return restaurantService.addNewRestaurant(restaurantInput);
     }
@@ -50,13 +49,11 @@ public class RestaurantController implements RestaurantsApi {
     }
 
     @Override
-    @PreAuthorize("permitAll()")
     public ResponseEntity<Restaurant> updateRestaurantById(Integer restaurantId, RestaurantInput restaurantInput) {
         return restaurantService.updateRestaurantById(restaurantId, restaurantInput);
     }
 
     @Override
-    @PreAuthorize("permitAll()")
     public ResponseEntity<Void> deleteRestaurantById(Integer restaurantId) {
         return restaurantService.deleteRestaurantById(restaurantId);
     }
