@@ -33,7 +33,6 @@ public class RestaurantControllerIntegrationTest {
     private String restaurantName = "Test Restaurant";
     private String cityName = "Test City";
     private Integer ratingNumber = 4;
-
     private Long createdRestaurantId;
 
     @BeforeEach
@@ -94,8 +93,7 @@ public class RestaurantControllerIntegrationTest {
                         .andReturn();
 
         String jsonResponse = result.getResponse().getContentAsString();
-        List<Restaurant> restaurants = objectMapper.readValue(jsonResponse, new TypeReference<List<Restaurant>>() {});
-
+        List<Restaurant> restaurants = objectMapper.readValue(jsonResponse, new TypeReference<>() {});
         for (Restaurant restaurant : restaurants) {
             Assertions.assertEquals(cityName, restaurant.getCity());
         }
@@ -109,7 +107,7 @@ public class RestaurantControllerIntegrationTest {
                 .andReturn();
 
         String jsonResponse = result.getResponse().getContentAsString();
-        List<Restaurant> restaurants = objectMapper.readValue(jsonResponse, new TypeReference<List<Restaurant>>() {});
+        List<Restaurant> restaurants = objectMapper.readValue(jsonResponse, new TypeReference<>() {});
 
         for (Restaurant restaurant : restaurants) {
             Assertions.assertEquals(ratingNumber, restaurant.getRating());
@@ -134,7 +132,7 @@ public class RestaurantControllerIntegrationTest {
 
     @Test
     public void testGetRestaurantById_exists() throws Exception {
-        Integer restaurantId = Integer.valueOf(createdRestaurantId.intValue());
+        Integer restaurantId = createdRestaurantId.intValue();
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/restaurants/{restaurantId}", restaurantId))
                 .andExpect(status().isOk())
@@ -155,7 +153,7 @@ public class RestaurantControllerIntegrationTest {
 
     @Test
     public void testUpdateRestaurantById() throws Exception {
-        Integer restaurantId = Integer.valueOf(createdRestaurantId.intValue());
+        Integer restaurantId = createdRestaurantId.intValue();
 
         // Create a new RestaurantInput object with the updated information
         RestaurantInput updatedRestaurantInput = new RestaurantInput()
