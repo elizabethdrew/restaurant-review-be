@@ -3,9 +3,8 @@ package dev.drew.restaurantreview.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.drew.restaurantreview.entity.RestaurantEntity;
-import io.swagger.models.auth.In;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
@@ -74,6 +73,14 @@ public class RestaurantControllerIntegrationTest {
         Restaurant restaurant = objectMapper.treeToValue(restaurantNode, Restaurant.class);
 
         createdRestaurantId = restaurant.getId();
+    }
+
+    @AfterEach
+    public void tearDown() throws Exception {
+        if (createdRestaurantId != null) {
+            mockMvc.perform(MockMvcRequestBuilders.delete("/restaurants/{restaurantId}", createdRestaurantId))
+                    .andExpect(status().isNoContent());
+        }
     }
 
     @Test

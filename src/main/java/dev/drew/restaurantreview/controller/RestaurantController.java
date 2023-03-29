@@ -55,6 +55,7 @@ public class RestaurantController implements RestaurantsApi {
     }
 
     @Override
+    @PreAuthorize("permitAll()")
     public ResponseEntity<Void> deleteRestaurantById(Integer restaurantId) {
         return restaurantService.deleteRestaurantById(restaurantId);
     }
