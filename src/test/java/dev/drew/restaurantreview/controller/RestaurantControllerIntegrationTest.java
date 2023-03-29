@@ -27,7 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ExtendWith(SpringExtension.class)
 @WithMockUser(username="admin",password="password",roles={"ADMIN"})
 public class RestaurantControllerIntegrationTest {
 
