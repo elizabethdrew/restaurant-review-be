@@ -56,4 +56,9 @@ public class SecurityUser  implements UserDetails {
     public UserEntity getUserEntity() {
         return userEntity;
     }
+
+    public boolean hasRole(String role) {
+        return getAuthorities().stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(role));
+    }
 }
