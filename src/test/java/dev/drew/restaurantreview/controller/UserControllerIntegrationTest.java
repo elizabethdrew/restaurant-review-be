@@ -3,9 +3,9 @@ package dev.drew.restaurantreview.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openapitools.model.Restaurant;
 import org.openapitools.model.User;
 import org.openapitools.model.UserInput;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static junit.framework.Assert.assertEquals;
 import static org.openapitools.model.UserInput.RoleEnum.ADMIN;
+import static org.openapitools.model.UserInput.RoleEnum.REVIEWER;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -92,6 +93,43 @@ class UserControllerIntegrationTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/user/{userId}", userId))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testUpdateUserById() throws Exception {
+        Integer userId = createdUserId.intValue();
+
+        // Create a new UserInput object with the updated information
+        UserInput updatedUserInput = new UserInput()
+                .name("Updated User")
+                .email("updated@test.com")
+                .password("newpassword")
+                .username("updateduser")
+                .role(REVIEWER);
+
+        // Convert the updated UserInput object to a JSON string
+        String updatedUserJson = objectMapper.writeValueAsString(updatedUserInput);
+
+        // Update the user using a PUT request and MockMvc
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/user/{userId}", userId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updatedUserJson))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        // Parse the JSON response
+        String jsonResponse = result.getResponse().getContentAsString();
+        JsonNode jsonNode = objectMapper.readTree(jsonResponse);
+        JsonNode userNode = jsonNode.get("user");
+        User updatedUser = objectMapper.treeToValue(userNode, User.class);
+
+        // Check if the user was updated successfully
+        Assertions.assertEquals(userId.intValue(), updatedUser.getId().intValue());
+        Assertions.assertEquals(updatedUserInput.getName(), updatedUser.getName());
+        Assertions.assertEquals(updatedUserInput.getEmail(), updatedUser.getEmail());
+        Assertions.assertEquals(updatedUserInput.getPassword(), updatedUser.getPassword());
+        Assertions.assertEquals(updatedUserInput.getUsername(), updatedUser.getUsername());
+        Assertions.assertEquals(updatedUserInput.getRole(), UserInput.RoleEnum.valueOf(updatedUser.getRole().toString()));
     }
 
 }
