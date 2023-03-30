@@ -41,9 +41,9 @@ class UserControllerIntegrationTest {
     public void setup() throws Exception {
         UserInput userInput = new UserInput()
                 .name("Test User")
-                .email("test2@test.com")
+                .email("test3@test.com")
                 .password("password")
-                .username("testuser2")
+                .username("testuser3")
                 .role(ADMIN);
 
         String userInputJson = objectMapper.writeValueAsString(userInput);
@@ -64,13 +64,28 @@ class UserControllerIntegrationTest {
         User user = objectMapper.treeToValue(userNode, User.class);
 
         createdUserId = user.getId();
+
+        // Assertions to check if the user was created successfully
+        Assertions.assertNotNull(createdUserId, "The created user ID should not be null");
+        Assertions.assertTrue(createdUserId > 0, "The created user ID should be greater than 0");
     }
 
     @AfterEach
     public void tearDown() throws Exception {
         if (createdUserId != null) {
+            // Fetch the user before deleting it
+            MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/user/{userId}", createdUserId))
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            // Delete the user
             mockMvc.perform(MockMvcRequestBuilders.delete("/user/{userId}", createdUserId))
                     .andExpect(status().isNoContent());
+
+            // Assertions to check if the user was deleted successfully
+            result = mockMvc.perform(MockMvcRequestBuilders.get("/user/{userId}", createdUserId))
+                    .andExpect(status().isNotFound())
+                    .andReturn();
         }
     }
 
