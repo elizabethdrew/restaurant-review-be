@@ -5,6 +5,7 @@ import dev.drew.restaurantreview.entity.SecurityUser;
 import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.mapper.RestaurantMapper;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
+import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import org.openapitools.model.Error;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import dev.drew.restaurantreview.util.SecurityUtils;
 
 
 
@@ -25,25 +27,21 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static dev.drew.restaurantreview.util.SecurityUtils.*;
+
 @Service
 public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
     private final RestaurantMapper restaurantMapper;
 
+    // Implement EntityUserIdProvider for RestaurantEntity
+    private final EntityUserIdProvider<RestaurantEntity> restaurantUserIdProvider = RestaurantEntity::getUserId;
+
     public RestaurantService(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper) {
         this.restaurantRepository = restaurantRepository;
         this.restaurantMapper = restaurantMapper;
     }
-
-    //Get current user details
-    private Long getCurrentUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
-        UserEntity userEntity = securityUser.getUserEntity();
-        return userEntity.getId();
-    }
-
 
     // Add a new restaurant to the database
     public ResponseEntity<RestaurantResponse> addNewRestaurant(RestaurantInput restaurantInput) {
@@ -119,19 +117,13 @@ public class RestaurantService {
 
     // Update a restaurant by ID
     public ResponseEntity<Restaurant> updateRestaurantById(Integer restaurantId, RestaurantInput restaurantInput) {
-
-        // Get current user id
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
-        UserEntity currentUserEntity = securityUser.getUserEntity();
-
         Optional<RestaurantEntity> restaurantEntityOptional = restaurantRepository.findById(restaurantId.longValue());
 
         if (restaurantEntityOptional.isPresent()) {
             RestaurantEntity restaurantEntity = restaurantEntityOptional.get();
 
             // Check if the current user is an admin or the owner of the restaurant
-            if (!securityUser.hasRole("ROLE_ADMIN") && !currentUserEntity.getId().equals(restaurantEntity.getUserId())) {
+            if (!isAdminOrOwner(restaurantEntity, restaurantUserIdProvider)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
 
@@ -162,19 +154,13 @@ public class RestaurantService {
 
     // Delete a restaurant by ID
     public ResponseEntity<Void> deleteRestaurantById(Integer restaurantId) {
-
-        // Get current user id
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
-        UserEntity currentUserEntity = securityUser.getUserEntity();
-
         Optional<RestaurantEntity> restaurantEntityOptional = restaurantRepository.findById(restaurantId.longValue());
 
         if (restaurantEntityOptional.isPresent()) {
             RestaurantEntity restaurantEntity = restaurantEntityOptional.get();
 
             // Check if the current user is an admin or the owner of the restaurant
-            if (!securityUser.hasRole("ROLE_ADMIN") && !currentUserEntity.getId().equals(restaurantEntity.getUserId())) {
+            if (!isAdminOrOwner(restaurantEntity, restaurantUserIdProvider)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
 
