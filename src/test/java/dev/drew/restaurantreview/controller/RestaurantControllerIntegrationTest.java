@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-@WithMockUser(username="admin",password="password",roles={"ADMIN"})
+@WithMockUser(username="admin",roles={"ADMIN"})
 public class RestaurantControllerIntegrationTest {
 
     @Autowired
@@ -35,9 +35,9 @@ public class RestaurantControllerIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private String restaurantName = "Test Restaurant";
-    private String cityName = "Test City";
-    private Integer ratingNumber = 4;
+    private final String restaurantName = "Test Restaurant";
+    private final String cityName = "Test City";
+    private final Integer ratingNumber = 4;
     private Long createdRestaurantId;
 
     @BeforeEach

@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-@WithMockUser(username="admin",password="password",roles={"ADMIN"})
+@WithMockUser(username="admin",roles={"ADMIN"})
 class UserControllerIntegrationTest {
 
     @Autowired
@@ -76,7 +76,7 @@ class UserControllerIntegrationTest {
     public void tearDown() throws Exception {
         if (createdUserId != null) {
             // Fetch the user before deleting it
-            MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/user/{userId}", createdUserId))
+            mockMvc.perform(MockMvcRequestBuilders.get("/user/{userId}", createdUserId))
                     .andExpect(status().isOk())
                     .andReturn();
 
@@ -85,7 +85,7 @@ class UserControllerIntegrationTest {
                     .andExpect(status().isNoContent());
 
             // Assertions to check if the user was deleted successfully
-            result = mockMvc.perform(MockMvcRequestBuilders.get("/user/{userId}", createdUserId))
+            mockMvc.perform(MockMvcRequestBuilders.get("/user/{userId}", createdUserId))
                     .andExpect(status().isNotFound())
                     .andReturn();
         }
