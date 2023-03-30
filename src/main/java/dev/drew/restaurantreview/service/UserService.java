@@ -1,8 +1,7 @@
 package dev.drew.restaurantreview.service;
 
-import dev.drew.restaurantreview.entity.RestaurantEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import dev.drew.restaurantreview.entity.UserEntity;
-import dev.drew.restaurantreview.mapper.RestaurantMapper;
 import dev.drew.restaurantreview.mapper.UserMapper;
 import dev.drew.restaurantreview.repository.UserRepository;
 import org.openapitools.model.*;
@@ -21,10 +20,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /*
@@ -34,6 +35,7 @@ public class UserService {
     public ResponseEntity<UserResponse> addNewUser(UserInput userInput) {
         UserEntity user = userMapper.toUserEntity(userInput);
         user.setCreatedAt(OffsetDateTime.now());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         UserResponse userResponse = new UserResponse();
 
@@ -102,6 +104,7 @@ public class UserService {
             UserEntity updatedEntity = userMapper.toUserEntity(userInput);
             updatedEntity.setId(userEntity.getId());
             updatedEntity.setCreatedAt(userEntity.getCreatedAt());
+            updatedEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
 
             try {
                 UserEntity savedUser = userRepository.save(updatedEntity);
