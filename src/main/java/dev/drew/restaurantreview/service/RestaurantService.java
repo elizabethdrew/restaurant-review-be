@@ -173,8 +173,21 @@ public class RestaurantService {
         Example curl command: curl -X DELETE http://localhost:8080/restaurants/{restaurantId}
         */
         public ResponseEntity<Void> deleteRestaurantById(Integer restaurantId) {
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
+            UserEntity currentUserEntity = securityUser.getUserEntity();
+
             Optional<RestaurantEntity> restaurantEntityOptional = restaurantRepository.findById(restaurantId.longValue());
+
             if (restaurantEntityOptional.isPresent()) {
+                RestaurantEntity restaurantEntity = restaurantEntityOptional.get();
+
+                // Check if the current user is an admin or the owner of the restaurant
+                if (!securityUser.hasRole("ROLE_ADMIN") && !currentUserEntity.getId().equals(restaurantEntity.getUserId())) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                }
+
                 restaurantRepository.deleteById(restaurantId.longValue());
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
             } else {
