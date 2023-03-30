@@ -86,4 +86,12 @@ class UserControllerIntegrationTest {
         assertEquals((long)userId, (long)user.getId());
     }
 
+    @Test
+    public void testGetUserById_notFound() throws Exception {
+        Integer userId = -1; // Use an ID that doesn't exist in the database
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/user/{userId}", userId))
+                .andExpect(status().isNotFound());
+    }
+
 }
