@@ -11,10 +11,13 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
+import dev.drew.restaurantreview.util.SecurityUtils;
+import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
+
+import static dev.drew.restaurantreview.util.SecurityUtils.isAdminOrOwner;
 
 @Service
 public class UserService {
@@ -22,6 +25,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder;
+
+    // Implement EntityUserIdProvider for UserEntity
+    private final EntityUserIdProvider<UserEntity> userEntityUserIdProvider = UserEntity::getId;
 
     public UserService(UserRepository userRepository, UserMapper userMapper, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -76,7 +82,13 @@ public class UserService {
         Optional<UserEntity> userEntityOptional = userRepository.findById(userId.longValue());
 
         if (userEntityOptional.isPresent()) {
-            User user = userMapper.toUser(userEntityOptional.get());
+            UserEntity userEntity = userEntityOptional.get();
+
+            if (!isAdminOrOwner(userEntity, userEntityUserIdProvider)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            User user = userMapper.toUser(userEntity);
             return ResponseEntity.ok(user);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -90,7 +102,14 @@ public class UserService {
         */
     public ResponseEntity<Void> deleteUserById(Integer userId) {
         Optional<UserEntity> userEntityOptional = userRepository.findById(userId.longValue());
+
         if (userEntityOptional.isPresent()) {
+            UserEntity userEntity = userEntityOptional.get();
+
+            if (!isAdminOrOwner(userEntity, userEntityUserIdProvider)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
             userRepository.deleteById(userId.longValue());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } else {
@@ -99,11 +118,15 @@ public class UserService {
     }
 
     public ResponseEntity<UserResponse> updateUserById(Integer userId, UserInput userInput) {
-        //UserMapper mapper = UserMapper.INSTANCE;
         Optional<UserEntity> userEntityOptional = userRepository.findById(userId.longValue());
 
         if (userEntityOptional.isPresent()) {
             UserEntity userEntity = userEntityOptional.get();
+
+            if (!isAdminOrOwner(userEntity, userEntityUserIdProvider)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
             UserEntity updatedEntity = userMapper.toUserEntity(userInput);
             updatedEntity.setId(userEntity.getId());
             updatedEntity.setCreatedAt(userEntity.getCreatedAt());
