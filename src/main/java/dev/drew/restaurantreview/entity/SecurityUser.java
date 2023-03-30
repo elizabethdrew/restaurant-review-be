@@ -51,4 +51,9 @@ public class SecurityUser  implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    //Return a user entity
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
 }

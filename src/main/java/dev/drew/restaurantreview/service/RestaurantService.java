@@ -1,6 +1,8 @@
 package dev.drew.restaurantreview.service;
 
 import dev.drew.restaurantreview.entity.RestaurantEntity;
+import dev.drew.restaurantreview.entity.SecurityUser;
+import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.mapper.RestaurantMapper;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
 import org.openapitools.model.Error;
@@ -11,7 +13,10 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
 
 
 import java.time.OffsetDateTime;
@@ -31,13 +36,24 @@ public class RestaurantService {
         this.restaurantMapper = restaurantMapper;
     }
 
+    //Get current user details
+    private Long getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
+        UserEntity userEntity = securityUser.getUserEntity();
+        return userEntity.getId();
+    }
+
+
     /*
         Add a new restaurant to the database
         Example curl command: curl -X POST http://localhost:8080/restaurants -H "Content-Type: application/json" -d '{"name": "Restaurant Name", "city": "City Name", "rating": 4}'
     */
         public ResponseEntity<RestaurantResponse> addNewRestaurant(RestaurantInput restaurantInput) {
+            Long currentUserId = getCurrentUserId();
             RestaurantEntity restaurant = restaurantMapper.toRestaurantEntity(restaurantInput);
             restaurant.setCreatedAt(OffsetDateTime.now());
+            restaurant.setUserId(currentUserId);
 
             RestaurantResponse restaurantResponse = new RestaurantResponse();
 
