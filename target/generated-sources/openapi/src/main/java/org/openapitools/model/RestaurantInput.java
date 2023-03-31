@@ -18,7 +18,7 @@ import javax.annotation.Generated;
  * RestaurantInput
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-31T13:15:36.089055+01:00[Europe/London]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-31T14:18:31.149766+01:00[Europe/London]")
 public class RestaurantInput {
 
   @JsonProperty("name")
@@ -26,9 +26,6 @@ public class RestaurantInput {
 
   @JsonProperty("city")
   private String city;
-
-  @JsonProperty("rating")
-  private Integer rating;
 
   public RestaurantInput name(String name) {
     this.name = name;
@@ -68,27 +65,6 @@ public class RestaurantInput {
     this.city = city;
   }
 
-  public RestaurantInput rating(Integer rating) {
-    this.rating = rating;
-    return this;
-  }
-
-  /**
-   * The rating of the restaurant.
-   * minimum: 1
-   * maximum: 5
-   * @return rating
-  */
-  @NotNull @Min(1) @Max(5) 
-  @Schema(name = "rating", description = "The rating of the restaurant.", requiredMode = Schema.RequiredMode.REQUIRED)
-  public Integer getRating() {
-    return rating;
-  }
-
-  public void setRating(Integer rating) {
-    this.rating = rating;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -99,13 +75,12 @@ public class RestaurantInput {
     }
     RestaurantInput restaurantInput = (RestaurantInput) o;
     return Objects.equals(this.name, restaurantInput.name) &&
-        Objects.equals(this.city, restaurantInput.city) &&
-        Objects.equals(this.rating, restaurantInput.rating);
+        Objects.equals(this.city, restaurantInput.city);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, city, rating);
+    return Objects.hash(name, city);
   }
 
   @Override
@@ -114,7 +89,6 @@ public class RestaurantInput {
     sb.append("class RestaurantInput {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    city: ").append(toIndentedString(city)).append("\n");
-    sb.append("    rating: ").append(toIndentedString(rating)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -37,7 +37,6 @@ public class RestaurantControllerIntegrationTest {
 
     private String restaurantName = "Test Restaurant";
     private String cityName = "Test City";
-    private Integer ratingNumber = 4;
     private Long createdRestaurantId;
 
     @BeforeEach
@@ -46,7 +45,6 @@ public class RestaurantControllerIntegrationTest {
         RestaurantInput restaurantInput = new RestaurantInput()
                 .name(restaurantName)
                 .city(cityName)
-                .rating(ratingNumber);
 
         // Convert the RestaurantInput object to a JSON string
         String restaurantInputJson = objectMapper.writeValueAsString(restaurantInput);
@@ -164,7 +162,6 @@ public class RestaurantControllerIntegrationTest {
         RestaurantInput updatedRestaurantInput = new RestaurantInput()
                 .name("Updated Restaurant")
                 .city("Updated City")
-                .rating(5);
 
         // Convert the updated RestaurantInput object to a JSON string
         String updatedRestaurantJson = objectMapper.writeValueAsString(updatedRestaurantInput);
@@ -184,7 +181,6 @@ public class RestaurantControllerIntegrationTest {
         Assertions.assertEquals(restaurantId.intValue(), updatedRestaurant.getId().intValue());
         Assertions.assertEquals(updatedRestaurantInput.getName(), updatedRestaurant.getName());
         Assertions.assertEquals(updatedRestaurantInput.getCity(), updatedRestaurant.getCity());
-        Assertions.assertEquals(updatedRestaurantInput.getRating(), updatedRestaurant.getRating());
     }
 
 
@@ -198,7 +194,6 @@ public class RestaurantControllerIntegrationTest {
         RestaurantInput updatedRestaurantInput = new RestaurantInput()
                 .name("Updated Restaurant")
                 .city("Updated City")
-                .rating(5);
 
         // Convert the updated RestaurantInput object to a JSON string
         String updatedRestaurantJson = objectMapper.writeValueAsString(updatedRestaurantInput);

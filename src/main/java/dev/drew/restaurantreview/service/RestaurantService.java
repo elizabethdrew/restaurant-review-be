@@ -1,8 +1,10 @@
 package dev.drew.restaurantreview.service;
 
 import dev.drew.restaurantreview.entity.RestaurantEntity;
+import dev.drew.restaurantreview.entity.ReviewEntity;
 import dev.drew.restaurantreview.mapper.RestaurantMapper;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
+import dev.drew.restaurantreview.repository.ReviewRepository;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import org.openapitools.model.Error;
 import org.openapitools.model.Restaurant;
@@ -28,14 +30,17 @@ import static dev.drew.restaurantreview.util.SecurityUtils.*;
 public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
+
+    private final ReviewRepository reviewRepository;
     private final RestaurantMapper restaurantMapper;
 
     // Implement EntityUserIdProvider for RestaurantEntity
     private final EntityUserIdProvider<RestaurantEntity> restaurantUserIdProvider = RestaurantEntity::getUserId;
 
-    public RestaurantService(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper) {
+    public RestaurantService(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper, ReviewRepository reviewRepository) {
         this.restaurantRepository = restaurantRepository;
         this.restaurantMapper = restaurantMapper;
+        this.reviewRepository = reviewRepository;
     }
 
     // Add a new restaurant to the database
@@ -102,7 +107,26 @@ public class RestaurantService {
         Optional<RestaurantEntity> restaurantEntityOptional = restaurantRepository.findById(restaurantId.longValue());
 
         if (restaurantEntityOptional.isPresent()) {
-            Restaurant restaurant = restaurantMapper.toRestaurant(restaurantEntityOptional.get());
+            RestaurantEntity restaurantEntity = restaurantEntityOptional.get();
+
+            // Retrieve all reviews with a matching restaurantId
+            List<ReviewEntity> reviewEntities = reviewRepository.findByRestaurantId(restaurantEntity.getId());
+
+            // Calculate the average rating
+            if (!reviewEntities.isEmpty()) {
+                double averageRating = reviewEntities.stream()
+                        .mapToDouble(ReviewEntity::getRating)
+                        .average()
+                        .orElse(0.0);
+
+                // Round the average rating to the nearest integer
+                int roundedAverageRating = (int) Math.round(averageRating);
+
+                // Set the average rating to the restaurant entity
+                restaurantEntity.setRating(roundedAverageRating);
+            }
+
+            Restaurant restaurant = restaurantMapper.toRestaurant(restaurantEntity);
             return ResponseEntity.ok(restaurant);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

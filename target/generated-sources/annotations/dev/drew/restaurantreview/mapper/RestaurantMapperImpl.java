@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-03-31T13:42:46+0100",
+    date = "2023-03-31T14:34:06+0100",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.6 (Amazon.com Inc.)"
 )
 @Component
@@ -41,7 +41,6 @@ public class RestaurantMapperImpl implements RestaurantMapper {
 
         restaurantEntity.setName( restaurantInput.getName() );
         restaurantEntity.setCity( restaurantInput.getCity() );
-        restaurantEntity.setRating( restaurantInput.getRating() );
 
         return restaurantEntity;
     }
@@ -56,7 +55,6 @@ public class RestaurantMapperImpl implements RestaurantMapper {
 
         restaurantInput.setName( restaurantEntity.getName() );
         restaurantInput.setCity( restaurantEntity.getCity() );
-        restaurantInput.setRating( restaurantEntity.getRating() );
 
         return restaurantInput;
     }

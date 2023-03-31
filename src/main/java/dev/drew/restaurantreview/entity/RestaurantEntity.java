@@ -33,7 +33,6 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
      @NotNull
      @Min(1)
      @Max(5)
-     @Column(name = "rating")
      private Integer rating;
 
     @Column(name = "created_at")

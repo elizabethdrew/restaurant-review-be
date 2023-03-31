@@ -693,15 +693,9 @@ components:
         city:
           type: string
           description: The city where the restaurant is located.
-        rating:
-          type: integer
-          minimum: 1
-          maximum: 5
-          description: The rating of the restaurant.
       required:
         - name
         - city
-        - rating
 
     Error:
       type: object
