@@ -18,7 +18,7 @@ import javax.annotation.Generated;
  * Error
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-29T16:25:01.973910+01:00[Europe/London]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-31T12:32:26.725552+01:00[Europe/London]")
 public class Error {
 
   @JsonProperty("code")
@@ -26,6 +26,9 @@ public class Error {
 
   @JsonProperty("message")
   private String message;
+
+  @JsonProperty("details")
+  private String details;
 
   public Error code(Integer code) {
     this.code = code;
@@ -36,8 +39,8 @@ public class Error {
    * Get code
    * @return code
   */
-  
-  @Schema(name = "code", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @NotNull 
+  @Schema(name = "code", requiredMode = Schema.RequiredMode.REQUIRED)
   public Integer getCode() {
     return code;
   }
@@ -55,14 +58,33 @@ public class Error {
    * Get message
    * @return message
   */
-  
-  @Schema(name = "message", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @NotNull 
+  @Schema(name = "message", requiredMode = Schema.RequiredMode.REQUIRED)
   public String getMessage() {
     return message;
   }
 
   public void setMessage(String message) {
     this.message = message;
+  }
+
+  public Error details(String details) {
+    this.details = details;
+    return this;
+  }
+
+  /**
+   * Get details
+   * @return details
+  */
+  
+  @Schema(name = "details", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  public String getDetails() {
+    return details;
+  }
+
+  public void setDetails(String details) {
+    this.details = details;
   }
 
   @Override
@@ -75,12 +97,13 @@ public class Error {
     }
     Error error = (Error) o;
     return Objects.equals(this.code, error.code) &&
-        Objects.equals(this.message, error.message);
+        Objects.equals(this.message, error.message) &&
+        Objects.equals(this.details, error.details);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(code, message);
+    return Objects.hash(code, message, details);
   }
 
   @Override
@@ -89,6 +112,7 @@ public class Error {
     sb.append("class Error {\n");
     sb.append("    code: ").append(toIndentedString(code)).append("\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
+    sb.append("    details: ").append(toIndentedString(details)).append("\n");
     sb.append("}");
     return sb.toString();
   }

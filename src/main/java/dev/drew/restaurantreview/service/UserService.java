@@ -123,7 +123,7 @@ public class UserService {
         if (userEntityOptional.isPresent()) {
             UserEntity userEntity = userEntityOptional.get();
 
-            if (!isAdminOrOwner(userEntity, userEntityUserIdProvider)) {
+            if (!isAdminOrOwner(userEntity, UserEntity::getId)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
 

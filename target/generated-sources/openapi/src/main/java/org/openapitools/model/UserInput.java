@@ -19,7 +19,7 @@ import javax.annotation.Generated;
  * UserInput
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-29T16:25:01.973910+01:00[Europe/London]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-31T12:32:26.725552+01:00[Europe/London]")
 public class UserInput {
 
   @JsonProperty("name")

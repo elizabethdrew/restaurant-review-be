@@ -5,7 +5,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import org.openapitools.model.Error;
-import org.openapitools.model.Restaurant;
+import org.openapitools.model.Review;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import javax.validation.Valid;
@@ -17,22 +17,22 @@ import java.util.*;
 import javax.annotation.Generated;
 
 /**
- * RestaurantResponse
+ * ReviewResponse
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-31T12:32:26.725552+01:00[Europe/London]")
-public class RestaurantResponse {
+public class ReviewResponse {
 
   @JsonProperty("success")
   private Boolean success;
 
-  @JsonProperty("restaurant")
-  private Restaurant restaurant;
+  @JsonProperty("user")
+  private Review user;
 
   @JsonProperty("error")
   private Error error;
 
-  public RestaurantResponse success(Boolean success) {
+  public ReviewResponse success(Boolean success) {
     this.success = success;
     return this;
   }
@@ -51,26 +51,26 @@ public class RestaurantResponse {
     this.success = success;
   }
 
-  public RestaurantResponse restaurant(Restaurant restaurant) {
-    this.restaurant = restaurant;
+  public ReviewResponse user(Review user) {
+    this.user = user;
     return this;
   }
 
   /**
-   * Get restaurant
-   * @return restaurant
+   * Get user
+   * @return user
   */
   @Valid 
-  @Schema(name = "restaurant", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  public Restaurant getRestaurant() {
-    return restaurant;
+  @Schema(name = "user", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  public Review getUser() {
+    return user;
   }
 
-  public void setRestaurant(Restaurant restaurant) {
-    this.restaurant = restaurant;
+  public void setUser(Review user) {
+    this.user = user;
   }
 
-  public RestaurantResponse error(Error error) {
+  public ReviewResponse error(Error error) {
     this.error = error;
     return this;
   }
@@ -97,23 +97,23 @@ public class RestaurantResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    RestaurantResponse restaurantResponse = (RestaurantResponse) o;
-    return Objects.equals(this.success, restaurantResponse.success) &&
-        Objects.equals(this.restaurant, restaurantResponse.restaurant) &&
-        Objects.equals(this.error, restaurantResponse.error);
+    ReviewResponse reviewResponse = (ReviewResponse) o;
+    return Objects.equals(this.success, reviewResponse.success) &&
+        Objects.equals(this.user, reviewResponse.user) &&
+        Objects.equals(this.error, reviewResponse.error);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(success, restaurant, error);
+    return Objects.hash(success, user, error);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class RestaurantResponse {\n");
+    sb.append("class ReviewResponse {\n");
     sb.append("    success: ").append(toIndentedString(success)).append("\n");
-    sb.append("    restaurant: ").append(toIndentedString(restaurant)).append("\n");
+    sb.append("    user: ").append(toIndentedString(user)).append("\n");
     sb.append("    error: ").append(toIndentedString(error)).append("\n");
     sb.append("}");
     return sb.toString();
