@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static dev.drew.restaurantreview.util.SecurityUtils.getCurrentUserId;
+import static dev.drew.restaurantreview.util.SecurityUtils.isAdminOrOwner;
 
 @Service
 public class ReviewService {
@@ -94,6 +95,63 @@ public class ReviewService {
         if (reviewEntityOptional.isPresent()) {
             Review review = reviewMapper.toReview(reviewEntityOptional.get());
             return ResponseEntity.ok(review);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    public ResponseEntity<ReviewResponse> updateReviewById(Integer reviewId, ReviewInput reviewInput) {
+        Optional<ReviewEntity> reviewEntityOptional = reviewRepository.findById(reviewId.longValue());
+
+        if (reviewEntityOptional.isPresent()) {
+            ReviewEntity reviewEntity = reviewEntityOptional.get();
+
+            if (!isAdminOrOwner(reviewEntity, ReviewEntity::getUserId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            ReviewEntity updatedEntity = reviewMapper.toReviewEntity(reviewInput);
+            updatedEntity.setId(reviewEntity.getId());
+            updatedEntity.setCreatedAt(reviewEntity.getCreatedAt());
+            updatedEntity.setUserId(reviewEntity.getUserId());
+            updatedEntity.setUpdatedAt(OffsetDateTime.now());
+
+            try {
+                ReviewEntity savedReview = reviewRepository.save(updatedEntity);
+                Review savedApiReview = reviewMapper.toReview(savedReview);
+
+                ReviewResponse reviewResponse = new ReviewResponse();
+                reviewResponse.setReview(savedApiReview);
+
+                return ResponseEntity.ok(reviewResponse);
+            } catch (DataIntegrityViolationException e) {
+                // Handle database constraint violations, such as unique constraints
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            } catch (DataAccessException e) {
+                // Handle other database-related exceptions
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            } catch (Exception e) {
+                // Handle general exceptions
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    public ResponseEntity<Void> deleteReviewById(Integer reviewId) {
+        Optional<ReviewEntity> reviewEntityOptional = reviewRepository.findById(reviewId.longValue());
+
+        if (reviewEntityOptional.isPresent()) {
+            ReviewEntity reviewEntity = reviewEntityOptional.get();
+
+            // Check if the current user is an admin or the owner of the review
+            if (!isAdminOrOwner(reviewEntity, ReviewEntity::getUserId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            reviewRepository.deleteById(reviewId.longValue());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

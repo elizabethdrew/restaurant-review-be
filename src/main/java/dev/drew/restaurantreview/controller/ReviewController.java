@@ -33,7 +33,7 @@ public class ReviewController implements ReviewsApi {
 
     @Override
     public ResponseEntity<Void> deleteReviewById(Integer reviewId) {
-        return null;
+        return reviewService.deleteReviewById(reviewId);
     }
 
     @Override
@@ -52,6 +52,6 @@ public class ReviewController implements ReviewsApi {
 
     @Override
     public ResponseEntity<ReviewResponse> updateReviewById(Integer reviewId, ReviewInput reviewInput) {
-        return null;
+        return reviewService.updateReviewById(reviewId, reviewInput);
     }
 }
