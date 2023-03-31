@@ -1,8 +1,6 @@
 package dev.drew.restaurantreview.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 import dev.drew.restaurantreview.entity.RestaurantEntity;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
