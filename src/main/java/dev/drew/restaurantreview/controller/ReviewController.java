@@ -45,8 +45,9 @@ public class ReviewController implements ReviewsApi {
     }
 
     @Override
+    @PreAuthorize("permitAll()")
     public ResponseEntity<Review> getReviewById(Integer reviewId) {
-        return null;
+        return reviewService.getReviewById(reviewId);
     }
 
     @Override

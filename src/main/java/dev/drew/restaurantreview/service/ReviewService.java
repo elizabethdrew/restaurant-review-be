@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -85,5 +86,16 @@ public class ReviewService {
                 .map(reviewMapper::toReview)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(reviews);
+    }
+
+    public ResponseEntity<Review> getReviewById(Integer reviewId) {
+        Optional<ReviewEntity> reviewEntityOptional = reviewRepository.findById(reviewId.longValue());
+
+        if (reviewEntityOptional.isPresent()) {
+            Review review = reviewMapper.toReview(reviewEntityOptional.get());
+            return ResponseEntity.ok(review);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 }
