@@ -107,26 +107,7 @@ public class RestaurantService {
         Optional<RestaurantEntity> restaurantEntityOptional = restaurantRepository.findById(restaurantId.longValue());
 
         if (restaurantEntityOptional.isPresent()) {
-            RestaurantEntity restaurantEntity = restaurantEntityOptional.get();
-
-            // Retrieve all reviews with a matching restaurantId
-            List<ReviewEntity> reviewEntities = reviewRepository.findByRestaurantId(restaurantEntity.getId());
-
-            // Calculate the average rating
-            if (!reviewEntities.isEmpty()) {
-                double averageRating = reviewEntities.stream()
-                        .mapToDouble(ReviewEntity::getRating)
-                        .average()
-                        .orElse(0.0);
-
-                // Round the average rating to the nearest integer
-                int roundedAverageRating = (int) Math.round(averageRating);
-
-                // Set the average rating to the restaurant entity
-                restaurantEntity.setRating(roundedAverageRating);
-            }
-
-            Restaurant restaurant = restaurantMapper.toRestaurant(restaurantEntity);
+            Restaurant restaurant = restaurantMapper.toRestaurant(restaurantEntityOptional.get());
             return ResponseEntity.ok(restaurant);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

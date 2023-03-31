@@ -1,7 +1,9 @@
 package dev.drew.restaurantreview.service;
 
+import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.entity.ReviewEntity;
 import dev.drew.restaurantreview.mapper.ReviewMapper;
+import dev.drew.restaurantreview.repository.RestaurantRepository;
 import dev.drew.restaurantreview.repository.ReviewRepository;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import org.openapitools.model.Error;
@@ -29,12 +31,15 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReviewMapper reviewMapper;
 
+    private final RestaurantRepository restaurantRepository;
+
     // Implement EntityUserIdProvider for ReviewEntity
     private final EntityUserIdProvider<ReviewEntity> reviewUserIdProvider = ReviewEntity::getUserId;
 
-    public ReviewService(ReviewRepository reviewRepository, ReviewMapper reviewMapper) {
+    public ReviewService(ReviewRepository reviewRepository, ReviewMapper reviewMapper, RestaurantRepository restaurantRepository) {
         this.reviewRepository = reviewRepository;
         this.reviewMapper = reviewMapper;
+        this.restaurantRepository = restaurantRepository;
     }
 
     // Add a new review to the database
@@ -50,6 +55,10 @@ public class ReviewService {
         try {
             ReviewEntity savedReview = reviewRepository.save(review);
             Review savedApiReview = reviewMapper.toReview(savedReview);
+
+            // Update the restaurant rating
+            updateRestaurantRating(savedReview.getRestaurantId());
+
             reviewResponse.setReview(savedApiReview);
             reviewResponse.setSuccess(true);
             return new ResponseEntity<>(reviewResponse, HttpStatus.CREATED);
@@ -121,6 +130,9 @@ public class ReviewService {
                 ReviewEntity savedReview = reviewRepository.save(updatedEntity);
                 Review savedApiReview = reviewMapper.toReview(savedReview);
 
+                // Update the restaurant rating
+                updateRestaurantRating(savedReview.getRestaurantId());
+
                 ReviewResponse reviewResponse = new ReviewResponse();
                 reviewResponse.setReview(savedApiReview);
 
@@ -151,10 +163,39 @@ public class ReviewService {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
 
+            // Save restaurant ID before deleting review
+            Long restaurantId = reviewEntity.getRestaurantId();
+
+            // Delete review
             reviewRepository.deleteById(reviewId.longValue());
+
+            // Update restaurant rating
+            updateRestaurantRating(restaurantId);
+
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    public void updateRestaurantRating(Long restaurantId) {
+        List<ReviewEntity> reviews = reviewRepository.findByRestaurantId(restaurantId);
+
+        if (!reviews.isEmpty()) {
+            double averageRating = reviews.stream()
+                    .mapToDouble(ReviewEntity::getRating)
+                    .average()
+                    .orElse(0);
+
+            // Round the average rating to the nearest integer
+            int roundedAverageRating = (int) Math.round(averageRating);
+
+
+            RestaurantEntity restaurantEntity = restaurantRepository.findById(restaurantId).orElse(null);
+            if (restaurantEntity != null) {
+                restaurantEntity.setRating(roundedAverageRating);
+                restaurantRepository.save(restaurantEntity);
+            }
         }
     }
 }
