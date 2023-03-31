@@ -12,6 +12,7 @@ import org.openapitools.model.ReviewInput;
 import org.openapitools.model.ReviewResponse;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,15 @@ public class ReviewService {
 
     // Add a new review to the database
     public ResponseEntity<ReviewResponse> addNewReview(ReviewInput reviewInput) {
+
+        // Check if restaurant exists
+        Optional<RestaurantEntity> restaurantEntityOptional = restaurantRepository.findById(reviewInput.getRestaurantId());
+        if(!restaurantEntityOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ReviewResponse()
+                            .success(false)
+                            .error(new Error().message("Invalid Restaurant ID")));
+        }
 
         ReviewEntity review = reviewMapper.toReviewEntity(reviewInput);
         review.setCreatedAt(OffsetDateTime.now());
