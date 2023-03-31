@@ -41,7 +41,7 @@ public class SecurityConfig {
                         .requestMatchers("/reviews").permitAll()
                         .requestMatchers(HttpMethod.GET, "/reviews/**" ).permitAll()
                         .requestMatchers(HttpMethod.POST, "/reviews/**" ).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/users/**" ).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/user" ).permitAll()
                         .anyRequest().authenticated())
                     .userDetailsService(jpaUserDetailsService)
                     .headers(headers -> headers.frameOptions().sameOrigin())
