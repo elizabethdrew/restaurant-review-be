@@ -45,6 +45,7 @@ public class ReviewService {
 
     // Add a new review to the database
     public ResponseEntity<ReviewResponse> addNewReview(ReviewInput reviewInput) {
+        Long currentUserId = getCurrentUserId();
 
         // Check if restaurant exists
         Optional<RestaurantEntity> restaurantEntityOptional = restaurantRepository.findById(reviewInput.getRestaurantId());
@@ -55,9 +56,21 @@ public class ReviewService {
                             .error(new Error().message("Invalid Restaurant ID")));
         }
 
+        // Check if the user has already reviewed the restaurant within the last year
+        OffsetDateTime oneYearAgo = OffsetDateTime.now().minusYears(1);
+        List<ReviewEntity> existingReviews = reviewRepository.findByUserIdAndRestaurantId(currentUserId, reviewInput.getRestaurantId());
+
+        boolean hasReviewWithinOneYear = existingReviews.stream()
+                .anyMatch(review -> review.getCreatedAt().isAfter(oneYearAgo));
+
+        if (hasReviewWithinOneYear) {
+            // Return error response if a review within the last year exists
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        // Add the new review
         ReviewEntity review = reviewMapper.toReviewEntity(reviewInput);
         review.setCreatedAt(OffsetDateTime.now());
-        Long currentUserId = getCurrentUserId();
         review.setUserId(currentUserId);
 
         ReviewResponse reviewResponse = new ReviewResponse();
