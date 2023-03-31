@@ -503,6 +503,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
 components:
+
   securitySchemes:
     basicAuth:
       type: http
@@ -576,8 +577,6 @@ components:
         - restaurant_id
         - user_id
         - rating
-        - created_at
-        - updated_at
 
     ReviewInput:
       type: object
@@ -743,7 +742,7 @@ components:
       properties:
         success:
           type: boolean
-        user:
+        Review:
           $ref: '#/components/schemas/Review'
         error:
           $ref: '#/components/schemas/Error'

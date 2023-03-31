@@ -20,14 +20,14 @@ import javax.annotation.Generated;
  * ReviewResponse
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-31T12:32:26.725552+01:00[Europe/London]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-31T13:15:36.089055+01:00[Europe/London]")
 public class ReviewResponse {
 
   @JsonProperty("success")
   private Boolean success;
 
-  @JsonProperty("user")
-  private Review user;
+  @JsonProperty("Review")
+  private Review review;
 
   @JsonProperty("error")
   private Error error;
@@ -51,23 +51,23 @@ public class ReviewResponse {
     this.success = success;
   }
 
-  public ReviewResponse user(Review user) {
-    this.user = user;
+  public ReviewResponse review(Review review) {
+    this.review = review;
     return this;
   }
 
   /**
-   * Get user
-   * @return user
+   * Get review
+   * @return review
   */
   @Valid 
-  @Schema(name = "user", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  public Review getUser() {
-    return user;
+  @Schema(name = "Review", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  public Review getReview() {
+    return review;
   }
 
-  public void setUser(Review user) {
-    this.user = user;
+  public void setReview(Review review) {
+    this.review = review;
   }
 
   public ReviewResponse error(Error error) {
@@ -99,13 +99,13 @@ public class ReviewResponse {
     }
     ReviewResponse reviewResponse = (ReviewResponse) o;
     return Objects.equals(this.success, reviewResponse.success) &&
-        Objects.equals(this.user, reviewResponse.user) &&
+        Objects.equals(this.review, reviewResponse.review) &&
         Objects.equals(this.error, reviewResponse.error);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(success, user, error);
+    return Objects.hash(success, review, error);
   }
 
   @Override
@@ -113,7 +113,7 @@ public class ReviewResponse {
     StringBuilder sb = new StringBuilder();
     sb.append("class ReviewResponse {\n");
     sb.append("    success: ").append(toIndentedString(success)).append("\n");
-    sb.append("    user: ").append(toIndentedString(user)).append("\n");
+    sb.append("    review: ").append(toIndentedString(review)).append("\n");
     sb.append("    error: ").append(toIndentedString(error)).append("\n");
     sb.append("}");
     return sb.toString();

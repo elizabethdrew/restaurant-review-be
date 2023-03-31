@@ -20,7 +20,7 @@ import javax.annotation.Generated;
  * Review
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-31T12:32:26.725552+01:00[Europe/London]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-31T13:15:36.089055+01:00[Europe/London]")
 public class Review {
 
   @JsonProperty("id")
@@ -152,8 +152,8 @@ public class Review {
    * Get createdAt
    * @return createdAt
   */
-  @NotNull @Valid 
-  @Schema(name = "created_at", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Valid 
+  @Schema(name = "created_at", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   public OffsetDateTime getCreatedAt() {
     return createdAt;
   }
@@ -171,8 +171,8 @@ public class Review {
    * Get updatedAt
    * @return updatedAt
   */
-  @NotNull @Valid 
-  @Schema(name = "updated_at", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Valid 
+  @Schema(name = "updated_at", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   public OffsetDateTime getUpdatedAt() {
     return updatedAt;
   }

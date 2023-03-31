@@ -4,7 +4,19 @@ import dev.drew.restaurantreview.entity.ReviewEntity;
 import dev.drew.restaurantreview.mapper.ReviewMapper;
 import dev.drew.restaurantreview.repository.ReviewRepository;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
+import org.openapitools.model.Error;
+import org.openapitools.model.Review;
+import org.openapitools.model.ReviewInput;
+import org.openapitools.model.ReviewResponse;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.time.OffsetDateTime;
+
+import static dev.drew.restaurantreview.util.SecurityUtils.getCurrentUserId;
 
 @Service
 public class ReviewService {
@@ -18,5 +30,39 @@ public class ReviewService {
     public ReviewService(ReviewRepository reviewRepository, ReviewMapper reviewMapper) {
         this.reviewRepository = reviewRepository;
         this.reviewMapper = reviewMapper;
+    }
+
+    // Add a new review to the database
+    public ResponseEntity<ReviewResponse> addNewReview(ReviewInput reviewInput) {
+
+        ReviewEntity review = reviewMapper.toReviewEntity(reviewInput);
+        review.setCreatedAt(OffsetDateTime.now());
+        Long currentUserId = getCurrentUserId();
+        review.setUserId(currentUserId);
+
+        ReviewResponse reviewResponse = new ReviewResponse();
+
+        try {
+            ReviewEntity savedReview = reviewRepository.save(review);
+            Review savedApiReview = reviewMapper.toReview(savedReview);
+            reviewResponse.setReview(savedApiReview);
+            reviewResponse.setSuccess(true);
+            return new ResponseEntity<>(reviewResponse, HttpStatus.CREATED);
+        } catch (DataIntegrityViolationException e) {
+            // Handle database constraint violations, such as unique constraints
+            reviewResponse.setSuccess(false);
+            reviewResponse.setError(new Error().message("Invalid input: " + e.getMessage()));
+            return new ResponseEntity<>(reviewResponse, HttpStatus.BAD_REQUEST);
+        } catch (DataAccessException e) {
+            // Handle other database-related exceptions
+            reviewResponse.setSuccess(false);
+            reviewResponse.setError(new Error().message("Database error: " + e.getMessage()));
+            return new ResponseEntity<>(reviewResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            // Handle general exceptions
+            reviewResponse.setSuccess(false);
+            reviewResponse.setError(new Error().message("An unexpected error occurred: " + e.getMessage()));
+            return new ResponseEntity<>(reviewResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

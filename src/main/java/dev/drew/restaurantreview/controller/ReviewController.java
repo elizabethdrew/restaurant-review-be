@@ -1,5 +1,7 @@
 package dev.drew.restaurantreview.controller;
 
+import dev.drew.restaurantreview.service.RestaurantService;
+import dev.drew.restaurantreview.service.ReviewService;
 import org.openapitools.api.ReviewsApi;
 import org.openapitools.model.Review;
 import org.openapitools.model.ReviewInput;
@@ -15,9 +17,16 @@ import java.util.List;
 @RequestMapping
 @PreAuthorize("isAuthenticated()")
 public class ReviewController implements ReviewsApi {
+
+    private final ReviewService reviewService;
+
+    public ReviewController(ReviewService reviewService) {
+        this.reviewService = reviewService;
+    }
+
     @Override
     public ResponseEntity<ReviewResponse> addNewReview(ReviewInput reviewInput) {
-        return null;
+        return reviewService.addNewReview(reviewInput);
     }
 
     @Override
