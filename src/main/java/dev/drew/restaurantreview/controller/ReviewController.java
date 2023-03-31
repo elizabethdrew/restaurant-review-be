@@ -9,8 +9,10 @@ import org.openapitools.model.ReviewResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -35,8 +37,11 @@ public class ReviewController implements ReviewsApi {
     }
 
     @Override
-    public ResponseEntity<List<Review>> getAllReviews(Long restaurantId, Long userId) {
-        return null;
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<List<Review>> getAllReviews(
+            @Valid @RequestParam(value = "restaurantId", required = false) Long restaurantId,
+            @Valid @RequestParam(value = "userId", required = false) Long userId) {
+        return reviewService.getAllReviews(restaurantId, userId);
     }
 
     @Override

@@ -15,6 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static dev.drew.restaurantreview.util.SecurityUtils.getCurrentUserId;
 
@@ -64,5 +67,23 @@ public class ReviewService {
             reviewResponse.setError(new Error().message("An unexpected error occurred: " + e.getMessage()));
             return new ResponseEntity<>(reviewResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public ResponseEntity<List<Review>> getAllReviews(Long restaurantId, Long userId) {
+
+        Stream<ReviewEntity> filteredEntities = reviewRepository.findAll().stream();
+
+        if (restaurantId != null) {
+            filteredEntities = filteredEntities.filter(r -> r.getRestaurantId().equals(restaurantId));
+        }
+
+        if (userId != null) {
+            filteredEntities = filteredEntities.filter(r -> r.getUserId().equals(userId));
+        }
+
+        List<Review> reviews = filteredEntities
+                .map(reviewMapper::toReview)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(reviews);
     }
 }
