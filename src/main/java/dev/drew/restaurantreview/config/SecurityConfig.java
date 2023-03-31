@@ -34,7 +34,7 @@ public class SecurityConfig {
 
         return http
                     .csrf().disable()
-                .authorizeRequests(auth -> auth
+                .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/restaurants").permitAll()
                         .requestMatchers(HttpMethod.GET,"/restaurants/**" ).permitAll()
                         .requestMatchers(HttpMethod.POST,"/restaurants/**" ).permitAll()
