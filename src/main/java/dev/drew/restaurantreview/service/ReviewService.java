@@ -114,6 +114,7 @@ public class ReviewService {
             updatedEntity.setId(reviewEntity.getId());
             updatedEntity.setCreatedAt(reviewEntity.getCreatedAt());
             updatedEntity.setUserId(reviewEntity.getUserId());
+            updatedEntity.setRestaurantId(reviewEntity.getRestaurantId());
             updatedEntity.setUpdatedAt(OffsetDateTime.now());
 
             try {

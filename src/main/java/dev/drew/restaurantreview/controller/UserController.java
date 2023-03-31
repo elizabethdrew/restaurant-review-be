@@ -22,6 +22,7 @@ public class UserController implements UserApi {
     }
 
     @Override
+    @PreAuthorize("permitAll()")
     public ResponseEntity<UserResponse> addUser(UserInput userInput) {
         return userService.addNewUser(userInput);
     }

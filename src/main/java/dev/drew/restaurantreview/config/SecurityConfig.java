@@ -3,6 +3,7 @@ package dev.drew.restaurantreview.config;
 import dev.drew.restaurantreview.service.JpaUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -35,6 +36,12 @@ public class SecurityConfig {
                     .csrf().disable()
                 .authorizeRequests(auth -> auth
                         .requestMatchers("/restaurants").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/restaurants/**" ).permitAll()
+                        .requestMatchers(HttpMethod.POST,"/restaurants/**" ).permitAll()
+                        .requestMatchers("/reviews").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/reviews/**" ).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/reviews/**" ).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/**" ).permitAll()
                         .anyRequest().authenticated())
                     .userDetailsService(jpaUserDetailsService)
                     .headers(headers -> headers.frameOptions().sameOrigin())

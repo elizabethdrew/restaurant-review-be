@@ -27,6 +27,7 @@ public class ReviewController implements ReviewsApi {
     }
 
     @Override
+    @PreAuthorize("permitAll()")
     public ResponseEntity<ReviewResponse> addNewReview(ReviewInput reviewInput) {
         return reviewService.addNewReview(reviewInput);
     }

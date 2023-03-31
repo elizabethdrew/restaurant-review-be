@@ -29,6 +29,7 @@ public class RestaurantController implements RestaurantsApi {
     }
 
     @Override
+    @PreAuthorize("permitAll()")
     public ResponseEntity<RestaurantResponse> addNewRestaurant(RestaurantInput restaurantInput) {
         return restaurantService.addNewRestaurant(restaurantInput);
     }
