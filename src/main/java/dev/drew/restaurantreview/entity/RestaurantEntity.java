@@ -1,6 +1,7 @@
 package dev.drew.restaurantreview.entity;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import javax.validation.constraints.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
