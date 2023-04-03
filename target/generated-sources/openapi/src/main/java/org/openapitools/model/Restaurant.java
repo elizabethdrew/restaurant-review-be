@@ -20,7 +20,7 @@ import javax.annotation.Generated;
  * Restaurant
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-31T14:18:31.149766+01:00[Europe/London]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-04-03T15:48:52.529580+01:00[Europe/London]")
 public class Restaurant {
 
   @JsonProperty("id")
@@ -38,6 +38,9 @@ public class Restaurant {
   @JsonProperty("created_at")
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private OffsetDateTime createdAt;
+
+  @JsonProperty("user_id")
+  private Long userId;
 
   public Restaurant id(Long id) {
     this.id = id;
@@ -136,6 +139,25 @@ public class Restaurant {
     this.createdAt = createdAt;
   }
 
+  public Restaurant userId(Long userId) {
+    this.userId = userId;
+    return this;
+  }
+
+  /**
+   * Get userId
+   * @return userId
+  */
+  
+  @Schema(name = "user_id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  public Long getUserId() {
+    return userId;
+  }
+
+  public void setUserId(Long userId) {
+    this.userId = userId;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -149,12 +171,13 @@ public class Restaurant {
         Objects.equals(this.name, restaurant.name) &&
         Objects.equals(this.city, restaurant.city) &&
         Objects.equals(this.rating, restaurant.rating) &&
-        Objects.equals(this.createdAt, restaurant.createdAt);
+        Objects.equals(this.createdAt, restaurant.createdAt) &&
+        Objects.equals(this.userId, restaurant.userId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, city, rating, createdAt);
+    return Objects.hash(id, name, city, rating, createdAt, userId);
   }
 
   @Override
@@ -166,6 +189,7 @@ public class Restaurant {
     sb.append("    city: ").append(toIndentedString(city)).append("\n");
     sb.append("    rating: ").append(toIndentedString(rating)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
+    sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
     sb.append("}");
     return sb.toString();
   }

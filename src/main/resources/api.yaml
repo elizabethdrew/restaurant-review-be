@@ -679,6 +679,9 @@ components:
           type: string
           format: date-time
           description: The date and time the restaurant was created.
+        user_id:
+          type: integer
+          format: int64
       required:
         - name
         - city
