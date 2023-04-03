@@ -3,14 +3,19 @@ package dev.drew.restaurantreview.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.drew.restaurantreview.entity.UserEntity;
-import dev.drew.restaurantreview.repository.UserRepository;
+import dev.drew.restaurantreview.entity.RestaurantEntity;
+import dev.drew.restaurantreview.repository.RestaurantRepository;
 import org.junit.jupiter.api.*;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -21,10 +26,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
-import static org.openapitools.model.User.RoleEnum.ADMIN;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -41,60 +48,38 @@ public class RestaurantControllerIntegrationTest {
 
     private String restaurantName = "Test Restaurant";
     private String cityName = "Test City";
-
-    private Integer ratingNumber = 3;
     private Long createdRestaurantId;
 
-
-    @BeforeEach
-    public void setup() throws Exception {
-
-        // Create a new RestaurantInput object with the given information
-        RestaurantInput restaurantInput = new RestaurantInput()
-                .name(restaurantName)
-                .city(cityName);
-
-        // Convert the RestaurantInput object to a JSON string
-        String restaurantInputJson = objectMapper.writeValueAsString(restaurantInput);
-
-        // Add the new restaurant using a POST request and MockMvc
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/restaurants")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(restaurantInputJson))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andReturn();
-
-        // Check if the restaurant was added successfully
-        if (result.getResponse().getStatus() != HttpStatus.CREATED.value()) {
-            throw new RuntimeException("Failed to add test restaurant.");
-        }
-
-        // Parse the JSON response
-        String jsonResponse = result.getResponse().getContentAsString();
-        JsonNode jsonNode = objectMapper.readTree(jsonResponse);
-
-        // Extract the "restaurant" section
-        JsonNode restaurantNode = jsonNode.get("restaurant");
-
-        // Convert the "restaurant" JSON section to a Restaurant object
-        Restaurant restaurant = objectMapper.treeToValue(restaurantNode, Restaurant.class);
-
-        createdRestaurantId = restaurant.getId();
-    }
-
-    @AfterEach
-    public void tearDown() throws Exception {
-        if (createdRestaurantId != null) {
-            mockMvc.perform(MockMvcRequestBuilders.delete("/restaurants/{restaurantId}", createdRestaurantId))
-                    .andExpect(status().isNoContent());
-        }
-
-    }
+    @MockBean
+    private RestaurantRepository restaurantRepository;
 
     @Test
     public void testGetAllRestaurants_noFilters() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/restaurants"))
-                .andExpect(status().isOk());
+        RestaurantEntity restaurantEntity = new RestaurantEntity();
+        restaurantEntity.setId(1L);
+        restaurantEntity.setName("Test");
+        restaurantEntity.setCity("City");
+
+
+        List<RestaurantEntity> restaurantEntities = new ArrayList<>();
+        restaurantEntities.add(restaurantEntity);
+
+        when(restaurantRepository.findAll()).thenReturn(restaurantEntities);
+
+        MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.get("/restaurants"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse();
+        List<Restaurant> actual = objectMapper.readValue(response.getContentAsString(), new TypeReference<>() {});
+
+        List<Restaurant> expected = new ArrayList<>();
+        Restaurant restaurant = new Restaurant();
+        restaurant.id(1L);
+        restaurant.setName("Test");
+        restaurant.city("City");
+        expected.add(restaurant);
+
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -113,6 +98,7 @@ public class RestaurantControllerIntegrationTest {
 
     @Test
     public void testGetAllRestaurants_filterByRating() throws Exception {
+        Integer ratingNumber = 1;
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/restaurants")
                         .param("rating", ratingNumber.toString()))
                 .andExpect(status().isOk())
