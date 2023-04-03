@@ -3,11 +3,14 @@ package dev.drew.restaurantreview.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.drew.restaurantreview.entity.UserEntity;
+import dev.drew.restaurantreview.repository.UserRepository;
 import org.junit.jupiter.api.*;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -21,6 +24,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static org.openapitools.model.User.RoleEnum.ADMIN;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -37,14 +41,18 @@ public class RestaurantControllerIntegrationTest {
 
     private String restaurantName = "Test Restaurant";
     private String cityName = "Test City";
+
+    private Integer ratingNumber = 3;
     private Long createdRestaurantId;
+
 
     @BeforeEach
     public void setup() throws Exception {
+
         // Create a new RestaurantInput object with the given information
         RestaurantInput restaurantInput = new RestaurantInput()
                 .name(restaurantName)
-                .city(cityName)
+                .city(cityName);
 
         // Convert the RestaurantInput object to a JSON string
         String restaurantInputJson = objectMapper.writeValueAsString(restaurantInput);
@@ -80,6 +88,7 @@ public class RestaurantControllerIntegrationTest {
             mockMvc.perform(MockMvcRequestBuilders.delete("/restaurants/{restaurantId}", createdRestaurantId))
                     .andExpect(status().isNoContent());
         }
+
     }
 
     @Test
@@ -161,7 +170,7 @@ public class RestaurantControllerIntegrationTest {
         // Create a new RestaurantInput object with the updated information
         RestaurantInput updatedRestaurantInput = new RestaurantInput()
                 .name("Updated Restaurant")
-                .city("Updated City")
+                .city("Updated City");
 
         // Convert the updated RestaurantInput object to a JSON string
         String updatedRestaurantJson = objectMapper.writeValueAsString(updatedRestaurantInput);
@@ -193,7 +202,7 @@ public class RestaurantControllerIntegrationTest {
         // Create a new RestaurantInput object with the updated information
         RestaurantInput updatedRestaurantInput = new RestaurantInput()
                 .name("Updated Restaurant")
-                .city("Updated City")
+                .city("Updated City");
 
         // Convert the updated RestaurantInput object to a JSON string
         String updatedRestaurantJson = objectMapper.writeValueAsString(updatedRestaurantInput);
