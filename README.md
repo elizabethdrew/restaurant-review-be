@@ -31,3 +31,13 @@ Diary:
 - Wed 29th March: Spent yesterday and today getting my head around integration tests. Have a strange failing test in restaurants - it should expect a 401 (which it gets) but for some reason it's saying it expects a 201? Shall come back to this in the future. Plan is to finish user tests tomorrow and implement the review endpoints before update security to use users within the database.
 - Thur 30th March: Productive day - managed to get security using JPA setup so now users in the database can have ownership over restaurant creation, editing and deletion, as can admins. Finished off a few more integration test this morning but may need to update to take into account to new security settings. Tomorrow the plan is to get all the review endpoints created, and any logic to pull restaurant ratings through from the input reviews.
 - Fri 31st March: Review endpoints in place. Review ratings now update the restaurant rating automatically.  Tweaks to security and review logic. Need to update the tests to take into account the updated setup.
+- Mon 3rd April: Back on integration tests. 
+
+
+To Do:
+- Columns should join each other
+- Integration Tests end in IT and own folder
+- Create unit tests
+- Service should be interface, logic in impl class
+- Lombok issue
+- JWT
