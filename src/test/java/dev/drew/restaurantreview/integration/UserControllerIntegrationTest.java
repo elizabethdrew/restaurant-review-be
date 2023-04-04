@@ -1,4 +1,4 @@
-package dev.drew.restaurantreview.controller;
+package dev.drew.restaurantreview.integration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

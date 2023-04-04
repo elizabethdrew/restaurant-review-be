@@ -1,4 +1,4 @@
-package dev.drew.restaurantreview.controller;
+package dev.drew.restaurantreview.integration;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -38,7 +38,6 @@ import java.util.Optional;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.openapitools.model.User.RoleEnum.ADMIN;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -46,7 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-@WithMockUser(username="admin",password="password",roles={"ADMIN"})
+@WithMockUser(username="admin",roles={"ADMIN"})
 public class RestaurantControllerIT {
 
     @Autowired

@@ -38,13 +38,10 @@ public class SecurityConfig {
         return http
                     .csrf().disable()
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/restaurants").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/restaurants" ).hasAnyRole("REVIEWER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/restaurants").permitAll()
                         .requestMatchers(HttpMethod.GET,"/restaurants/**" ).permitAll()
-                        .requestMatchers(HttpMethod.POST,"/restaurants/**" ).permitAll()
-                        .requestMatchers("/reviews").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/reviews").permitAll()
                         .requestMatchers(HttpMethod.GET, "/reviews/**" ).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/reviews/**" ).permitAll()
                         .requestMatchers(HttpMethod.POST, "/user" ).permitAll()
                         .anyRequest().authenticated())
                     .userDetailsService(jpaUserDetailsService)
