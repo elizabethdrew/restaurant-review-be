@@ -8,7 +8,6 @@ import dev.drew.restaurantreview.entity.SecurityUser;
 import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
 import org.junit.jupiter.api.*;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
@@ -16,8 +15,7 @@ import org.openapitools.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
+import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,12 +27,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,7 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @WithMockUser(username="admin",password="password",roles={"ADMIN"})
-public class RestaurantControllerIntegrationTest {
+public class RestaurantControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
@@ -66,7 +62,7 @@ public class RestaurantControllerIntegrationTest {
     @MockBean
     private RestaurantRepository restaurantRepository;
 
-    public RestaurantControllerIntegrationTest() {
+    public RestaurantControllerIT() {
         passwordEncoder = new BCryptPasswordEncoder();
     }
 
@@ -292,5 +288,67 @@ public class RestaurantControllerIntegrationTest {
         Assertions.assertEquals(restaurantId.intValue(), updatedRestaurant.getId().intValue());
         Assertions.assertEquals(updatedRestaurantInput.getName(), updatedRestaurant.getName());
         Assertions.assertEquals(updatedRestaurantInput.getCity(), updatedRestaurant.getCity());
+    }
+
+    @Test
+    public void testAddNewRestaurant_authorized() throws Exception {
+
+        // Create SecurityUser and set it as the principal in the Authentication object
+        SecurityUser securityUser = createSecurityUserWithRole(ADMIN);
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(securityUser);
+        when(authentication.isAuthenticated()).thenReturn(true);
+
+        // Set the Authentication object in the SecurityContextHolder
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // Create new restaurant input object
+        RestaurantInput input = new RestaurantInput()
+                .name("New Restaurant")
+                .city("New City");
+
+        String inputJson = objectMapper.writeValueAsString(input);
+
+        when(restaurantRepository.save(any(RestaurantEntity.class))).thenAnswer(invocation -> {
+            RestaurantEntity restaurant = invocation.getArgument(0);
+            restaurant.setId(1L);
+            return restaurant;
+        });
+
+        // Add the new restaurant using a POST request and MockMvc
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/restaurants")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(inputJson))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andReturn();
+
+        // Parse the JSON response
+        String jsonResponse = result.getResponse().getContentAsString();
+        JsonNode rootNode = objectMapper.readTree(jsonResponse);
+        JsonNode createdRestaurant = rootNode.path("restaurant");
+
+        // Check if the restaurant was added successfully
+        if (result.getResponse().getStatus() != HttpStatus.CREATED.value()) {
+            throw new RuntimeException("Failed to add test restaurant.");
+        }
+
+        // Extract user_id from the response
+        Long userIdResponse = createdRestaurant.path("user_id").asLong();
+
+        // Check if the current user's id has been added to the created restaurant
+        Assertions.assertEquals(securityUser.getId(), userIdResponse);
+    }
+
+    @Test
+    @WithAnonymousUser
+    public void testAddNewRestaurant_unauthorized() throws Exception {
+
+        RestaurantInput input = new RestaurantInput().name("New Restaurant").city("New City");
+        String inputJson = objectMapper.writeValueAsString(input);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/restaurants")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(inputJson))
+                .andExpect(status().isUnauthorized());
     }
 }

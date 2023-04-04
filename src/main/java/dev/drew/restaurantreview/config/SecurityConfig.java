@@ -11,6 +11,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static org.openapitools.model.User.RoleEnum.ADMIN;
+import static org.openapitools.model.User.RoleEnum.REVIEWER;
+
 @Configuration
 @EnableMethodSecurity
 @EnableWebSecurity
@@ -36,6 +39,7 @@ public class SecurityConfig {
                     .csrf().disable()
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/restaurants").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/restaurants" ).hasAnyRole("REVIEWER", "ADMIN")
                         .requestMatchers(HttpMethod.GET,"/restaurants/**" ).permitAll()
                         .requestMatchers(HttpMethod.POST,"/restaurants/**" ).permitAll()
                         .requestMatchers("/reviews").permitAll()
