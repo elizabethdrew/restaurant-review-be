@@ -29,6 +29,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,7 @@ import java.util.Optional;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.openapitools.model.User.RoleEnum.ADMIN;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -54,10 +57,6 @@ public class RestaurantControllerIT {
 
     @Autowired
     private final BCryptPasswordEncoder passwordEncoder;
-
-    private String restaurantName = "Test Restaurant";
-    private String cityName = "Test City";
-    private Long createdRestaurantId;
 
     @MockBean
     private RestaurantRepository restaurantRepository;
@@ -350,5 +349,37 @@ public class RestaurantControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(inputJson))
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void testDeleteRestaurantById() throws Exception {
+        Long restaurantId = 1L;
+        Long userId = 1L;
+
+        // Create SecurityUser and set it as the principal in the Authentication object
+        SecurityUser securityUser = createSecurityUserWithRole(ADMIN);
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(securityUser);
+        when(authentication.isAuthenticated()).thenReturn(true);
+
+        // Set the Authentication object in the SecurityContextHolder
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        RestaurantEntity restaurant1 = new RestaurantEntity();
+        restaurant1.setId(restaurantId);
+        restaurant1.setName("TestCity");
+        restaurant1.setCity("City");
+        restaurant1.setUserId(userId);
+
+        Optional<RestaurantEntity> optionalRestaurant = Optional.of(restaurant1);
+
+        when(restaurantRepository.findById(restaurantId)).thenReturn(optionalRestaurant);
+
+        // Delete the restaurant using a DELETE request and MockMvc
+        mockMvc.perform(MockMvcRequestBuilders.delete("/restaurants/{restaurantId}", restaurantId))
+                .andExpect(status().isNoContent());
+
+        // Verify that the delete method was called with the correct id
+        verify(restaurantRepository, times(1)).deleteById(restaurantId);
     }
 }
