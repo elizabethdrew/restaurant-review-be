@@ -11,9 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static org.openapitools.model.User.RoleEnum.ADMIN;
-import static org.openapitools.model.User.RoleEnum.REVIEWER;
-
 @Configuration
 @EnableMethodSecurity
 @EnableWebSecurity
@@ -25,29 +22,33 @@ public class SecurityConfig {
         this.jpaUserDetailsService = jpaUserDetailsService;
     }
 
+    // Declare a BCryptPasswordEncoder bean for password encoding
     @Bean
     public static BCryptPasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
-
-    // Configure to use just basic
+    // Configure the security settings for the application, including authentication and authorization rules
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         return http
-                    .csrf().disable()
+                .csrf().disable() // Disable CSRF protection
                 .authorizeHttpRequests(auth -> auth
+                        // Allow unauthenticated access to the following endpoints
                         .requestMatchers(HttpMethod.GET,"/restaurants").permitAll()
                         .requestMatchers(HttpMethod.GET,"/restaurants/**" ).permitAll()
                         .requestMatchers(HttpMethod.GET,"/reviews").permitAll()
                         .requestMatchers(HttpMethod.GET, "/reviews/**" ).permitAll()
                         .requestMatchers(HttpMethod.POST, "/user" ).permitAll()
+                        // Require authentication for all other requests
                         .anyRequest().authenticated())
-                    .userDetailsService(jpaUserDetailsService)
-                    .headers(headers -> headers.frameOptions().sameOrigin())
-                    .httpBasic(Customizer.withDefaults())
-                    .build();
+                // Set the user details service for authentication
+                .userDetailsService(jpaUserDetailsService)
+                // Configure the response headers to allow frame options from the same origin
+                .headers(headers -> headers.frameOptions().sameOrigin())
+                // Enable basic HTTP authentication
+                .httpBasic(Customizer.withDefaults())
+                .build();
     }
-
 }
