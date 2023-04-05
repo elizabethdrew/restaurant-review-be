@@ -1,6 +1,5 @@
 package dev.drew.restaurantreview.controller;
 
-import dev.drew.restaurantreview.service.RestaurantService;
 import dev.drew.restaurantreview.service.ReviewService;
 import org.openapitools.api.ReviewsApi;
 import org.openapitools.model.Review;
