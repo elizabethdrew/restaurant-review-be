@@ -55,7 +55,7 @@ class RestaurantControllerUT {
         when(restaurantService.addNewRestaurant(any(RestaurantInput.class))).thenReturn(responseEntity);
 
         // Call the endpoint and check the response status
-        mockMvc.perform(post("/restaurants")
+        mockMvc.perform(post("/api/v1/restaurants")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(input)))
                 .andExpect(status().isCreated());
@@ -73,7 +73,7 @@ class RestaurantControllerUT {
 
         when(restaurantService.getAllRestaurants(null, null, null)).thenReturn(responseEntity);
 
-        mockMvc.perform(get("/restaurants")
+        mockMvc.perform(get("/api/v1/restaurants")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
@@ -87,7 +87,7 @@ class RestaurantControllerUT {
 
         when(restaurantService.getRestaurantById(restaurantId.intValue())).thenReturn(responseEntity);
 
-        mockMvc.perform(get("/restaurants/{restaurantId}", restaurantId)
+        mockMvc.perform(get("/api/v1/restaurants/{restaurantId}", restaurantId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
@@ -102,7 +102,7 @@ class RestaurantControllerUT {
 
         when(restaurantService.updateRestaurantById(restaurantId.intValue(), input)).thenReturn(responseEntity);
 
-        mockMvc.perform(put("/restaurants/{restaurantId}", restaurantId)
+        mockMvc.perform(put("/api/v1/restaurants/{restaurantId}", restaurantId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(input)))
                 .andExpect(status().isOk());
@@ -116,7 +116,7 @@ class RestaurantControllerUT {
 
         when(restaurantService.deleteRestaurantById(restaurantId.intValue())).thenReturn(responseEntity);
 
-        mockMvc.perform(delete("/restaurants/{restaurantId}", restaurantId)
+        mockMvc.perform(delete("/api/v1/restaurants/{restaurantId}", restaurantId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
