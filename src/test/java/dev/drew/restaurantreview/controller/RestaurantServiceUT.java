@@ -1,4 +1,4 @@
-package dev.drew.restaurantreview.unit;
+package dev.drew.restaurantreview.controller;
 
 import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.mapper.RestaurantMapper;

@@ -1,4 +1,4 @@
-package dev.drew.restaurantreview.unit;
+package dev.drew.restaurantreview.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.drew.restaurantreview.controller.RestaurantController;

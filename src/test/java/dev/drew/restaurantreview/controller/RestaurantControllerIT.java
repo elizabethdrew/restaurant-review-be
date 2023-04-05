@@ -1,4 +1,4 @@
-package dev.drew.restaurantreview.integration;
+package dev.drew.restaurantreview.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
