@@ -36,8 +36,8 @@ public class SecurityConfig {
                 .csrf().disable() // Disable CSRF protection
                 .authorizeHttpRequests(auth -> auth
                         // Allow unauthenticated access to the following endpoints
-                        .requestMatchers(HttpMethod.GET,"/restaurants").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/restaurants/**" ).permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/v1/restaurants").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/v1/restaurants/**" ).permitAll()
                         .requestMatchers(HttpMethod.GET,"/reviews").permitAll()
                         .requestMatchers(HttpMethod.GET, "/reviews/**" ).permitAll()
                         .requestMatchers(HttpMethod.POST, "/user" ).permitAll()

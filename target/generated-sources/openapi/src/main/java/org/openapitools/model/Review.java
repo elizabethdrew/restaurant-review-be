@@ -20,7 +20,7 @@ import javax.annotation.Generated;
  * Review
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-04-03T15:48:52.529580+01:00[Europe/London]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-04-05T11:51:17.415607+01:00[Europe/London]")
 public class Review {
 
   @JsonProperty("id")
