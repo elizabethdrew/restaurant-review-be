@@ -87,7 +87,7 @@ public class RestaurantControllerIT {
 
         when(restaurantRepository.findAll()).thenReturn(restaurantEntities);
 
-        MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.get("/restaurants"))
+        MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/restaurants"))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
@@ -122,7 +122,7 @@ public class RestaurantControllerIT {
 
         when(restaurantRepository.findAll()).thenReturn(restaurantEntities);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/restaurants")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/restaurants")
                         .param("city", "City"))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -158,7 +158,7 @@ public class RestaurantControllerIT {
 
         when(restaurantRepository.findAll()).thenReturn(restaurantEntities);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/restaurants")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/restaurants")
                         .param("rating", testRating.toString()))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -193,7 +193,7 @@ public class RestaurantControllerIT {
 
         when(restaurantRepository.findAll()).thenReturn(restaurantEntities);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/restaurants")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/restaurants")
                         .param("user_id", testUserId.toString()))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -219,7 +219,7 @@ public class RestaurantControllerIT {
 
         when(restaurantRepository.findById(restaurantId)).thenReturn(optionalRestaurant);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/restaurants/{restaurantId}", restaurantId))
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/restaurants/{restaurantId}", restaurantId))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -232,7 +232,7 @@ public class RestaurantControllerIT {
     public void testGetRestaurantById_notFound() throws Exception {
         Long restaurantId = -1L; // Use an ID that doesn't exist in the database
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/restaurants/{restaurantId}", restaurantId))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/restaurants/{restaurantId}", restaurantId))
                 .andExpect(status().isNotFound());
     }
 
@@ -272,7 +272,7 @@ public class RestaurantControllerIT {
         String updatedRestaurantJson = objectMapper.writeValueAsString(updatedRestaurantInput);
 
         // Update the restaurant using a PUT request and MockMvc
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/restaurants/{restaurantId}", restaurantId)
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/restaurants/{restaurantId}", restaurantId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updatedRestaurantJson))
                 .andExpect(status().isOk())
@@ -314,7 +314,7 @@ public class RestaurantControllerIT {
         });
 
         // Add the new restaurant using a POST request and MockMvc
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/restaurants")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/restaurants")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(inputJson))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
@@ -344,7 +344,7 @@ public class RestaurantControllerIT {
         RestaurantInput input = new RestaurantInput().name("New Restaurant").city("New City");
         String inputJson = objectMapper.writeValueAsString(input);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/restaurants")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/restaurants")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(inputJson))
                 .andExpect(status().isUnauthorized());
@@ -375,7 +375,7 @@ public class RestaurantControllerIT {
         when(restaurantRepository.findById(restaurantId)).thenReturn(optionalRestaurant);
 
         // Delete the restaurant using a DELETE request and MockMvc
-        mockMvc.perform(MockMvcRequestBuilders.delete("/restaurants/{restaurantId}", restaurantId))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/restaurants/{restaurantId}", restaurantId))
                 .andExpect(status().isNoContent());
 
         // Verify that the delete method was called with the correct id

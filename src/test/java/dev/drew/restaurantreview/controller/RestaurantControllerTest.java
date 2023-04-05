@@ -1,7 +1,6 @@
 package dev.drew.restaurantreview.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.drew.restaurantreview.controller.RestaurantController;
 import dev.drew.restaurantreview.service.RestaurantService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-class RestaurantControllerUT {
+class RestaurantControllerTest {
 
     @InjectMocks
     private RestaurantController restaurantController;
