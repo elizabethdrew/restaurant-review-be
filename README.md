@@ -41,6 +41,15 @@
 
 - **Description:** This class is responsible for handling requests related to restaurants. The `RestaurantController` class is a Spring RestController that implements the `RestaurantsApi` interface. It contains methods that map to different endpoints for handling HTTP requests related to restaurants. The class is annotated with `@RestController` and `@RequestMapping` which marks it as a controller and maps all endpoints within the class to the root URL of the application. Additionally, the `@PreAuthorize` annotation is used to restrict access to some endpoints based on user authentication status.
 
+### **Package: `dev.drew.restaurantreview.service`**
+**Purpose:** This package contains the service layer classes responsible for the business logic of the application, such as interacting with repositories, mapping between model objects, and handling exceptions.
+
+**Directory Structure:** Service classes should be placed in a **`service`** package within the application.
+
+**Class: `RestaurantServiceImpl`**
+
+- **Description:** This class implements the **`RestaurantService`** interface and is responsible for handling business logic related to restaurants. It interacts with the **`RestaurantRepository`** and **`ReviewRepository`**, as well as the **`RestaurantMapper`**. The class is annotated with **`@Service`**, which marks it as a Spring service bean.
+
 ## 6. Core Features
 *Detail the main functionalities of the application and their corresponding code implementations. Describe the APIs, their endpoints, request and response models, and any specific business rules.*
 

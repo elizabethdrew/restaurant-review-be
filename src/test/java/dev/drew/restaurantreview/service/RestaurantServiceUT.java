@@ -1,10 +1,9 @@
-package dev.drew.restaurantreview.controller;
+package dev.drew.restaurantreview.service;
 
 import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.mapper.RestaurantMapper;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
 import dev.drew.restaurantreview.repository.ReviewRepository;
-import dev.drew.restaurantreview.service.RestaurantService;
 import dev.drew.restaurantreview.util.SecurityUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +32,7 @@ import static org.mockito.Mockito.*;
 class RestaurantServiceUT {
 
     @InjectMocks
-    private RestaurantService restaurantService;
+    private RestaurantServiceImpl restaurantServiceImpl;
 
     @Mock
     private RestaurantRepository restaurantRepository;
@@ -84,7 +83,7 @@ class RestaurantServiceUT {
         when(restaurantRepository.save(any(RestaurantEntity.class))).thenReturn(restaurant);
 
         // Call the service method
-        ResponseEntity<RestaurantResponse> response = restaurantService.addNewRestaurant(input);
+        ResponseEntity<RestaurantResponse> response = restaurantServiceImpl.addNewRestaurant(input);
 
         // Verify the response status
         assertEquals(responseEntity.getStatusCode(), response.getStatusCode());
