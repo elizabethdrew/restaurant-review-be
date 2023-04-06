@@ -6,21 +6,33 @@ import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.entity.SecurityUser;
 import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
+import junit.framework.Assert;
 import org.junit.jupiter.api.*;
+import org.mockito.Mockito;
 import org.openapitools.model.Restaurant;
+import org.openapitools.model.RestaurantInput;
+import org.openapitools.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
+import static org.openapitools.model.User.RoleEnum.ADMIN;
+import static org.openapitools.model.User.RoleEnum.REVIEWER;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -38,6 +50,16 @@ public class RestaurantServiceImplIT {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    private SecurityUser createSecurityUserWithRole(User.RoleEnum role) {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(1L);
+        userEntity.setUsername("testUser");
+        userEntity.setPassword(passwordEncoder.encode("password"));
+        userEntity.setRole(role);
+
+        return new SecurityUser(userEntity);
+    }
 
     @Test
     public void testGetAllRestaurants_noFilters() {
@@ -141,6 +163,162 @@ public class RestaurantServiceImplIT {
         for (Restaurant restaurant : actual) {
             Assertions.assertEquals(1L, restaurant.getUserId());
         }
+    }
+
+    @Test
+    public void testGetRestaurantById() {
+        // Save a sample restaurant to the repository
+        RestaurantEntity restaurantEntity = new RestaurantEntity();
+        restaurantEntity.setId(1L);
+        restaurantEntity.setName("Test");
+        restaurantEntity.setCity("City");
+        restaurantRepository.save(restaurantEntity);
+
+        // Call the getRestaurantById method
+        ResponseEntity<Restaurant> response = restaurantServiceImpl.getRestaurantById(1);
+
+        // Check if the response status is OK and the restaurant details are correct
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        Restaurant actualRestaurant = response.getBody();
+        assertNotNull(actualRestaurant);
+
+        // Prepare the expected restaurant data
+        Restaurant expectedRestaurant = new Restaurant();
+        expectedRestaurant.setId(1L);
+        expectedRestaurant.setName("Test");
+        expectedRestaurant.setCity("City");
+
+        // Compare the actual and expected restaurants
+        assertEquals(expectedRestaurant, actualRestaurant);
+    }
+
+    @Test
+    public void testGetRestaurantById_notFound() {
+        // Try to get a restaurant with an ID that doesn't exist in the repository
+        ResponseEntity<Restaurant> response = restaurantServiceImpl.getRestaurantById(-1);
+
+        // Check if the response status is NOT_FOUND
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void testUpdateRestaurantById() {
+
+        // Create SecurityUser and set it as the principal in the Authentication object
+        SecurityUser securityUser = createSecurityUserWithRole(REVIEWER);
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(securityUser);
+        when(authentication.isAuthenticated()).thenReturn(true);
+
+        // Set the Authentication object in the SecurityContextHolder
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // Save a sample restaurant to the repository
+        RestaurantEntity restaurantEntity = new RestaurantEntity();
+        restaurantEntity.setId(1L);
+        restaurantEntity.setName("Test");
+        restaurantEntity.setCity("City");
+        restaurantEntity.setUserId(securityUser.getId());
+        restaurantRepository.save(restaurantEntity);
+
+        // Create an instance of RestaurantInput with updated information
+        RestaurantInput restaurantInput = new RestaurantInput();
+        restaurantInput.setName("Updated Test");
+        restaurantInput.setCity("Updated City");
+
+        // Call the updateRestaurantById method with the saved restaurant's ID and the RestaurantInput instance
+        ResponseEntity<Restaurant> response = restaurantServiceImpl.updateRestaurantById(1, restaurantInput);
+
+        // Check if the response status is OK and the updated restaurant details are correct
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        Restaurant actualRestaurant = response.getBody();
+        assertNotNull(actualRestaurant);
+
+        // Prepare the expected restaurant data
+        Restaurant expectedRestaurant = new Restaurant();
+        expectedRestaurant.setId(1L);
+        expectedRestaurant.setName("Updated Test");
+        expectedRestaurant.setCity("Updated City");
+        expectedRestaurant.setUserId(1L);
+
+        // Compare the actual and expected restaurants
+        assertEquals(expectedRestaurant, actualRestaurant);
+    }
+
+    @Test
+    public void testUpdateRestaurantById_notOwner() {
+
+        // Create SecurityUser and set it as the principal in the Authentication object
+        SecurityUser securityUser = createSecurityUserWithRole(REVIEWER);
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(securityUser);
+        when(authentication.isAuthenticated()).thenReturn(true);
+
+        // Set the Authentication object in the SecurityContextHolder
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // Save a sample restaurant to the repository
+        RestaurantEntity restaurantEntity = new RestaurantEntity();
+        restaurantEntity.setId(1L);
+        restaurantEntity.setName("Test");
+        restaurantEntity.setCity("City");
+        restaurantEntity.setUserId(2L);
+        restaurantRepository.save(restaurantEntity);
+
+        // Create an instance of RestaurantInput with updated information
+        RestaurantInput restaurantInput = new RestaurantInput();
+        restaurantInput.setName("Updated Test");
+        restaurantInput.setCity("Updated City");
+
+        // Call the updateRestaurantById method with the saved restaurant's ID and the RestaurantInput instance
+        ResponseEntity<Restaurant> response = restaurantServiceImpl.updateRestaurantById(1, restaurantInput);
+
+        // Check if the response status is FORBIDDEN
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
+    public void testUpdateRestaurantById_isAdmin() {
+
+        // Create SecurityUser and set it as the principal in the Authentication object
+        SecurityUser securityUser = createSecurityUserWithRole(ADMIN);
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(securityUser);
+        when(authentication.isAuthenticated()).thenReturn(true);
+
+        // Set the Authentication object in the SecurityContextHolder
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // Save a sample restaurant to the repository
+        RestaurantEntity restaurantEntity = new RestaurantEntity();
+        restaurantEntity.setId(1L);
+        restaurantEntity.setName("Test");
+        restaurantEntity.setCity("City");
+        restaurantEntity.setUserId(2L);
+        restaurantRepository.save(restaurantEntity);
+
+        // Create an instance of RestaurantInput with updated information
+        RestaurantInput restaurantInput = new RestaurantInput();
+        restaurantInput.setName("Updated Test");
+        restaurantInput.setCity("Updated City");
+
+        // Call the updateRestaurantById method with the saved restaurant's ID and the RestaurantInput instance
+        ResponseEntity<Restaurant> response = restaurantServiceImpl.updateRestaurantById(1, restaurantInput);
+
+        // Check if the response status is OK and the updated restaurant details are correct
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        Restaurant actualRestaurant = response.getBody();
+        assertNotNull(actualRestaurant);
+
+        // Prepare the expected restaurant data
+        Restaurant expectedRestaurant = new Restaurant();
+        expectedRestaurant.setId(1L);
+        expectedRestaurant.setName("Updated Test");
+        expectedRestaurant.setCity("Updated City");
+        expectedRestaurant.setUserId(2L);
+
+        // Compare the actual and expected restaurants
+        assertEquals(expectedRestaurant, actualRestaurant);
     }
 
 }
