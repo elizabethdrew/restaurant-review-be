@@ -28,8 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.openapitools.model.User.RoleEnum.ADMIN;
 import static org.openapitools.model.User.RoleEnum.REVIEWER;
@@ -319,6 +318,35 @@ public class RestaurantServiceImplIT {
 
         // Compare the actual and expected restaurants
         assertEquals(expectedRestaurant, actualRestaurant);
+    }
+
+    @Test
+    public void testDeleteRestaurantById_isAdmin() {
+        // Create SecurityUser and set it as the principal in the Authentication object
+        SecurityUser securityUser = createSecurityUserWithRole(ADMIN);
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(securityUser);
+        when(authentication.isAuthenticated()).thenReturn(true);
+
+        // Set the Authentication object in the SecurityContextHolder
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // Save a sample restaurant to the repository
+        RestaurantEntity restaurantEntity = new RestaurantEntity();
+        restaurantEntity.setId(1L);
+        restaurantEntity.setName("Test");
+        restaurantEntity.setCity("City");
+        restaurantEntity.setUserId(2L);
+        restaurantRepository.save(restaurantEntity);
+
+        // Call the deleteRestaurantById method with the saved restaurant's ID
+        ResponseEntity<Void> response = restaurantServiceImpl.deleteRestaurantById(1);
+
+        // Check if the response status is NO_CONTENT
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+
+        // Check if the restaurant has been deleted from the repository
+        assertFalse(restaurantRepository.existsById(1L));
     }
 
 }
