@@ -163,6 +163,10 @@
 **Class: `RestaurantServiceImpl`**
 - **Description:** This class implements the **`RestaurantService`** interface and is responsible for handling business logic related to restaurants. It interacts with the **`RestaurantRepository`** and **`ReviewRepository`**, as well as the **`RestaurantMapper`**. The class is annotated with **`@Service`**, which marks it as a Spring service bean.
 
+**Interface: `ReviewService`**
+- **Description:** This interface provides a set of methods for managing reviews, including adding new reviews, retrieving all reviews with optional filters, getting a specific review by ID, updating a review by ID, and deleting a review by ID. The actual implementation of these methods should be provided in a class implementing this interface.
+
+
 ---
 
 ## 6. Core Features
