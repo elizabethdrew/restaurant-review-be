@@ -140,6 +140,9 @@
 **Purpose:**
 **Directory Structure:**
 
+**Interface: `RestaurantRepository`**
+- **Description:** This interface defines the **`RestaurantRepository`**, which is responsible for interacting with the database to manage **`RestaurantEntity`** objects. It extends **`JpaRepository`** and is annotated with **`@Repository`**, indicating that it is a Spring Data JPA repository.
+
 **Interface: `ReviewRepository`**
 - **Description:** This interface defines the **`ReviewRepository`**, which is responsible for interacting with the database to manage **`ReviewEntity`** objects. It extends **`JpaRepository`** and is annotated with **`@Repository`**, indicating that it is a Spring Data JPA repository.
 
