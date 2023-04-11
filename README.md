@@ -275,6 +275,60 @@ Class: **`EntityUserIdProvider`**
 ## 6. Core Features
 *Detail the main functionalities of the application and their corresponding code implementations. Describe the APIs, their endpoints, request and response models, and any specific business rules.*
 
+## **6. Core Features**
+
+### **6.1 User Management**
+
+The application provides user management features through the **`UserService`** interface and its implementation in **`UserServiceImpl`**. These features include adding a new user, getting a user by their ID, deleting a user by their ID, and updating a user by their ID.
+
+**Endpoints:**
+
+- **POST /users**: This endpoint is used to add a new user. It takes a JSON payload containing user information, such as username, password, and email. The **`UserServiceImpl`** class handles the creation of the user in the database.
+- **GET /users/{id}**: This endpoint retrieves a user by their ID. The **`UserServiceImpl`** class fetches the user from the database using the **`UserRepository`**.
+- **PUT /users/{id}**: This endpoint updates a user by their ID. It takes a JSON payload containing the updated user information. The **`UserServiceImpl`** class is responsible for updating the user in the database.
+- **DELETE /users/{id}**: This endpoint deletes a user by their ID. The **`UserServiceImpl`** class handles the deletion of the user from the database.
+
+### **6.2 Restaurant Management**
+
+The application provides restaurant management features through the **`RestaurantService`** interface and its implementation in **`RestaurantServiceImpl`**. These features include adding new restaurants, retrieving all restaurants with optional filters, getting a specific restaurant by ID, updating a restaurant by ID, and deleting a restaurant by ID.
+
+**Endpoints:**
+
+- **POST /restaurants**: This endpoint is used to add a new restaurant. It takes a JSON payload containing restaurant information, such as name, address, and description. The **`RestaurantServiceImpl`** class handles the creation of the restaurant in the database.
+- **GET /restaurants**: This endpoint retrieves all restaurants, with optional filters like a search query or a specific location. The **`RestaurantServiceImpl`** class fetches the restaurants from the database using the **`RestaurantRepository`**.
+- **GET /restaurants/{id}**: This endpoint retrieves a specific restaurant by its ID. The **`RestaurantServiceImpl`** class fetches the restaurant from the database using the **`RestaurantRepository`**.
+- **PUT /restaurants/{id}**: This endpoint updates a restaurant by its ID. It takes a JSON payload containing the updated restaurant information. The **`RestaurantServiceImpl`** class is responsible for updating the restaurant in the database.
+- **DELETE /restaurants/{id}**: This endpoint deletes a restaurant by its ID. The **`RestaurantServiceImpl`** class handles the deletion of the restaurant from the database.
+
+### **6.3 Review Management**
+
+The application provides review management features through the **`ReviewService`** interface and its implementation in **`ReviewServiceImpl`**. These features include adding new reviews, retrieving all reviews with optional filters, getting a specific review by ID, updating a review by ID, and deleting a review by ID.
+
+**Endpoints:**
+
+- **POST /reviews**: This endpoint is used to add a new review. It takes a JSON payload containing review information, such as the restaurant ID, user ID, rating, and comment. The **`ReviewServiceImpl`** class handles the creation of the review in the database.
+- **GET /reviews**: This endpoint retrieves all reviews, with optional filters like a search query or a specific user or restaurant. The **`ReviewServiceImpl`** class fetches the reviews from the database using the **`ReviewRepository`**.
+- **GET /reviews/{id}**: This endpoint retrieves a specific review by its ID. The **`ReviewServiceImpl`** class fetches the review from the database using the **`ReviewRepository`**.
+- **PUT /reviews/{id}**: This endpoint updates a review by its ID. It takes a JSON payload containing the updated review information, such as rating and comment. The **`ReviewServiceImpl`** class is responsible for updating the review in the database.
+- **DELETE /reviews/{id}**: This endpoint deletes a review by its ID. The **`ReviewServiceImpl`** class handles the deletion of the review from the database.
+
+### **6.4 Authentication and Authorization**
+
+The application provides authentication and authorization features using the **`JpaUserDetailsService`** class and the **`SecurityUtils`** utility class. Users are authenticated based on their username and password. User roles determine their authorization levels, with the "ROLE_ADMIN" role having additional privileges.
+
+### Endpoints:
+
+- **POST /auth/login**: This endpoint is used for user authentication. It takes a JSON payload containing the user's username and password. The **`JpaUserDetailsService`** class is responsible for loading user details and checking the provided credentials.
+- **POST /auth/register**: This endpoint is used for user registration. It takes a JSON payload containing the user's username, password, and email. The **`UserServiceImpl`** class handles the creation of the new user in the database.
+
+### Business Rules:
+
+- Users with the "ROLE_ADMIN" role have additional privileges, such as deleting and updating any restaurant or review, regardless of ownership.
+- Users without the "ROLE_ADMIN" role can only delete or update their own reviews or restaurants.
+- The **`SecurityUtils`** utility class provides methods like **`getCurrentUserId()`**, **`isAdmin()`**, and **`isAdminOrOwner()`** to facilitate checking user permissions and roles.
+
+In summary, the Restaurant Review application offers core features related to user management, restaurant management, review management, and authentication/authorization. The code implementation is organized into controllers, services, repositories, and utility classes, with specific business rules enforced through the **`SecurityUtils`** utility class and user roles.
+
 ---
 
 ## 7. Error Handling
