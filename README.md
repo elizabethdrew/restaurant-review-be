@@ -40,6 +40,11 @@
 **Class: `RestaurantController`**
 
 - **Description:** This class is responsible for handling requests related to restaurants. The `RestaurantController` class is a Spring RestController that implements the `RestaurantsApi` interface. It contains methods that map to different endpoints for handling HTTP requests related to restaurants. The class is annotated with `@RestController` and `@RequestMapping` which marks it as a controller and maps all endpoints within the class to the root URL of the application. Additionally, the `@PreAuthorize` annotation is used to restrict access to some endpoints based on user authentication status.
+
+**Class: `ReviewController`**
+
+- **Description:** This class is responsible for handling requests related to reviews. The **`ReviewController`** class is a Spring RestController that implements the **`ReviewsApi`** interface. It contains methods that map to different endpoints for handling HTTP requests related to reviews. The class is annotated with **`@RestController`**, **`@RequestMapping`**, and **`@PreAuthorize`**, which marks it as a controller and maps all endpoints within the class to the root URL of the application. Additionally, the **`@PreAuthorize`** annotation is used to restrict access to some endpoints based on user authentication status.
+
 ---
 ### **Package: `dev.drew.restaurantreview.entity`**
 

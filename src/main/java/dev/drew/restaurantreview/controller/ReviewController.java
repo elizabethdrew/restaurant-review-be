@@ -21,21 +21,25 @@ public class ReviewController implements ReviewsApi {
 
     private final ReviewService reviewService;
 
+    // Constructor for dependency injection of ReviewService
     public ReviewController(ReviewService reviewService) {
         this.reviewService = reviewService;
     }
 
+    // Endpoint to add a new review, accessible to authenticated users
     @Override
-    @PreAuthorize("permitAll()")
     public ResponseEntity<ReviewResponse> addNewReview(ReviewInput reviewInput) {
         return reviewService.addNewReview(reviewInput);
     }
 
+    // Endpoint to delete a review by its ID, accessible to authenticated users
     @Override
     public ResponseEntity<Void> deleteReviewById(Integer reviewId) {
         return reviewService.deleteReviewById(reviewId);
     }
 
+    // Endpoint to get all reviews, accessible to all users
+    // Supports optional filtering by restaurantId and userId
     @Override
     @PreAuthorize("permitAll()")
     public ResponseEntity<List<Review>> getAllReviews(
@@ -44,14 +48,17 @@ public class ReviewController implements ReviewsApi {
         return reviewService.getAllReviews(restaurantId, userId);
     }
 
+    // Endpoint to get a single review by its ID, accessible to all users
     @Override
     @PreAuthorize("permitAll()")
     public ResponseEntity<Review> getReviewById(Integer reviewId) {
         return reviewService.getReviewById(reviewId);
     }
 
+    // Endpoint to update a review by its ID, accessible to authenticated users
     @Override
     public ResponseEntity<ReviewResponse> updateReviewById(Integer reviewId, ReviewInput reviewInput) {
         return reviewService.updateReviewById(reviewId, reviewInput);
     }
 }
+
