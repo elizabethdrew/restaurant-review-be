@@ -32,12 +32,10 @@ Diary:
 - Thur 30th March: Productive day - managed to get security using JPA setup so now users in the database can have ownership over restaurant creation, editing and deletion, as can admins. Finished off a few more integration test this morning but may need to update to take into account to new security settings. Tomorrow the plan is to get all the review endpoints created, and any logic to pull restaurant ratings through from the input reviews.
 - Fri 31st March: Review endpoints in place. Review ratings now update the restaurant rating automatically.  Tweaks to security and review logic. Need to update the tests to take into account the updated setup.
 - Mon 3rd April: Back on integration tests. 
+- Tuesday 11th April: Updated documentation. Changed database tables to link to other tables. Removed the lombok @EqualsAndHashCode from entity classes. Updated yaml for api version control.
 
 
 To Do:
-- Columns should join each other
 - Integration Tests end in IT and own folder
 - Create unit tests
-- Service should be interface, logic in impl class
-- Lombok issue
 - JWT
