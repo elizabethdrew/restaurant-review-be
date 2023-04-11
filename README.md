@@ -75,6 +75,16 @@ Here are the general steps to set up and run the application locally:
 ## 4. Application Architecture
 *Give an overview of the main components and layers of the application. Include a simple diagram illustrating the architecture.*
 
+The Restaurant Review app is made with the Spring Boot framework and follows a layered architecture pattern, consisting of four layers: presentation, service, repository, and database.
+
+The presentation layer is in the **`controller`** package, which exposes REST APIs for the app. The service layer is in the **`service`** package and handles the app's business logic. It communicates with the repository layer in the **`repository`** package to retrieve and manipulate data. The repository layer communicates with the database layer, which uses an in-memory H2 database and is managed using Spring Data JPA.
+
+The entity layer has three entities that map to the database tables: **`RestaurantEntity`**, **`ReviewEntity`**, and **`UserEntity`**. The repository layer has three repositories: **`RestaurantRepository`**, **`ReviewRepository`**, and **`UserRepository`**, which provide methods for basic CRUD operations on its corresponding entity.
+
+The service layer has three services: **`RestaurantService`**, **`ReviewService`**, and **`UserService`**, which interact with the repository layer to retrieve and manipulate data from the database. The controller layer has three controllers: **`RestaurantController`**, **`ReviewController`**, and **`UserController`**, which expose RESTful endpoints for clients to interact with the app.
+
+Finally, the mapper layer provides mapping between entities and DTOs, used by the controller layer. The app is structured so that the client makes requests to the controller layer, which delegates to the service layer to perform business logic. The service layer interacts with the repository layer to perform CRUD operations on the database. The entities and DTOs are used by the controller and mapper layers to represent data.
+
 ---
 
 ## 5. Code Structure
