@@ -1,3 +1,4 @@
 /.idea/
 dining.trace.db
-/target/*
+/target/
+/target/generated-sources/
