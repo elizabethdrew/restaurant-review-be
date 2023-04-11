@@ -157,6 +157,9 @@
 **Class: `JpaUserDetailsService`**
 - **Description:** This class implements the **`UserDetailsService`** interface and provides a way to load user-specific data by their username for the authentication process. It has a **`loadUserByUsername()`** method, which retrieves user information from the **`UserRepository`**. It uses the **`SecurityUser`** class to return user details. The class is annotated with **`@Service`**, indicating that it is a Spring service component.
 
+**Interface: `RestaurantService`**
+- **Description:** This interface provides a set of methods for managing restaurants, including adding new restaurants, retrieving all restaurants with optional filters, getting a specific restaurant by ID, updating a restaurant by ID, and deleting a restaurant by ID. The actual implementation of these methods should be provided in a class implementing this interface.
+
 **Class: `RestaurantServiceImpl`**
 - **Description:** This class implements the **`RestaurantService`** interface and is responsible for handling business logic related to restaurants. It interacts with the **`RestaurantRepository`** and **`ReviewRepository`**, as well as the **`RestaurantMapper`**. The class is annotated with **`@Service`**, which marks it as a Spring service bean.
 
