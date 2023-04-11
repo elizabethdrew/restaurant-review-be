@@ -145,7 +145,9 @@
 
 **Interface: `ReviewRepository`**
 - **Description:** This interface defines the **`ReviewRepository`**, which is responsible for interacting with the database to manage **`ReviewEntity`** objects. It extends **`JpaRepository`** and is annotated with **`@Repository`**, indicating that it is a Spring Data JPA repository.
-
+  
+**Interface: `UserRepository`**
+- **Description:** This interface defines the **`UserRepository`**, which is responsible for interacting with the database to manage **`UserEntity`** objects. It extends **`JpaRepository`** and is annotated with **`@Repository`**, indicating that it is a Spring Data JPA repository. It includes custom methods for finding and deleting users by their username.
 ---
 
 ### **Package: `dev.drew.restaurantreview.service`**

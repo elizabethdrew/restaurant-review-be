@@ -1,16 +1,19 @@
 package dev.drew.restaurantreview.repository;
 
 import dev.drew.restaurantreview.entity.UserEntity;
-import org.openapitools.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+// The UserRepository interface is responsible for interacting with the database to manage UserEntity objects.
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
+    // Find a user by their username
     Optional<UserEntity> findByUsername(String username);
+
+    // Delete a user by their username
     void deleteByUsername(String username);
 
 }
