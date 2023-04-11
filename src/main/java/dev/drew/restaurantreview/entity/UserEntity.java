@@ -19,7 +19,6 @@ import java.time.OffsetDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 public class UserEntity extends org.openapitools.model.User {
 
     @Id

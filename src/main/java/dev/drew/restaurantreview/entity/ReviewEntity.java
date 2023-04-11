@@ -15,7 +15,6 @@ import java.time.OffsetDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 public class ReviewEntity extends org.openapitools.model.Review {
 
     @Id
