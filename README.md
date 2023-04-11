@@ -148,6 +148,8 @@
   
 **Interface: `UserRepository`**
 - **Description:** This interface defines the **`UserRepository`**, which is responsible for interacting with the database to manage **`UserEntity`** objects. It extends **`JpaRepository`** and is annotated with **`@Repository`**, indicating that it is a Spring Data JPA repository. It includes custom methods for finding and deleting users by their username.
+
+
 ---
 
 ### **Package: `dev.drew.restaurantreview.service`**
@@ -165,6 +167,12 @@
 
 **Interface: `ReviewService`**
 - **Description:** This interface provides a set of methods for managing reviews, including adding new reviews, retrieving all reviews with optional filters, getting a specific review by ID, updating a review by ID, and deleting a review by ID. The actual implementation of these methods should be provided in a class implementing this interface.
+
+**Class: `ReviewServiceImpl`**
+- **Description:** This class provides the implementation of the **`ReviewService`** interface, managing the functionality for managing reviews, including adding new reviews, retrieving all reviews with optional filters, getting a specific review by ID, updating a review by ID, and deleting a review by ID.
+
+**Interface: `UserService`**
+- **Description:** This interface defines the contract for managing user-related operations, such as adding a new user, getting a user by their ID, deleting a user by their ID, and updating a user by their ID.
 
 
 ---
