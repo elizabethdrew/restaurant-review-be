@@ -154,6 +154,9 @@
 **Purpose:** This package contains the service layer classes responsible for the business logic of the application, such as interacting with repositories, mapping between model objects, and handling exceptions.
 **Directory Structure:** Service classes should be placed in a **`service`** package within the application.
 
+**Class: `JpaUserDetailsService`**
+- **Description:** This class implements the **`UserDetailsService`** interface and provides a way to load user-specific data by their username for the authentication process. It has a **`loadUserByUsername()`** method, which retrieves user information from the **`UserRepository`**. It uses the **`SecurityUser`** class to return user details. The class is annotated with **`@Service`**, indicating that it is a Spring service component.
+
 **Class: `RestaurantServiceImpl`**
 - **Description:** This class implements the **`RestaurantService`** interface and is responsible for handling business logic related to restaurants. It interacts with the **`RestaurantRepository`** and **`ReviewRepository`**, as well as the **`RestaurantMapper`**. The class is annotated with **`@Service`**, which marks it as a Spring service bean.
 
