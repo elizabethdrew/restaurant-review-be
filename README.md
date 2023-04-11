@@ -81,6 +81,22 @@
     - **`comment`**: The comment text of the review. It is also marked with **`@NotNull`**.
     - **`createdAt`**: The date and time when the review was created, stored as an **`OffsetDateTime`**. It is annotated with **`@DateTimeFormat`** to specify the date-time format.
     - **`updatedAt`**: The date and time when the review was last updated, stored as an **`OffsetDateTime`**. It is also annotated with **`@DateTimeFormat`**.
+
+**Class: `SecurityUser`**
+
+- **Description:** This class represents a security user in the application, which is used by the Spring Security framework to manage authentication and authorization. It implements the **`UserDetails`** interface and wraps a **`UserEntity`** object.
+- **Methods:**
+    - **`getAuthorities()`**: Returns a collection of granted authorities for the user, which represent their roles in the application. In this case, it returns a singleton list containing a **`SimpleGrantedAuthority`** object with the user's role.
+    - **`getPassword()`**: Returns the password of the user.
+    - **`getUsername()`**: Returns the username of the user.
+    - **`getId()`**: Returns the ID of the user.
+    - **`isAccountNonExpired()`**: Returns **`true`**, indicating that the user's account is not expired.
+    - **`isAccountNonLocked()`**: Returns **`true`**, indicating that the user's account is not locked.
+    - **`isCredentialsNonExpired()`**: Returns **`true`**, indicating that the user's credentials are not expired.
+    - **`isEnabled()`**: Returns **`true`**, indicating that the user's account is enabled.
+    - **`getUserEntity()`**: Returns the **`UserEntity`** object wrapped by this **`SecurityUser`** object.
+    - **`hasRole(String role)`**: Checks if the user has the specified role by comparing it with the authorities granted to the user.
+
 ---
 
 ### **Package: `dev.drew.restaurantreview.service`**
