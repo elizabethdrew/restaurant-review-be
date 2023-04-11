@@ -124,6 +124,13 @@
     - **`hasRole(String role)`**: Checks if the user has the specified role by comparing it with the authorities granted to the user.
 
 ---
+### **Package: `dev.drew.restaurantreview.mapper`**
+
+**Interface: `RestaurantMapper`**
+
+- **Description:** This interface defines the methods for mapping between the **`RestaurantEntity`**, **`Restaurant`**, and **`RestaurantInput`** classes. It is an interface annotated with **`@Mapper(componentModel = "spring")`**, which indicates that it is a MapStruct mapper with Spring integration.
+
+---
 
 ### **Package: `dev.drew.restaurantreview.service`**
 **Purpose:** This package contains the service layer classes responsible for the business logic of the application, such as interacting with repositories, mapping between model objects, and handling exceptions.
