@@ -51,22 +51,12 @@ Here are the general steps to set up and run the application locally:
 
 1. Install Java 17
     - You can download and install Java 17 from the official website: **[https://www.oracle.com/java/technologies/downloads/](https://www.oracle.com/java/technologies/downloads/)**
-    - Alternatively, you can use a package manager to install Java 17. For example, on Ubuntu or Debian, you can run the following command:
-
-    ```
-    sudo apt install openjdk-17-jdk
-    ```
 
 2. Install Maven
     - Maven is a build automation tool used to manage dependencies and build the project. You can download and install Maven from the official website: **[https://maven.apache.org/download.cgi](https://maven.apache.org/download.cgi)**
-    - Alternatively, you can use a package manager to install Maven. For example, on Ubuntu or Debian, you can run the following command:
-
-    ```
-    sudo apt install maven
-    ```
 
 3. Clone the project repository
-    - You can clone the project repository using Git command line tool or a GUI tool like GitKraken.
+    - You can clone the project repository using Git command line tool.
 
     ```
     git clone https://github.com/username/repository.git
@@ -122,6 +112,7 @@ Finally, the mapper layer provides mapping between entities and DTOs, used by th
 
 ### Package: `dev.drew.restaurantreview.config`
 **Purpose:** This package contains configuration classes for the application. In this case, it includes the `SecurityConfig` class, which configures the Spring Security settings for the application.
+
 **Directory Structure:** Configuration classes should be placed in a `config` package within the application.
 
 **Class: `SecurityConfig`**
@@ -131,6 +122,7 @@ Finally, the mapper layer provides mapping between entities and DTOs, used by th
 
 ### Package: `dev.drew.restaurantreview.controller`
 **Purpose:** The controller package is responsible for handling incoming requests from clients and returning responses.
+
 **Directory Structure:** The directory structure for controllers should follow the package structure of the application and be placed in a directory named `controller`.
 
 **Class: `RestaurantController`**
@@ -146,6 +138,7 @@ Finally, the mapper layer provides mapping between entities and DTOs, used by th
 
 ### **Package: `dev.drew.restaurantreview.entity`**
 **Purpose:** This package contains the entity classes representing the data model objects in the application. These classes are mapped to the database tables using JPA and Hibernate.
+
 **Directory Structure:** Entity classes should be placed in an **`entity`** package within the application.
 
 **Class: `RestaurantEntity`**
@@ -201,7 +194,7 @@ Finally, the mapper layer provides mapping between entities and DTOs, used by th
 **Class: `SecurityUser`**
 - **Description:** This class represents a security user in the application, which is used by the Spring Security framework to manage authentication and authorization. It implements the **`UserDetails`** interface and wraps a **`UserEntity`** object.
 - **Methods:**
-    - **`getAuthorities()`**: Returns a collection of granted authorities for the user, which represent their roles in the application. In this case, it returns a singleton list containing a **`SimpleGrantedAuthority`** object with the user's role.
+    - **`getAuthorities()`**: Returns a collection of granted authorities for the user, which represent their roles in the application. In this case, it returns a list containing a **`SimpleGrantedAuthority`** object with the user's role.
     - **`getPassword()`**: Returns the password of the user.
     - **`getUsername()`**: Returns the username of the user.
     - **`getId()`**: Returns the ID of the user.
@@ -216,6 +209,7 @@ Finally, the mapper layer provides mapping between entities and DTOs, used by th
 
 ### **Package: `dev.drew.restaurantreview.mapper`**
 **Purpose:** The dev.drew.restaurantreview.mapper package contains all the classes responsible for mapping entities to API data transfer objects and vice versa. This package serves as the data transfer object mapping layer between the API and the entity layer.
+
 **Directory Structure:** Mapping classes should be placed in a mapper package within the application.
 
 **Interface: `RestaurantMapper`**
@@ -231,6 +225,7 @@ Finally, the mapper layer provides mapping between entities and DTOs, used by th
 
 ### **Package: `dev.drew.restaurantreview.repository`**
 **Purpose:** This package contains interfaces for interacting with the database to manage restaurant review objects. Each interface defines a Spring Data JPA repository that extends JpaRepository, which provides basic CRUD operations. Additionally, the interfaces include custom methods for querying and deleting objects based on specific criteria.
+
 **Directory Structure:** Repository interfaces should be placed in a repository package within the application.
 
 **Interface: `RestaurantRepository`**
@@ -246,6 +241,7 @@ Finally, the mapper layer provides mapping between entities and DTOs, used by th
 
 ### **Package: `dev.drew.restaurantreview.service`**
 **Purpose:** This package contains the service layer classes responsible for the business logic of the application, such as interacting with repositories, mapping between model objects, and handling exceptions.
+
 **Directory Structure:** Service classes should be placed in a **`service`** package within the application.
 
 **Class: `JpaUserDetailsService`**
@@ -272,6 +268,7 @@ Finally, the mapper layer provides mapping between entities and DTOs, used by th
 ---
 ### Package: **`dev.drew.restaurantreview.util`**
 **Purpose:** The dev.drew.restaurantreview.util package contains utility classes and interfaces used throughout the application.
+
 **Directory Structure:** All utility classes and interfaces should be placed in a util package within the application.
 
 Class: **`SecurityUtils`**
@@ -284,6 +281,7 @@ Class: **`SecurityUtils`**
 
 ### Package: **`dev.drew.restaurantreview.util.interfaces`**
 **Purpose:** This package contains interfaces used for providing functionality across the application. In this case, it includes the EntityUserIdProvider interface, which is used for obtaining the ID of an entity in the system.
+
 **Directory Structure:** Interfaces should be placed in a util.interfaces package within the application.
 
 Class: **`EntityUserIdProvider`**
@@ -293,8 +291,6 @@ Class: **`EntityUserIdProvider`**
 
 ## 6. Core Features
 *Detail the main functionalities of the application and their corresponding code implementations. Describe the APIs, their endpoints, request and response models, and any specific business rules.*
-
-## **6. Core Features**
 
 ### **6.1 User Management**
 
@@ -333,7 +329,7 @@ The application provides review management features through the **`ReviewService
 
 ### **6.4 Authentication and Authorization**
 
-The application provides authentication and authorization features using the **`JpaUserDetailsService`** class and the **`SecurityUtils`** utility class. Users are authenticated based on their username and password. User roles determine their authorization levels, with the "ROLE_ADMIN" role having additional privileges.
+The application provides authentication and authorization features using the **`JpaUserDetailsService`** class and the **`SecurityUtils`** utility class. Users are authenticated based on their username and password. User roles determine their authorization levels, with the "ADMIN" role having additional privileges.
 
 ### Endpoints:
 
@@ -342,8 +338,8 @@ The application provides authentication and authorization features using the **`
 
 ### Business Rules:
 
-- Users with the "ROLE_ADMIN" role have additional privileges, such as deleting and updating any restaurant or review, regardless of ownership.
-- Users without the "ROLE_ADMIN" role can only delete or update their own reviews or restaurants.
+- Users with the "ADMIN" role have additional privileges, such as deleting and updating any restaurant or review, regardless of ownership.
+- Users without the "ADMIN" role can only delete or update their own reviews or restaurants.
 - The **`SecurityUtils`** utility class provides methods like **`getCurrentUserId()`**, **`isAdmin()`**, and **`isAdminOrOwner()`** to facilitate checking user permissions and roles.
 
 In summary, the Restaurant Review application offers core features related to user management, restaurant management, review management, and authentication/authorization. The code implementation is organized into controllers, services, repositories, and utility classes, with specific business rules enforced through the **`SecurityUtils`** utility class and user roles.
