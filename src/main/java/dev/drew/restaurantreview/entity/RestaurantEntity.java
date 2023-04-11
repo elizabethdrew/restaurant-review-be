@@ -27,8 +27,9 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
     @Column(name = "city")
     private String city;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity userEntity;
 
      @NotNull
      @Min(1)
@@ -39,5 +40,26 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
     @Column(name = "created_at")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime createdAt;
+
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
+    }
+
+    @Override
+    public Long getUserId() {
+        return userEntity != null ? userEntity.getId() : null;
+    }
+
+    @Override
+    public void setUserId(Long userId) {
+        if (userEntity == null) {
+            userEntity = new UserEntity();
+        }
+        userEntity.setId(userId);
+    }
 
 }

@@ -23,11 +23,13 @@ public class ReviewEntity extends org.openapitools.model.Review {
     private Long id;
 
     @NotNull
-    @Column(name = "restaurant_id")
-    private Long restaurantId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_id", nullable = false)
+    private RestaurantEntity restaurantEntity;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity userEntity;
 
     @NotNull
     @Column(name = "rating")
@@ -44,5 +46,47 @@ public class ReviewEntity extends org.openapitools.model.Review {
     @Column(name = "updated_at")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime updatedAt;
+
+    public RestaurantEntity getrestaurantEntity() {
+        return restaurantEntity;
+    }
+
+    public void setRestaurantEntity(RestaurantEntity restaurantEntity) {
+        this.restaurantEntity = restaurantEntity;
+    }
+
+    @Override
+    public Long getRestaurantId() {
+        return restaurantEntity != null ? restaurantEntity.getId() : null;
+    }
+
+    @Override
+    public void setRestaurantId(Long restaurantId) {
+        if (restaurantEntity == null) {
+            restaurantEntity = new RestaurantEntity();
+        }
+        restaurantEntity.setId(restaurantId);
+    }
+
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
+    }
+
+    @Override
+    public Long getUserId() {
+        return userEntity != null ? userEntity.getId() : null;
+    }
+
+    @Override
+    public void setUserId(Long userId) {
+        if (userEntity == null) {
+            userEntity = new UserEntity();
+        }
+        userEntity.setId(userId);
+    }
 
 }
