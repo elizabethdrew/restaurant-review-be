@@ -7,7 +7,22 @@
 
 ## 2. Prerequisites
 *List the required software and tools to build, run, and test the application. Include version numbers, if necessary.*
-
+1. Java Development Kit (JDK) version 17 or later
+2. Maven build tool version 3.6.0 or later
+3. IDE (Integrated Development Environment) such as IntelliJ IDEA
+4. Web browser (such as Google Chrome or Mozilla Firefox) for testing the API endpoints
+5. Testing frameworks such as JUnit and Hamcrest
+6. Spring Boot version 3.0.4 or later
+7. H2 Database Engine version 1.4.200 or later (used for local development and testing)
+8. Spring Security version 5.5.2 or later
+9. OkHttp version 4.10.0 or later (used for making HTTP requests in tests)
+10. Lombok version 1.18.20 or later (optional, used for generating boilerplate code)
+11. Jackson Databind Nullable version 0.2.6 or later
+12. OpenAPI Generator Maven Plugin version 4.3.1 or later (used for generating REST API client code)
+13. MapStruct version 1.4.2.Final or later (used for object mapping)
+14. Gson version 2.10.1 or later (used for JSON serialization and deserialization)
+15. JsonPath version 2.7.0 or later (used for testing JSON responses)
+16. Swagger Annotations version 2.2.8 or later.
 ---
 
 ## 3. Setup and Installation
