@@ -1,17 +1,12 @@
 package dev.drew.restaurantreview.entity;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 import javax.validation.constraints.*;
-import lombok.*;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "restaurant")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class RestaurantEntity extends org.openapitools.model.Restaurant {
 
     @Id
@@ -62,4 +57,53 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
         userEntity.setId(userId);
     }
 
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getCity() {
+        return city;
+    }
+
+    @Override
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    @Override
+    public Integer getRating() {
+        return rating;
+    }
+
+    @Override
+    public void setRating(Integer rating) {
+        this.rating = rating;
+    }
+
+    @Override
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    @Override
+    public void setCreatedAt(OffsetDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 }

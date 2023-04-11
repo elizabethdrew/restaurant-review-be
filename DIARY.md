@@ -39,3 +39,4 @@ To Do:
 - Integration Tests end in IT and own folder
 - Create unit tests
 - JWT
+- When restaurant updated, rating returns to null

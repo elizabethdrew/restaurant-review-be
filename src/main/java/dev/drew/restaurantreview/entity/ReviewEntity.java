@@ -1,10 +1,6 @@
 package dev.drew.restaurantreview.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
@@ -12,9 +8,6 @@ import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "review")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class ReviewEntity extends org.openapitools.model.Review {
 
     @Id
@@ -89,4 +82,57 @@ public class ReviewEntity extends org.openapitools.model.Review {
         userEntity.setId(userId);
     }
 
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public RestaurantEntity getRestaurantEntity() {
+        return restaurantEntity;
+    }
+
+    @Override
+    public Float getRating() {
+        return rating;
+    }
+
+    @Override
+    public void setRating(Float rating) {
+        this.rating = rating;
+    }
+
+    @Override
+    public String getComment() {
+        return comment;
+    }
+
+    @Override
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    @Override
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    @Override
+    public void setCreatedAt(OffsetDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    @Override
+    public OffsetDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    @Override
+    public void setUpdatedAt(OffsetDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }
