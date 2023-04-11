@@ -1,9 +1,28 @@
 # Application Documentation
 
-## 1. Introduction
+## **1. Introduction**
+
 *Briefly describe the purpose of the application and its main features. Mention any external dependencies or frameworks used.*
 
----
+This Restaurant Review project is an API designed to allow users to discover, rate, and review restaurants. The main objective of this API is to provide a simple and efficient way to find the best dining experiences while helping restaurant owners gather valuable feedback to improve their services.
+
+Main features of the API include:
+
+1. User registration and authentication: Users can sign up for an account and securely log in to access the API's features.
+2. Browsing restaurants: Users can view a list of restaurants, filter them by various criteria such as city and rating.
+3. Restaurant details: Users can view detailed information about a specific restaurant, including its location and reviews.
+4. Rating and reviewing restaurants: Users can rate and write reviews for restaurants they've visited, providing valuable feedback for both restaurant owners and other users.
+5. Restaurant management: Restaurant owners or admins can add, update, and delete restaurant listings.
+
+The API is built using the Spring Boot framework, which is a widely-used Java-based framework for creating scalable and maintainable applications. The backend handles all the necessary data processing, storage, and management, allowing it to be consumed by various types of clients, such as web or mobile applications.
+
+Some of the key external dependencies and frameworks used in the application include:
+
+1. Spring Boot: Provides a simplified way to develop and configure Spring applications, along with a built-in web server for easy deployment.
+2. Spring Security: Offers comprehensive security services for Java applications, including authentication, authorization, and protection against common vulnerabilities.
+3. Spring Data JPA: Simplifies data access by providing an abstraction layer over the Java Persistence API (JPA) and enabling easy integration with various databases.
+4. Hibernate: Acts as the Object-Relational Mapping (ORM) implementation for JPA, allowing seamless mapping of Java objects to database tables.
+5. OpenAPI: Offers a standardized method for describing and documenting RESTful APIs, making it easier for developers and users to understand the API's capabilities.
 
 ## 2. Prerequisites
 *List the required software and tools to build, run, and test the application. Include version numbers, if necessary.*
