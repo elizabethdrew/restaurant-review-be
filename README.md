@@ -3,17 +3,24 @@
 ## 1. Introduction
 *Briefly describe the purpose of the application and its main features. Mention any external dependencies or frameworks used.*
 
+---
+
 ## 2. Prerequisites
 *List the required software and tools to build, run, and test the application. Include version numbers, if necessary.*
+
+---
 
 ## 3. Setup and Installation
 *Provide step-by-step instructions for setting up the development environment. Describe how to install dependencies, configure the application, and run it locally.*
 
+---
+
 ## 4. Application Architecture
 *Give an overview of the main components and layers of the application. Include a simple diagram illustrating the architecture.*
 
-## 5. Code Structure
+---
 
+## 5. Code Structure
 *Briefly describe each package and its purpose. Explain the main classes and interfaces within each package. Provide guidance on naming conventions, directory structures, and other best practices followed in the codebase.*
 
 **Naming Conventions:** Class names should be in `PascalCase`, describing their purpose. Method names should be in `camelCase` and start with a verb.
@@ -21,42 +28,34 @@
 ---
 
 ### Package: `dev.drew.restaurantreview.config`
-
 **Purpose:** This package contains configuration classes for the application. In this case, it includes the `SecurityConfig` class, which configures the Spring Security settings for the application.
-
 **Directory Structure:** Configuration classes should be placed in a `config` package within the application.
 
 **Class: `SecurityConfig`**
-
 - **Description:** This class configures the security settings for the application, such as authentication and authorization rules. It sets up basic authentication, allowing certain HTTP requests to be accessible without authentication and requiring authentication for the rest.
+
 ---
 
 ### Package: `dev.drew.restaurantreview.controller`
-
 **Purpose:** The controller package is responsible for handling incoming requests from clients and returning responses.
-
 **Directory Structure:** The directory structure for controllers should follow the package structure of the application and be placed in a directory named `controller`.
 
 **Class: `RestaurantController`**
-
 - **Description:** This class is responsible for handling requests related to restaurants. The `RestaurantController` class is a Spring RestController that implements the `RestaurantsApi` interface. It contains methods that map to different endpoints for handling HTTP requests related to restaurants. The class is annotated with `@RestController` and `@RequestMapping` which marks it as a controller and maps all endpoints within the class to the root URL of the application. Additionally, the `@PreAuthorize` annotation is used to restrict access to some endpoints based on user authentication status.
 
 **Class: `ReviewController`**
-
 - **Description:** This class is responsible for handling requests related to reviews. The **`ReviewController`** class is a Spring RestController that implements the **`ReviewsApi`** interface. It contains methods that map to different endpoints for handling HTTP requests related to reviews. The class is annotated with **`@RestController`**, **`@RequestMapping`**, and **`@PreAuthorize`**, which marks it as a controller and maps all endpoints within the class to the root URL of the application. Additionally, the **`@PreAuthorize`** annotation is used to restrict access to some endpoints based on user authentication status.
   
 **Class: `UserController`**
-
 - **Description:** This class is responsible for handling requests related to users. The **`UserController`** class is a Spring RestController that implements the **`UserApi`** interface. It contains methods that map to different endpoints for handling HTTP requests related to users. The class is annotated with **`@RestController`**, **`@RequestMapping`**, and **`@PreAuthorize`**, which marks it as a controller and maps all endpoints within the class to the root URL of the application. Additionally, the **`@PreAuthorize`** annotation is used to restrict access to some endpoints based on user authentication status.
+
 ---
+
 ### **Package: `dev.drew.restaurantreview.entity`**
-
 **Purpose:** This package contains the entity classes representing the data model objects in the application. These classes are mapped to the database tables using JPA and Hibernate.
-
 **Directory Structure:** Entity classes should be placed in an **`entity`** package within the application.
 
 **Class: `RestaurantEntity`**
-
 - **Description:** This class represents a restaurant in the application. It extends the **`org.openapitools.model.Restaurant`** class and includes JPA annotations to map the class to the **`restaurant`** table in the database.
     - **`@Entity`**: Specifies that the class is an entity and is mapped to a database table.
     - **`@Table(name = "restaurant")`**: Specifies the name of the table to which this entity class is mapped.
@@ -73,7 +72,6 @@
     - **`createdAt`**: The date and time when the restaurant was created, stored as an **`OffsetDateTime`**. It is annotated with **`@DateTimeFormat`** to specify the date-time format.
 
 **Class: `ReviewEntity`**
-
 - **Description:** This class represents a review in the application. It extends the **`org.openapitools.model.Review`** class and includes JPA annotations to map the class to the **`review`** table in the database.
     - **`@Entity`**: Specifies that the class is an entity and is mapped to a database table.
     - **`@Table(name = "review")`**: Specifies the name of the table to which this entity class is mapped.
@@ -91,7 +89,6 @@
     - **`updatedAt`**: The date and time when the review was last updated, stored as an **`OffsetDateTime`**. It is also annotated with **`@DateTimeFormat`**.
 
 **Class: `UserEntity`**
-
 - **Description:** This class represents a user in the application. It extends the **`org.openapitools.model.User`** class and includes JPA annotations to map the class to the **`users`** table in the database.
     - **`@Entity`**: Specifies that the class is an entity and is mapped to a database table.
     - **`@Table(name = "users", uniqueConstraints = {...})`**: Specifies the name of the table to which this entity class is mapped, along with unique constraints for the **`username`** and **`email`** columns.
@@ -109,7 +106,6 @@
     - **`role`**: The role of the user. It is marked with **`@NotNull`** to ensure that it must have a value. The **`RoleEnum`** is used to represent the different roles a user can have.
 
 **Class: `SecurityUser`**
-
 - **Description:** This class represents a security user in the application, which is used by the Spring Security framework to manage authentication and authorization. It implements the **`UserDetails`** interface and wraps a **`UserEntity`** object.
 - **Methods:**
     - **`getAuthorities()`**: Returns a collection of granted authorities for the user, which represent their roles in the application. In this case, it returns a singleton list containing a **`SimpleGrantedAuthority`** object with the user's role.
@@ -124,7 +120,10 @@
     - **`hasRole(String role)`**: Checks if the user has the specified role by comparing it with the authorities granted to the user.
 
 ---
+
 ### **Package: `dev.drew.restaurantreview.mapper`**
+**Purpose:**
+**Directory Structure:**
 
 **Interface: `RestaurantMapper`**
 - **Description:** This interface defines the methods for mapping between the **`RestaurantEntity`**, **`Restaurant`**, and **`RestaurantInput`** classes. It is an interface annotated with **`@Mapper(componentModel = "spring")`**, which indicates that it is a MapStruct mapper with Spring integration.
@@ -137,32 +136,53 @@
 
 ---
 
+### **Package: `dev.drew.restaurantreview.repository`**
+**Purpose:**
+**Directory Structure:**
+
+**Interface: `ReviewRepository`**
+- **Description:** This interface defines the **`ReviewRepository`**, which is responsible for interacting with the database to manage **`ReviewEntity`** objects. It extends **`JpaRepository`** and is annotated with **`@Repository`**, indicating that it is a Spring Data JPA repository.
+
+---
+
 ### **Package: `dev.drew.restaurantreview.service`**
 **Purpose:** This package contains the service layer classes responsible for the business logic of the application, such as interacting with repositories, mapping between model objects, and handling exceptions.
-
 **Directory Structure:** Service classes should be placed in a **`service`** package within the application.
 
 **Class: `RestaurantServiceImpl`**
-
 - **Description:** This class implements the **`RestaurantService`** interface and is responsible for handling business logic related to restaurants. It interacts with the **`RestaurantRepository`** and **`ReviewRepository`**, as well as the **`RestaurantMapper`**. The class is annotated with **`@Service`**, which marks it as a Spring service bean.
+
+---
 
 ## 6. Core Features
 *Detail the main functionalities of the application and their corresponding code implementations. Describe the APIs, their endpoints, request and response models, and any specific business rules.*
 
+---
+
 ## 7. Error Handling
 *Explain how the application handles errors and exceptions. Describe how error messages and HTTP status codes are returned.*
+
+---
 
 ## 8. Testing
 *Provide instructions on how to run tests for the application. Explain the testing strategy, including unit tests, integration tests, and any other testing approaches used.*
 
+---
+
 ## 9. Deployment
 *Outline the steps for deploying the application to a production environment. Mention any specific configurations or environment variables required.*
+
+---
 
 ## 10. Troubleshooting and FAQs
 *List common issues and their solutions. Include any frequently asked questions and their answers.*
 
+---
+
 ## 11. Contributing
 *Explain the process for submitting bug reports, feature requests, or contributing code. Include information on how to join the development community or get help if needed.*
+
+---
 
 ## 12. License and Credits
 *Mention the software license and give credit to any third-party libraries or resources used.*
