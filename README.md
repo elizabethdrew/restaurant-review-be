@@ -334,6 +334,16 @@ In summary, the Restaurant Review application offers core features related to us
 ## 7. Error Handling
 *Explain how the application handles errors and exceptions. Describe how error messages and HTTP status codes are returned.*
 
+The application handles errors and exceptions at the service level, where each method in the service classes manages exceptions by catching them and returning appropriate HTTP status codes along with error messages. This approach ensures that the error handling is consistent across methods and provides meaningful error messages and status codes to clients.
+
+For example, in the **`RestaurantServiceImpl`** class, the **`addNewRestaurant`** method handles various types of exceptions as follows:
+
+1. **`DataIntegrityViolationException`**: This exception is thrown when there's a database constraint violation, such as unique constraints. The method responds with a **`HttpStatus.BAD_REQUEST`** status and a detailed error message.
+2. **`DataAccessException`**: This exception is thrown for other database-related exceptions, and the method responds with a **`HttpStatus.INTERNAL_SERVER_ERROR`** status and a detailed error message.
+3. **`Exception`**: This is a catch-all for any other exceptions that may occur. The method responds with a **`HttpStatus.INTERNAL_SERVER_ERROR`** status and a detailed error message.
+
+The other methods in the service classes follow a similar approach to handling exceptions, ensuring that clients receive appropriate and meaningful responses when errors occur. Although the application does not utilize a global exception handler, the consistent handling of exceptions within service methods effectively addresses error handling requirements.
+
 ---
 
 ## 8. Testing
