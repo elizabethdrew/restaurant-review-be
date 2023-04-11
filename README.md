@@ -28,6 +28,48 @@
 ## 3. Setup and Installation
 *Provide step-by-step instructions for setting up the development environment. Describe how to install dependencies, configure the application, and run it locally.*
 
+Here are the general steps to set up and run the application locally:
+
+1. Install Java 17
+    - You can download and install Java 17 from the official website: **[https://www.oracle.com/java/technologies/downloads/](https://www.oracle.com/java/technologies/downloads/)**
+    - Alternatively, you can use a package manager to install Java 17. For example, on Ubuntu or Debian, you can run the following command:
+
+    ```
+    sudo apt install openjdk-17-jdk
+    ```
+
+2. Install Maven
+    - Maven is a build automation tool used to manage dependencies and build the project. You can download and install Maven from the official website: **[https://maven.apache.org/download.cgi](https://maven.apache.org/download.cgi)**
+    - Alternatively, you can use a package manager to install Maven. For example, on Ubuntu or Debian, you can run the following command:
+
+    ```
+    sudo apt install maven
+    ```
+
+3. Clone the project repository
+    - You can clone the project repository using Git command line tool or a GUI tool like GitKraken.
+
+    ```
+    git clone https://github.com/username/repository.git
+    ```
+
+4. Build the project
+    - Navigate to the project root directory and run the following command to build the project.
+    - This command will download all the project dependencies, build the project and generate an executable jar file.
+
+    ```
+    mvn clean install
+    ```
+
+5. Run the application
+    - After building the project, you can run the application by executing the generated jar file. The jar file should be located in the "target" directory.
+
+    ```
+    java -jar target/restaurant-review-0.0.1-SNAPSHOT.jar
+    ```
+
+    - The application should be up and running on **[http://localhost:8080](http://localhost:8080/)**.
+
 ---
 
 ## 4. Application Architecture
