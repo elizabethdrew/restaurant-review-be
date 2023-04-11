@@ -127,9 +127,10 @@
 ### **Package: `dev.drew.restaurantreview.mapper`**
 
 **Interface: `RestaurantMapper`**
-
 - **Description:** This interface defines the methods for mapping between the **`RestaurantEntity`**, **`Restaurant`**, and **`RestaurantInput`** classes. It is an interface annotated with **`@Mapper(componentModel = "spring")`**, which indicates that it is a MapStruct mapper with Spring integration.
 
+**Interface: `ReviewMapper`**
+- **Description:** This interface defines the methods for mapping between the **`ReviewEntity`**, **`Review`**, and **`ReviewInput`** classes. It is an interface annotated with **`@Mapper(componentModel = "spring")`**, which indicates that it is a MapStruct mapper with Spring integration.
 ---
 
 ### **Package: `dev.drew.restaurantreview.service`**
