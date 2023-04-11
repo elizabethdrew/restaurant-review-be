@@ -30,7 +30,7 @@ Some of the key external dependencies and frameworks used in the application inc
 2. Maven build tool version 3.6.0 or later
 3. IDE (Integrated Development Environment) such as IntelliJ IDEA
 4. Web browser (such as Google Chrome or Mozilla Firefox) for testing the API endpoints
-5. Testing frameworks such as JUnit and Hamcrest
+5. Testing framework such as JUnit
 6. Spring Boot version 3.0.4 or later
 7. H2 Database Engine version 1.4.200 or later (used for local development and testing)
 8. Spring Security version 5.5.2 or later
