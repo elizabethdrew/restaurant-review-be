@@ -28,7 +28,6 @@
 ---
 ### **Package: `dev.drew.restaurantreview`**
 **Purpose:** The dev.drew.restaurantreview package contains all the classes that are part of the restaurant review application. This package serves as the top-level package for the application.
-**Directory Structure:**
 
 **Class: `BasicDiningApplication`**
 - **Description:** This class serves as the entry point for the Spring Boot application.
@@ -130,8 +129,8 @@
 ---
 
 ### **Package: `dev.drew.restaurantreview.mapper`**
-**Purpose:**
-**Directory Structure:**
+**Purpose:** The dev.drew.restaurantreview.mapper package contains all the classes responsible for mapping entities to API data transfer objects and vice versa. This package serves as the data transfer object mapping layer between the API and the entity layer.
+**Directory Structure:** Mapping classes should be placed in a mapper package within the application.
 
 **Interface: `RestaurantMapper`**
 - **Description:** This interface defines the methods for mapping between the **`RestaurantEntity`**, **`Restaurant`**, and **`RestaurantInput`** classes. It is an interface annotated with **`@Mapper(componentModel = "spring")`**, which indicates that it is a MapStruct mapper with Spring integration.
@@ -145,8 +144,8 @@
 ---
 
 ### **Package: `dev.drew.restaurantreview.repository`**
-**Purpose:**
-**Directory Structure:**
+**Purpose:** This package contains interfaces for interacting with the database to manage restaurant review objects. Each interface defines a Spring Data JPA repository that extends JpaRepository, which provides basic CRUD operations. Additionally, the interfaces include custom methods for querying and deleting objects based on specific criteria.
+**Directory Structure:** Repository interfaces should be placed in a repository package within the application.
 
 **Interface: `RestaurantRepository`**
 - **Description:** This interface defines the **`RestaurantRepository`**, which is responsible for interacting with the database to manage **`RestaurantEntity`** objects. It extends **`JpaRepository`** and is annotated with **`@Repository`**, indicating that it is a Spring Data JPA repository.
@@ -156,7 +155,6 @@
   
 **Interface: `UserRepository`**
 - **Description:** This interface defines the **`UserRepository`**, which is responsible for interacting with the database to manage **`UserEntity`** objects. It extends **`JpaRepository`** and is annotated with **`@Repository`**, indicating that it is a Spring Data JPA repository. It includes custom methods for finding and deleting users by their username.
-
 
 ---
 
@@ -187,8 +185,8 @@
 
 ---
 ### Package: **`dev.drew.restaurantreview.util`**
-**Purpose:**
-**Directory Structure:**
+**Purpose:** The dev.drew.restaurantreview.util package contains utility classes and interfaces used throughout the application.
+**Directory Structure:** All utility classes and interfaces should be placed in a util package within the application.
 
 Class: **`SecurityUtils`**
 - **Description:** This class provides utility methods related to security and authentication. The class contains three static methods, which are described below.
@@ -199,11 +197,12 @@ Class: **`SecurityUtils`**
 ---
 
 ### Package: **`dev.drew.restaurantreview.util.interfaces`**
-**Purpose:**
-**Directory Structure:**
+**Purpose:** This package contains interfaces used for providing functionality across the application. In this case, it includes the EntityUserIdProvider interface, which is used for obtaining the ID of an entity in the system.
+**Directory Structure:** Interfaces should be placed in a util.interfaces package within the application.
 
 Class: **`EntityUserIdProvider`**
 - **Description:** This interface defines a method for obtaining the ID of an entity in the system. It is used as a functional interface for providing a way to get the user ID from an entity when needed. The class takes in a generic type **`T`**, which represents the entity type that it is used with. The method **`getUserId`** takes in an instance of the generic type **`T`** and returns a **`Long`** value representing the ID of the entity. This interface is implemented by classes that need to obtain the ID of an entity in order to perform operations on it.
+
 ---
 
 ## 6. Core Features
