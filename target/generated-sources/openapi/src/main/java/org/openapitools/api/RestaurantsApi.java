@@ -35,13 +35,13 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-04-05T11:51:17.415607+01:00[Europe/London]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-04-11T15:16:39.328790+01:00[Europe/London]")
 @Validated
-@Tag(name = "restaurants", description = "the restaurants API")
+@Tag(name = "Restaurants", description = "the Restaurants API")
 public interface RestaurantsApi {
 
     /**
-     * POST /restaurants : Add a new restaurant
+     * POST /api/v1/restaurants : Add a new restaurant
      * Adds a new restaurant to the database.
      *
      * @param restaurantInput The restaurant to add. (required)
@@ -71,7 +71,7 @@ public interface RestaurantsApi {
     )
     @RequestMapping(
         method = RequestMethod.POST,
-        value = "/restaurants",
+        value = "/api/v1/restaurants",
         produces = { "application/json" },
         consumes = { "application/json" }
     )
@@ -81,7 +81,7 @@ public interface RestaurantsApi {
 
 
     /**
-     * DELETE /restaurants/{restaurantId} : Delete a restaurant
+     * DELETE /api/v1/restaurants/{restaurantId} : Delete a restaurant
      * Deletes a restaurant by ID.
      *
      * @param restaurantId The ID of the restaurant to delete. (required)
@@ -109,7 +109,7 @@ public interface RestaurantsApi {
     )
     @RequestMapping(
         method = RequestMethod.DELETE,
-        value = "/restaurants/{restaurantId}",
+        value = "/api/v1/restaurants/{restaurantId}",
         produces = { "application/json" }
     )
     ResponseEntity<Void> deleteRestaurantById(
@@ -118,7 +118,7 @@ public interface RestaurantsApi {
 
 
     /**
-     * GET /restaurants : Get all restaurants
+     * GET /api/v1/restaurants : Get all restaurants
      * Returns a list of all restaurants.
      *
      * @param city The city to filter restaurants by. (optional)
@@ -143,7 +143,7 @@ public interface RestaurantsApi {
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/restaurants",
+        value = "/api/v1/restaurants",
         produces = { "application/json" }
     )
     ResponseEntity<List<Restaurant>> getAllRestaurants(
@@ -154,7 +154,7 @@ public interface RestaurantsApi {
 
 
     /**
-     * GET /restaurants/{restaurantId} : Get a restaurant by ID
+     * GET /api/v1/restaurants/{restaurantId} : Get a restaurant by ID
      * Returns a single restaurant by ID.
      *
      * @param restaurantId The ID of the restaurant to retrieve. (required)
@@ -173,7 +173,7 @@ public interface RestaurantsApi {
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/restaurants/{restaurantId}",
+        value = "/api/v1/restaurants/{restaurantId}",
         produces = { "application/json" }
     )
     ResponseEntity<Restaurant> getRestaurantById(
@@ -182,7 +182,7 @@ public interface RestaurantsApi {
 
 
     /**
-     * PUT /restaurants/{restaurantId} : Update a restaurant
+     * PUT /api/v1/restaurants/{restaurantId} : Update a restaurant
      * Updates a restaurant by ID.
      *
      * @param restaurantId The ID of the restaurant to update. (required)
@@ -205,7 +205,7 @@ public interface RestaurantsApi {
     )
     @RequestMapping(
         method = RequestMethod.PUT,
-        value = "/restaurants/{restaurantId}",
+        value = "/api/v1/restaurants/{restaurantId}",
         produces = { "application/json" },
         consumes = { "application/json" }
     )

@@ -205,6 +205,7 @@
 							<configOptions>
 								<interfaceOnly>true</interfaceOnly>
 								<skipDefaultInterface>true</skipDefaultInterface>
+								<useTags>true</useTags>
 							</configOptions>
 						</configuration>
 					</execution>

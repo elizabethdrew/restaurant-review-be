@@ -35,13 +35,13 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-04-05T11:51:17.415607+01:00[Europe/London]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-04-11T15:16:39.328790+01:00[Europe/London]")
 @Validated
-@Tag(name = "reviews", description = "the reviews API")
+@Tag(name = "Reviews", description = "the Reviews API")
 public interface ReviewsApi {
 
     /**
-     * POST /reviews : Add a new review
+     * POST /api/v1/reviews : Add a new review
      * Adds a new review to the database.
      *
      * @param reviewInput The review to add. (required)
@@ -71,7 +71,7 @@ public interface ReviewsApi {
     )
     @RequestMapping(
         method = RequestMethod.POST,
-        value = "/reviews",
+        value = "/api/v1/reviews",
         produces = { "application/json" },
         consumes = { "application/json" }
     )
@@ -81,7 +81,7 @@ public interface ReviewsApi {
 
 
     /**
-     * DELETE /reviews/{reviewId} : Delete a review
+     * DELETE /api/v1/reviews/{reviewId} : Delete a review
      * Deletes a review by ID.
      *
      * @param reviewId The ID of the review to delete. (required)
@@ -109,7 +109,7 @@ public interface ReviewsApi {
     )
     @RequestMapping(
         method = RequestMethod.DELETE,
-        value = "/reviews/{reviewId}",
+        value = "/api/v1/reviews/{reviewId}",
         produces = { "application/json" }
     )
     ResponseEntity<Void> deleteReviewById(
@@ -118,7 +118,7 @@ public interface ReviewsApi {
 
 
     /**
-     * GET /reviews : Get all reviews
+     * GET /api/v1/reviews : Get all reviews
      * Returns a list of all reviews.
      *
      * @param restaurantId The restaurant ID to filter reviews by. (optional)
@@ -142,7 +142,7 @@ public interface ReviewsApi {
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/reviews",
+        value = "/api/v1/reviews",
         produces = { "application/json" }
     )
     ResponseEntity<List<Review>> getAllReviews(
@@ -152,7 +152,7 @@ public interface ReviewsApi {
 
 
     /**
-     * GET /reviews/{reviewId} : Get a review by ID
+     * GET /api/v1/reviews/{reviewId} : Get a review by ID
      * Returns a single review by ID.
      *
      * @param reviewId The ID of the review to retrieve. (required)
@@ -179,7 +179,7 @@ public interface ReviewsApi {
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/reviews/{reviewId}",
+        value = "/api/v1/reviews/{reviewId}",
         produces = { "application/json" }
     )
     ResponseEntity<Review> getReviewById(
@@ -188,7 +188,7 @@ public interface ReviewsApi {
 
 
     /**
-     * PUT /reviews/{reviewId} : Update a review
+     * PUT /api/v1/reviews/{reviewId} : Update a review
      * Updates a review by ID.
      *
      * @param reviewId The ID of the review to update. (required)
@@ -223,7 +223,7 @@ public interface ReviewsApi {
     )
     @RequestMapping(
         method = RequestMethod.PUT,
-        value = "/reviews/{reviewId}",
+        value = "/api/v1/reviews/{reviewId}",
         produces = { "application/json" },
         consumes = { "application/json" }
     )

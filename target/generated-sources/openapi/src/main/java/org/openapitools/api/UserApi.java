@@ -35,13 +35,13 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-04-05T11:51:17.415607+01:00[Europe/London]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-04-11T15:16:39.328790+01:00[Europe/London]")
 @Validated
-@Tag(name = "user", description = "the user API")
+@Tag(name = "User", description = "the User API")
 public interface UserApi {
 
     /**
-     * POST /user : Add a new user
+     * POST /api/v1/user : Add a new user
      * Adds a new user to the database.
      *
      * @param userInput The user to add. (required)
@@ -71,7 +71,7 @@ public interface UserApi {
     )
     @RequestMapping(
         method = RequestMethod.POST,
-        value = "/user",
+        value = "/api/v1/user",
         produces = { "application/json" },
         consumes = { "application/json" }
     )
@@ -81,7 +81,7 @@ public interface UserApi {
 
 
     /**
-     * DELETE /user/{userId} : Delete a user by ID
+     * DELETE /api/v1/user/{userId} : Delete a user by ID
      *
      * @param userId The ID or name of the user to retrieve. (required)
      * @return User deleted (status code 204)
@@ -107,7 +107,7 @@ public interface UserApi {
     )
     @RequestMapping(
         method = RequestMethod.DELETE,
-        value = "/user/{userId}",
+        value = "/api/v1/user/{userId}",
         produces = { "application/json" }
     )
     ResponseEntity<Void> deleteUserById(
@@ -116,7 +116,7 @@ public interface UserApi {
 
 
     /**
-     * GET /user/{userId} : Get a user by ID
+     * GET /api/v1/user/{userId} : Get a user by ID
      * Returns a single user by ID
      *
      * @param userId The ID or name of the user to retrieve. (required)
@@ -146,7 +146,7 @@ public interface UserApi {
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/user/{userId}",
+        value = "/api/v1/user/{userId}",
         produces = { "application/json" }
     )
     ResponseEntity<User> getUserById(
@@ -155,7 +155,7 @@ public interface UserApi {
 
 
     /**
-     * PUT /user/{userId} : Update a user
+     * PUT /api/v1/user/{userId} : Update a user
      * Updates a user by ID.
      *
      * @param userId The ID or name of the user to retrieve. (required)
@@ -190,7 +190,7 @@ public interface UserApi {
     )
     @RequestMapping(
         method = RequestMethod.PUT,
-        value = "/user/{userId}",
+        value = "/api/v1/user/{userId}",
         produces = { "application/json" },
         consumes = { "application/json" }
     )

@@ -331,12 +331,12 @@ The application provides review management features through the **`ReviewService
 
 The application provides authentication and authorization features using the **`JpaUserDetailsService`** class and the **`SecurityUtils`** utility class. Users are authenticated based on their username and password. User roles determine their authorization levels, with the "ADMIN" role having additional privileges.
 
-### Endpoints:
+**Endpoints:**
 
 - **POST /auth/login**: This endpoint is used for user authentication. It takes a JSON payload containing the user's username and password. The **`JpaUserDetailsService`** class is responsible for loading user details and checking the provided credentials.
 - **POST /auth/register**: This endpoint is used for user registration. It takes a JSON payload containing the user's username, password, and email. The **`UserServiceImpl`** class handles the creation of the new user in the database.
 
-### Business Rules:
+**Business Rules:**
 
 - Users with the "ADMIN" role have additional privileges, such as deleting and updating any restaurant or review, regardless of ownership.
 - Users without the "ADMIN" role can only delete or update their own reviews or restaurants.
