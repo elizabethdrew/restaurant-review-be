@@ -26,6 +26,14 @@
 **Naming Conventions:** Class names should be in `PascalCase`, describing their purpose. Method names should be in `camelCase` and start with a verb.
 
 ---
+### **Package: `dev.drew.restaurantreview`**
+**Purpose:**
+**Directory Structure:**
+
+**Class: `BasicDiningApplication`**
+- **Description:** This class serves as the entry point for the Spring Boot application.
+
+---
 
 ### Package: `dev.drew.restaurantreview.config`
 **Purpose:** This package contains configuration classes for the application. In this case, it includes the `SecurityConfig` class, which configures the Spring Security settings for the application.
@@ -174,6 +182,8 @@
 **Interface: `UserService`**
 - **Description:** This interface defines the contract for managing user-related operations, such as adding a new user, getting a user by their ID, deleting a user by their ID, and updating a user by their ID.
 
+**Class: `UserServiceImpl`**
+- **Description:** This class implements the **`UserService`** interface and provides the logic for managing user-related operations, such as adding a new user, getting a user by their ID, deleting a user by their ID, and updating a user by their ID.
 
 ---
 
