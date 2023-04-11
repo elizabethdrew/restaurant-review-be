@@ -27,7 +27,7 @@
 
 ---
 ### **Package: `dev.drew.restaurantreview`**
-**Purpose:**
+**Purpose:** The dev.drew.restaurantreview package contains all the classes that are part of the restaurant review application. This package serves as the top-level package for the application.
 **Directory Structure:**
 
 **Class: `BasicDiningApplication`**
@@ -185,6 +185,25 @@
 **Class: `UserServiceImpl`**
 - **Description:** This class implements the **`UserService`** interface and provides the logic for managing user-related operations, such as adding a new user, getting a user by their ID, deleting a user by their ID, and updating a user by their ID.
 
+---
+### Package: **`dev.drew.restaurantreview.util`**
+**Purpose:**
+**Directory Structure:**
+
+Class: **`SecurityUtils`**
+- **Description:** This class provides utility methods related to security and authentication. The class contains three static methods, which are described below.
+  - **getCurrentUserId():** This method returns the ID of the currently authenticated user. It retrieves the Authentication object from the SecurityContextHolder and extracts the UserEntity object associated with it. It then returns the ID of the UserEntity object.
+  - **isAdmin():** This method returns a boolean value indicating whether the currently authenticated user has the "ROLE_ADMIN" role. It retrieves the Authentication object from the SecurityContextHolder and checks if the associated SecurityUser object has the "ROLE_ADMIN" role.
+  - **isAdminOrOwner(entity, userIdProvider):** This method returns a boolean value indicating whether the currently authenticated user is an admin or the owner of a given entity. It takes two arguments: the entity to check ownership of, and a EntityUserIdProvider instance which is used to extract the user ID associated with the entity. The method first checks if the user is an admin by calling the isAdmin() method. If the user is not an admin, it retrieves the ID of the currently authenticated user and compares it to the ID of the user associated with the entity, which is extracted using the userIdProvider argument.
+
+---
+
+### Package: **`dev.drew.restaurantreview.util.interfaces`**
+**Purpose:**
+**Directory Structure:**
+
+Class: **`EntityUserIdProvider`**
+- **Description:** This interface defines a method for obtaining the ID of an entity in the system. It is used as a functional interface for providing a way to get the user ID from an entity when needed. The class takes in a generic type **`T`**, which represents the entity type that it is used with. The method **`getUserId`** takes in an instance of the generic type **`T`** and returns a **`Long`** value representing the ID of the entity. This interface is implemented by classes that need to obtain the ID of an entity in order to perform operations on it.
 ---
 
 ## 6. Core Features
