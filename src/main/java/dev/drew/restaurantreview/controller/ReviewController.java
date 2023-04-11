@@ -7,40 +7,55 @@ import org.openapitools.model.ReviewInput;
 import org.openapitools.model.ReviewResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/v1/reviews")
 @PreAuthorize("isAuthenticated()")
 public class ReviewController implements ReviewsApi {
 
     private final ReviewService reviewService;
 
-    // Constructor for dependency injection of ReviewService
     public ReviewController(ReviewService reviewService) {
         this.reviewService = reviewService;
     }
 
-    // Endpoint to add a new review, accessible to authenticated users
+    /**
+     * Add a new review to the database.
+     *
+     * @param reviewInput input data for the new review
+     * @return response entity containing the new review data
+     */
+    @PostMapping
     @Override
     public ResponseEntity<ReviewResponse> addNewReview(ReviewInput reviewInput) {
         return reviewService.addNewReview(reviewInput);
     }
 
-    // Endpoint to delete a review by its ID, accessible to authenticated users
+    /**
+     * Delete a review from the database by its ID.
+     *
+     * @param reviewId the ID of the review to delete
+     * @return response entity indicating success or failure of the operation
+     */
     @Override
+    @DeleteMapping("/{reviewId}")
     public ResponseEntity<Void> deleteReviewById(Integer reviewId) {
         return reviewService.deleteReviewById(reviewId);
     }
 
-    // Endpoint to get all reviews, accessible to all users
-    // Supports optional filtering by restaurantId and userId
+    /**
+     * Get all reviews from the database, with optional filtering by restaurantId and userId.
+     *
+     * @param restaurantId optional filter by restaurant ID
+     * @param userId optional filter by user ID
+     * @return response entity containing the list of reviews
+     */
     @Override
+    @GetMapping
     @PreAuthorize("permitAll()")
     public ResponseEntity<List<Review>> getAllReviews(
             @Valid @RequestParam(value = "restaurantId", required = false) Long restaurantId,
@@ -48,17 +63,29 @@ public class ReviewController implements ReviewsApi {
         return reviewService.getAllReviews(restaurantId, userId);
     }
 
-    // Endpoint to get a single review by its ID, accessible to all users
+    /**
+     * Get a specific review by its ID.
+     *
+     * @param reviewId the ID of the review to retrieve
+     * @return response entity containing the review data
+     */
     @Override
+    @GetMapping("/{reviewId}")
     @PreAuthorize("permitAll()")
     public ResponseEntity<Review> getReviewById(Integer reviewId) {
         return reviewService.getReviewById(reviewId);
     }
 
-    // Endpoint to update a review by its ID, accessible to authenticated users
+    /**
+     * Update a review's data by its ID.
+     *
+     * @param reviewId the ID of the review to update
+     * @param reviewInput the updated review data
+     * @return response entity containing the updated review data
+     */
     @Override
+    @PutMapping("/{reviewId}")
     public ResponseEntity<ReviewResponse> updateReviewById(Integer reviewId, ReviewInput reviewInput) {
         return reviewService.updateReviewById(reviewId, reviewInput);
     }
 }
-

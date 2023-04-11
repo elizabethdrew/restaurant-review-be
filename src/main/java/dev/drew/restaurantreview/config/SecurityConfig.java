@@ -38,9 +38,9 @@ public class SecurityConfig {
                         // Allow unauthenticated access to the following endpoints
                         .requestMatchers(HttpMethod.GET,"/api/v1/restaurants").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/v1/restaurants/**" ).permitAll()
-                        .requestMatchers(HttpMethod.GET,"/reviews").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/reviews/**" ).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/user" ).permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/v1/reviews").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/reviews/**" ).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/user" ).permitAll()
                         // Require authentication for all other requests
                         .anyRequest().authenticated())
                 // Set the user details service for authentication
