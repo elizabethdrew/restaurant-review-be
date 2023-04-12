@@ -3,9 +3,17 @@ package dev.drew.restaurantreview.entity;
 import java.time.OffsetDateTime;
 import javax.validation.constraints.*;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@EqualsAndHashCode
 @Table(name = "restaurant")
 public class RestaurantEntity extends org.openapitools.model.Restaurant {
 

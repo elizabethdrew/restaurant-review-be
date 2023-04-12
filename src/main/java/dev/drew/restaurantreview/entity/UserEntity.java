@@ -12,6 +12,10 @@ import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@EqualsAndHashCode
 @Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames = "username"),
         @UniqueConstraint(columnNames = "email")
@@ -47,73 +51,4 @@ public class UserEntity extends org.openapitools.model.User {
     @Column(name = "role")
     private RoleEnum role;
 
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getEmail() {
-        return email;
-    }
-
-    @Override
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    @Override
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    @Override
-    public OffsetDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    @Override
-    public void setCreatedAt(OffsetDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    @Override
-    public RoleEnum getRole() {
-        return role;
-    }
-
-    @Override
-    public void setRole(RoleEnum role) {
-        this.role = role;
-    }
 }

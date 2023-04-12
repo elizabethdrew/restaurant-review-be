@@ -1,12 +1,20 @@
 package dev.drew.restaurantreview.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@EqualsAndHashCode
 @Table(name = "review")
 public class ReviewEntity extends org.openapitools.model.Review {
 
