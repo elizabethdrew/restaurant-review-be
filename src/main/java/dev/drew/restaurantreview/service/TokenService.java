@@ -1,5 +1,6 @@
 package dev.drew.restaurantreview.service;
 
+import dev.drew.restaurantreview.entity.SecurityUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -22,6 +23,7 @@ public class TokenService {
 
     public String generateToken(Authentication authentication) {
         Instant now = Instant.now();
+        SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
         String scope = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));

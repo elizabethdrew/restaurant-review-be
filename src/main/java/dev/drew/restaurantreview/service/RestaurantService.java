@@ -4,6 +4,7 @@ import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
 import org.openapitools.model.RestaurantResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
