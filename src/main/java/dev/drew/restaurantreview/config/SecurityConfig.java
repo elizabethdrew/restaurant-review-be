@@ -25,6 +25,8 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
+import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 
@@ -69,12 +71,15 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/v1/user" ).permitAll()
                         // Require authentication for all other requests
                         .anyRequest().authenticated())
-                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+                .exceptionHandling((ex) -> ex
+                        .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
+                        .accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
                 // Set the user details service for authentication
                 //.userDetailsService(jpaUserDetailsService)
                 // Configure the response headers to allow frame options from the same origin
-                .headers(headers -> headers.frameOptions().sameOrigin())
+                //.headers(headers -> headers.frameOptions().sameOrigin())
                 // Enable basic HTTP authentication
                 //.httpBasic(Customizer.withDefaults())
                 .build();
