@@ -13,7 +13,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -38,15 +37,19 @@ public class SecurityConfig {
     private final JpaUserDetailsService jpaUserDetailsService;
     private final RsaKeyProperties rsaKeys;
 
-    public SecurityConfig(JpaUserDetailsService jpaUserDetailsService, RsaKeyProperties rsaKeys) {
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    public SecurityConfig(JpaUserDetailsService jpaUserDetailsService, RsaKeyProperties rsaKeys, BCryptPasswordEncoder passwordEncoder) {
         this.jpaUserDetailsService = jpaUserDetailsService;
         this.rsaKeys = rsaKeys;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Bean
     public AuthenticationManager authManager(UserDetailsService userDetailsService) {
         var authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(jpaUserDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
         return new ProviderManager(authProvider);
     }
 
@@ -64,6 +67,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Disable CSRF protection
                 .authorizeHttpRequests(auth -> auth
                         // Allow unauthenticated access to the following endpoints
+                        .requestMatchers(HttpMethod.POST,"/token").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/v1/restaurants").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/v1/restaurants/**" ).permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/v1/reviews").permitAll()

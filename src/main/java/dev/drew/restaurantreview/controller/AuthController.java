@@ -4,9 +4,12 @@ import dev.drew.restaurantreview.entity.LoginRequest;
 import dev.drew.restaurantreview.service.TokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("/token")
+    @PreAuthorize("permitAll()")
     public String token(@RequestBody LoginRequest userLogin) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLogin.username(), userLogin.password()));
         return tokenService.generateToken(authentication);
