@@ -31,9 +31,8 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
     @Column(name = "city")
     private String city;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity userEntity;
+    @Column(name = "user_id")
+    private Long userId;
 
      @NotNull
      @Min(1)
@@ -44,75 +43,4 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
     @Column(name = "created_at")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime createdAt;
-
-    public UserEntity getUserEntity() {
-        return userEntity;
-    }
-
-    public void setUserEntity(UserEntity userEntity) {
-        this.userEntity = userEntity;
-    }
-
-    @Override
-    public Long getUserId() {
-        return userEntity != null ? userEntity.getId() : null;
-    }
-
-    @Override
-    public void setUserId(Long userId) {
-        if (userEntity == null) {
-            userEntity = new UserEntity();
-        }
-        userEntity.setId(userId);
-    }
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getCity() {
-        return city;
-    }
-
-    @Override
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    @Override
-    public Integer getRating() {
-        return rating;
-    }
-
-    @Override
-    public void setRating(Integer rating) {
-        this.rating = rating;
-    }
-
-    @Override
-    public OffsetDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    @Override
-    public void setCreatedAt(OffsetDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
 }
