@@ -13,6 +13,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,6 +29,8 @@ import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthen
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
+
+import java.util.List;
 
 @Configuration
 @EnableMethodSecurity
@@ -46,11 +49,11 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authManager(UserDetailsService userDetailsService) {
+    public AuthenticationManager authManager() {
         var authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(jpaUserDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
-        return new ProviderManager(authProvider);
+        return new ProviderManager(List.of(authProvider));
     }
 
     // Declare a BCryptPasswordEncoder bean for password encoding
@@ -68,6 +71,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Allow unauthenticated access to the following endpoints
                         .requestMatchers(HttpMethod.POST,"/token").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/h2-console/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/v1/restaurants").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/v1/restaurants/**" ).permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/v1/reviews").permitAll()
@@ -77,13 +81,13 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
-                .exceptionHandling((ex) -> ex
-                        .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
-                        .accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
+//                .exceptionHandling((ex) -> ex
+//                        .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
+//                        .accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
                 // Set the user details service for authentication
-                //.userDetailsService(jpaUserDetailsService)
+                .userDetailsService(jpaUserDetailsService)
                 // Configure the response headers to allow frame options from the same origin
-                //.headers(headers -> headers.frameOptions().sameOrigin())
+                .headers(headers -> headers.frameOptions().sameOrigin())
                 // Enable basic HTTP authentication
                 //.httpBasic(Customizer.withDefaults())
                 .build();

@@ -7,6 +7,8 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class TokenService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TokenService.class);
 
     private final JwtEncoder encoder;
 
@@ -22,6 +25,7 @@ public class TokenService {
     }
 
     public String generateToken(Authentication authentication) {
+        LOGGER.info("Generating token for user: {}", authentication.getName());
         Instant now = Instant.now();
         SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
         String scope = authentication.getAuthorities().stream()
