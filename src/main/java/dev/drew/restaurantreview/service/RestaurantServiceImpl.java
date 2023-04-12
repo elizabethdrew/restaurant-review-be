@@ -138,6 +138,7 @@ public class RestaurantServiceImpl implements RestaurantService {
             updatedEntity.setId(restaurantEntity.getId());
             updatedEntity.setCreatedAt(restaurantEntity.getCreatedAt());
             updatedEntity.setUserId(restaurantEntity.getUserId());
+            updatedEntity.setRating(restaurantEntity.getRating());
 
             try {
                 // Save the updated restaurant to the database
