@@ -26,7 +26,7 @@ public class SecurityConfigTest {
     // Test the passwordEncoder() method to ensure it returns a non-null BCryptPasswordEncoder instance
     @Test
     public void testPasswordEncoder() {
-        BCryptPasswordEncoder encoder = SecurityConfig.passwordEncoder();
+        BCryptPasswordEncoder encoder = ApplicationConfig.passwordEncoder();
         assertNotNull(encoder, "PasswordEncoder should not be null");
         assertTrue(encoder instanceof BCryptPasswordEncoder, "PasswordEncoder should be an instance of BCryptPasswordEncoder");
     }

@@ -25,12 +25,6 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
-    // Declare a BCryptPasswordEncoder bean for password encoding
-    @Bean
-    public static BCryptPasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
-
     // Configure the security settings for the application, including authentication and authorization rules
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -52,8 +46,6 @@ public class SecurityConfig {
                 .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                // Set the user details service for authentication
-                .userDetailsService(jpaUserDetailsService)
                 // Configure the response headers to allow frame options from the same origin
                 .headers(headers -> headers.frameOptions().sameOrigin())
                 // Enable basic HTTP authentication
