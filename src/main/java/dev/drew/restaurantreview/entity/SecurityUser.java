@@ -3,57 +3,36 @@ package dev.drew.restaurantreview.entity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.jwt.Jwt;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Collections;
 
-public class SecurityUser implements UserDetails {
+public class SecurityUser  implements UserDetails {
 
-    private Long id;
-    private String username;
-    private String password;
-    private List<GrantedAuthority> authorities;
+    private UserEntity userEntity;
 
     public SecurityUser(UserEntity userEntity) {
-        this.id = userEntity.getId();
-        this.username = userEntity.getUsername();
-        this.password = userEntity.getPassword();
-        this.authorities = List.of(new SimpleGrantedAuthority("ROLE_" + userEntity.getRole().getValue()));
-    }
-
-    public SecurityUser(Jwt jwt) {
-        this.id = jwt.getClaim("userId");
-        this.username = jwt.getSubject();
-        this.password = null;
-        this.authorities = Arrays.stream(jwt.getClaimAsString("scope").split(" "))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-    }
-
-    public static SecurityUser fromJwt(Jwt jwt) {
-        return new SecurityUser(jwt);
+        this.userEntity = userEntity;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + userEntity.getRole().getValue()));
     }
 
     @Override
     public String getPassword() {
-        return password;
+        return userEntity.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return username;
+        return userEntity.getUsername();
     }
 
+
     public Long getId() {
-        return id;
+        return userEntity.getId();
     }
 
     @Override
@@ -74,6 +53,11 @@ public class SecurityUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    //Return a user entity
+    public UserEntity getUserEntity() {
+        return userEntity;
     }
 
     public boolean hasRole(String role) {
