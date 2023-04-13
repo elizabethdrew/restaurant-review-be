@@ -23,8 +23,9 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
     @Column(name = "city")
     private String city;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
     @NotNull
     @Min(1)
@@ -39,11 +40,11 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
     public RestaurantEntity() {
     }
 
-    public RestaurantEntity(Long id, String name, String city, Long userId, Integer rating, OffsetDateTime createdAt) {
+    public RestaurantEntity(Long id, String name, String city, UserEntity user, Integer rating, OffsetDateTime createdAt) {
         this.id = id;
         this.name = name;
         this.city = city;
-        this.userId = userId;
+        this.user = user;
         this.rating = rating;
         this.createdAt = createdAt;
     }
@@ -72,12 +73,12 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
         this.city = city;
     }
 
-    public Long getUserId() {
-        return userId;
+    public UserEntity getUser() {
+        return user;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
     public Integer getRating() {
@@ -104,13 +105,13 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
         return Objects.equals(id, that.id) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(city, that.city) &&
-                Objects.equals(userId, that.userId) &&
+                Objects.equals(user, that.user) &&
                 Objects.equals(rating, that.rating) &&
                 Objects.equals(createdAt, that.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, city, userId, rating, createdAt);
+        return Objects.hash(id, name, city, user, rating, createdAt);
     }
 }
