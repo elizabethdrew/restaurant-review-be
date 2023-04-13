@@ -1,10 +1,15 @@
 package dev.drew.restaurantreview.config;
 
+import dev.drew.restaurantreview.entity.SecurityUser;
+import dev.drew.restaurantreview.service.JpaUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -16,6 +21,9 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
+    private UserDetailsService userDetailsService;
+
+    private JpaUserDetailsService jpaUserDetailsService;
 
     @Override
     protected void doFilterInternal(
@@ -35,6 +43,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         jwtToken = authHeader.substring(7);
         username = jwtService.extractUsername(jwtToken);
+
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
+            SecurityUser securityUser = (SecurityUser) JpaUserDetailsService.loadUserByUsername(username);
+        }
 
     }
 }
