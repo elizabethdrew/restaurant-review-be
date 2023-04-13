@@ -1,6 +1,5 @@
 package dev.drew.restaurantreview.auth;
 
-import dev.drew.restaurantreview.config.JwtService;
 import dev.drew.restaurantreview.entity.SecurityUser;
 import dev.drew.restaurantreview.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package dev.drew.restaurantreview.config;
+package dev.drew.restaurantreview.auth;
 
 import dev.drew.restaurantreview.service.JpaUserDetailsService;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,5 @@
-package dev.drew.restaurantreview.config;
+package dev.drew.restaurantreview.auth;
 
-import dev.drew.restaurantreview.entity.SecurityUser;
 import dev.drew.restaurantreview.service.JpaUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
