@@ -33,7 +33,7 @@ Diary:
 - Fri 31st March: Review endpoints in place. Review ratings now update the restaurant rating automatically.  Tweaks to security and review logic. Need to update the tests to take into account the updated setup.
 - Mon 3rd April: Back on integration tests. 
 - Tuesday 11th April: Updated documentation. Changed database tables to link to other tables. Removed the lombok @EqualsAndHashCode from entity classes. Updated yaml for api version control.
-
+- Thursday 13th April: Failed on the JWT front yesterday so went back to where I was on tuesday. Seem to have got the authentication working with the JWT token alongside the database of users which is good. Not sure I understand how exactly, but it's a good start. The entity classes are still using the incorrect lombok so that needs re-fixing, and unit and integration tests need updating.
 
 To Do:
 - Integration Tests end in IT and own folder
