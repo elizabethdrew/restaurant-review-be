@@ -36,10 +36,7 @@ public class UserServiceImpl implements UserService {
 
 
 
-    /*
-        Add a new user to the database
-        Example curl command: curl -X POST http://localhost:8080/user -H "Content-Type: application/json" -d '{"name": "User Name", "city": "City Name", "rating": 4}'
-    */
+
     public ResponseEntity<UserResponse> addNewUser(UserInput userInput) {
         UserEntity user = userMapper.toUserEntity(userInput);
         user.setCreatedAt(OffsetDateTime.now());

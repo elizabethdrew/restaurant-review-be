@@ -2,13 +2,13 @@ package dev.drew.restaurantreview.config;
 
 import dev.drew.restaurantreview.service.JpaUserDetailsService;
 import lombok.RequiredArgsConstructor;
-import org.openapitools.model.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Disable CSRF protection
                 .authorizeHttpRequests()
                 // Allow unauthenticated access to the following endpoints
+                .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET,"/api/v1/restaurants").permitAll()
                 .requestMatchers(HttpMethod.GET,"/api/v1/restaurants/**" ).permitAll()
                 .requestMatchers(HttpMethod.GET,"/api/v1/reviews").permitAll()
