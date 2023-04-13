@@ -1,9 +1,11 @@
 package dev.drew.restaurantreview.service;
 
 import dev.drew.restaurantreview.entity.RestaurantEntity;
+import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.mapper.RestaurantMapper;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
 import dev.drew.restaurantreview.repository.ReviewRepository;
+import dev.drew.restaurantreview.repository.UserRepository;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import org.openapitools.model.Error;
 import org.openapitools.model.Restaurant;
@@ -31,22 +33,35 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final ReviewRepository reviewRepository;
     private final RestaurantMapper restaurantMapper;
     private final EntityUserIdProvider<RestaurantEntity> restaurantUserIdProvider = RestaurantEntity::getUserId;
+    private UserRepository userRepository;
 
     // Constructor with required dependencies
-    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper, ReviewRepository reviewRepository) {
+    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper, ReviewRepository reviewRepository, UserRepository userRepository) {
         this.restaurantRepository = restaurantRepository;
         this.restaurantMapper = restaurantMapper;
         this.reviewRepository = reviewRepository;
+        this.userRepository = userRepository;
     }
 
     // Add a new restaurant to the database
     public ResponseEntity<RestaurantResponse> addNewRestaurant(RestaurantInput restaurantInput) {
 
-        // Convert the input data to a RestaurantEntity object, set the created timestamp, and current user ID
+        // Convert the input data to a RestaurantEntity object and set the created timestamp
         RestaurantEntity restaurant = restaurantMapper.toRestaurantEntity(restaurantInput);
         restaurant.setCreatedAt(OffsetDateTime.now());
+
+        // Fetch the current user entity
         Long currentUserId = getCurrentUserId();
-        restaurant.setUserId(currentUserId);
+        Optional<UserEntity> currentUserOptional = userRepository.findById(currentUserId);
+        if (!currentUserOptional.isPresent()) {
+            // Handle the case when the user is not found, return an error response
+            RestaurantResponse errorResponse = new RestaurantResponse();
+            errorResponse.setSuccess(false);
+            errorResponse.setError(new Error().message("User not found"));
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+        // Set the current user to the restaurant
+        restaurant.setUser(currentUserOptional.get());
 
         // Initialize the RestaurantResponse object
         RestaurantResponse restaurantResponse = new RestaurantResponse();
@@ -94,7 +109,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         }
 
         if (userId != null) {
-            filteredEntities = filteredEntities.filter(r -> r.getUserId().equals(userId));
+            filteredEntities = filteredEntities.filter(r -> r.getUser().getId().equals(userId));
         }
 
         // Convert the filtered RestaurantEntity objects to Restaurant objects and return them as a list
@@ -137,7 +152,7 @@ public class RestaurantServiceImpl implements RestaurantService {
             RestaurantEntity updatedEntity = restaurantMapper.toRestaurantEntity(restaurantInput);
             updatedEntity.setId(restaurantEntity.getId());
             updatedEntity.setCreatedAt(restaurantEntity.getCreatedAt());
-            updatedEntity.setUserId(restaurantEntity.getUserId());
+            updatedEntity.setUser(restaurantEntity.getUser());
             updatedEntity.setRating(restaurantEntity.getRating());
 
             try {
