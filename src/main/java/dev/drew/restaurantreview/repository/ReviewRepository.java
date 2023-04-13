@@ -11,8 +11,8 @@ import java.util.List;
 public interface ReviewRepository extends JpaRepository<ReviewEntity, Long> {
 
     // Method to find all reviews by restaurantId
-    List<ReviewEntity> findByRestaurantEntity_Id(Long restaurantId);
+    List<ReviewEntity> findByRestaurantId(Long restaurantId);
 
     // Method to find all reviews by userId and restaurantId
-    List<ReviewEntity> findByUserEntity_IdAndRestaurantEntity_Id(Long userId, Long restaurantId);
+    List<ReviewEntity> findByUserIdAndRestaurantId(Long userId, Long restaurantId);
 }
