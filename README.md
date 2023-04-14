@@ -122,6 +122,10 @@ Finally, the mapper layer provides mapping between entities and DTOs, used by th
 **Class: `AuthenticationService`**
 - **Description:** This class is a service responsible for authenticating users by validating their provided credentials. If the authentication is successful, the service generates a JWT token using the **`JwtService`**.
 
+**Class: `JwtAuthenticationFilter`**
+- **Description:** This class extends the **`OncePerRequestFilter`** and is responsible for filtering incoming requests. It extracts the JWT token from the **`Authorization`** header and, if valid, sets the authentication in the **`SecurityContextHolder`**.
+
+
 ---
 ### **Package: `dev.drew.restaurantreview`**
 **Purpose:** The dev.drew.restaurantreview package contains all the classes that are part of the restaurant review application. This package serves as the top-level package for the application.

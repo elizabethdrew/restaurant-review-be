@@ -23,6 +23,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final JpaUserDetailsService jpaUserDetailsService;
 
+    // Filter incoming requests and extract JWT token from the Authorization header
     @Override
     protected void doFilterInternal(
             @NotNull HttpServletRequest request,
@@ -34,14 +35,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwtToken;
         final String username;
 
+        // If the Authorization header is missing or does not start with "Bearer ", proceed with the filter chain
         if(authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
+        // Extract the JWT token and username
         jwtToken = authHeader.substring(7);
         username = jwtService.extractUsername(jwtToken);
 
+        // If the username is not null and there is no existing authentication, validate the token and set the authentication
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
             UserDetails userDetails = jpaUserDetailsService.loadUserByUsername(username);
 
