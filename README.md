@@ -26,22 +26,30 @@ Some of the key external dependencies and frameworks used in the application inc
 
 ## 2. Prerequisites
 *List the required software and tools to build, run, and test the application. Include version numbers, if necessary.*
-1. Java Development Kit (JDK) version 17 or later
-2. Maven build tool version 3.6.0 or later
-3. IDE (Integrated Development Environment) such as IntelliJ IDEA
-4. Web browser (such as Google Chrome or Mozilla Firefox) for testing the API endpoints
-5. Testing framework such as JUnit
-6. Spring Boot version 3.0.4 or later
-7. H2 Database Engine version 1.4.200 or later (used for local development and testing)
-8. Spring Security version 5.5.2 or later
-9. OkHttp version 4.10.0 or later (used for making HTTP requests in tests)
-10. Lombok version 1.18.20 or later (optional, used for generating boilerplate code)
-11. Jackson Databind Nullable version 0.2.6 or later
-12. OpenAPI Generator Maven Plugin version 4.3.1 or later (used for generating REST API client code)
-13. MapStruct version 1.4.2.Final or later (used for object mapping)
-14. Gson version 2.10.1 or later (used for JSON serialization and deserialization)
-15. JsonPath version 2.7.0 or later (used for testing JSON responses)
-16. Swagger Annotations version 2.2.8 or later.
+- Java Development Kit (JDK) version 17 or later
+- Maven build tool version 3.6.0 or later
+- IDE (Integrated Development Environment) such as IntelliJ IDEA
+- Web browser (such as Google Chrome or Mozilla Firefox) for testing the API endpoints
+- JUnit version 5.9.2 or later (used for unit testing)
+- Spring Boot version 3.0.4 or later
+- H2 Database Engine version 1.4.200 or later (used for local development and testing)
+- Spring Security version 5.5.2 or later
+- OkHttp version 4.10.0 or later (used for making HTTP requests in tests)
+- Lombok version 1.18.20 or later (optional, used for generating boilerplate code)
+- Jackson Databind Nullable version 0.2.6 or later
+- OpenAPI Generator Maven Plugin version 6.3.0 or later (used for generating REST API client code)
+- MapStruct version 1.5.3.Final or later (used for object mapping)
+- Gson version 2.10.1 or later (used for JSON serialization and deserialization)
+- JsonPath version 2.7.0 or later (used for testing JSON responses)
+- Swagger Annotations version 2.2.8 or later
+- jjwt-api version 0.11.5 or later (used for JWT handling)
+- jjwt-impl version 0.11.5 or later (used for JWT handling)
+- jjwt-jackson version 0.11.5 or later (used for JWT handling)
+- Gson Fire version 1.8.5 or later (used for JSON serialization and deserialization)
+- javax.ws.rs-api version 2.1.1 or later (used for RESTful web services)
+- servlet-api version 2.5 or later (used for Java servlets)
+- Hamcrest version 2.2 or later (used for testing)
+- Jackson Core version 2.14.2 or later (used for JSON processing)
 ---
 
 ## 3. Setup and Installation
@@ -91,6 +99,8 @@ The presentation layer is in the **`controller`** package, which exposes REST AP
 The entity layer has three entities that map to the database tables: **`RestaurantEntity`**, **`ReviewEntity`**, and **`UserEntity`**. The repository layer has three repositories: **`RestaurantRepository`**, **`ReviewRepository`**, and **`UserRepository`**, which provide methods for basic CRUD operations on its corresponding entity.
 
 The service layer has three services: **`RestaurantService`**, **`ReviewService`**, and **`UserService`**, which interact with the repository layer to retrieve and manipulate data from the database. The controller layer has three controllers: **`RestaurantController`**, **`ReviewController`**, and **`UserController`**, which expose RESTful endpoints for clients to interact with the app.
+
+In addition to these layers, the application also has an auth package, which contains classes related to authentication and authorization. This package includes the AuthenticationController, AuthenticationRequest, AuthenticationResponse, AuthenticationService, JwtAuthenticationFilter, and JwtService classes for handling user authentication and JWT token generation, validation, and extraction.
 
 Finally, the mapper layer provides mapping between entities and DTOs, used by the controller layer. The app is structured so that the client makes requests to the controller layer, which delegates to the service layer to perform business logic. The service layer interacts with the repository layer to perform CRUD operations on the database. The entities and DTOs are used by the controller and mapper layers to represent data.
 
