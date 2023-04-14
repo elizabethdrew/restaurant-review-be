@@ -332,10 +332,10 @@ The application provides user management features through the **`UserService`** 
 
 **Endpoints:**
 
-- **POST /users**: This endpoint is used to add a new user. It takes a JSON payload containing user information, such as username, password, and email. The **`UserServiceImpl`** class handles the creation of the user in the database.
-- **GET /users/{id}**: This endpoint retrieves a user by their ID. The **`UserServiceImpl`** class fetches the user from the database using the **`UserRepository`**.
-- **PUT /users/{id}**: This endpoint updates a user by their ID. It takes a JSON payload containing the updated user information. The **`UserServiceImpl`** class is responsible for updating the user in the database.
-- **DELETE /users/{id}**: This endpoint deletes a user by their ID. The **`UserServiceImpl`** class handles the deletion of the user from the database.
+- **POST api/v1/users**: This endpoint is used to add a new user. It takes a JSON payload containing user information, such as username, password, and email. The **`UserServiceImpl`** class handles the creation of the user in the database.
+- **GET api/v1/users/{id}**: This endpoint retrieves a user by their ID. The **`UserServiceImpl`** class fetches the user from the database using the **`UserRepository`**.
+- **PUT api/v1/users/{id}**: This endpoint updates a user by their ID. It takes a JSON payload containing the updated user information. The **`UserServiceImpl`** class is responsible for updating the user in the database.
+- **DELETE api/v1/users/{id}**: This endpoint deletes a user by their ID. The **`UserServiceImpl`** class handles the deletion of the user from the database.
 
 ### **6.2 Restaurant Management**
 
@@ -343,11 +343,11 @@ The application provides restaurant management features through the **`Restauran
 
 **Endpoints:**
 
-- **POST /restaurants**: This endpoint is used to add a new restaurant. It takes a JSON payload containing restaurant information, such as name, address, and description. The **`RestaurantServiceImpl`** class handles the creation of the restaurant in the database.
-- **GET /restaurants**: This endpoint retrieves all restaurants, with optional filters like a search query or a specific location. The **`RestaurantServiceImpl`** class fetches the restaurants from the database using the **`RestaurantRepository`**.
-- **GET /restaurants/{id}**: This endpoint retrieves a specific restaurant by its ID. The **`RestaurantServiceImpl`** class fetches the restaurant from the database using the **`RestaurantRepository`**.
-- **PUT /restaurants/{id}**: This endpoint updates a restaurant by its ID. It takes a JSON payload containing the updated restaurant information. The **`RestaurantServiceImpl`** class is responsible for updating the restaurant in the database.
-- **DELETE /restaurants/{id}**: This endpoint deletes a restaurant by its ID. The **`RestaurantServiceImpl`** class handles the deletion of the restaurant from the database.
+- **POST api/v1/restaurants**: This endpoint is used to add a new restaurant. It takes a JSON payload containing restaurant information, such as name, address, and description. The **`RestaurantServiceImpl`** class handles the creation of the restaurant in the database.
+- **GET api/v1/restaurants**: This endpoint retrieves all restaurants, with optional filters like a search query or a specific location. The **`RestaurantServiceImpl`** class fetches the restaurants from the database using the **`RestaurantRepository`**.
+- **GET api/v1/restaurants/{id}**: This endpoint retrieves a specific restaurant by its ID. The **`RestaurantServiceImpl`** class fetches the restaurant from the database using the **`RestaurantRepository`**.
+- **PUT api/v1/restaurants/{id}**: This endpoint updates a restaurant by its ID. It takes a JSON payload containing the updated restaurant information. The **`RestaurantServiceImpl`** class is responsible for updating the restaurant in the database.
+- **DELETE api/v1/restaurants/{id}**: This endpoint deletes a restaurant by its ID. The **`RestaurantServiceImpl`** class handles the deletion of the restaurant from the database.
 
 ### **6.3 Review Management**
 
@@ -355,11 +355,11 @@ The application provides review management features through the **`ReviewService
 
 **Endpoints:**
 
-- **POST /reviews**: This endpoint is used to add a new review. It takes a JSON payload containing review information, such as the restaurant ID, user ID, rating, and comment. The **`ReviewServiceImpl`** class handles the creation of the review in the database.
-- **GET /reviews**: This endpoint retrieves all reviews, with optional filters like a search query or a specific user or restaurant. The **`ReviewServiceImpl`** class fetches the reviews from the database using the **`ReviewRepository`**.
-- **GET /reviews/{id}**: This endpoint retrieves a specific review by its ID. The **`ReviewServiceImpl`** class fetches the review from the database using the **`ReviewRepository`**.
-- **PUT /reviews/{id}**: This endpoint updates a review by its ID. It takes a JSON payload containing the updated review information, such as rating and comment. The **`ReviewServiceImpl`** class is responsible for updating the review in the database.
-- **DELETE /reviews/{id}**: This endpoint deletes a review by its ID. The **`ReviewServiceImpl`** class handles the deletion of the review from the database.
+- **POST api/v1/reviews**: This endpoint is used to add a new review. It takes a JSON payload containing review information, such as the restaurant ID, user ID, rating, and comment. The **`ReviewServiceImpl`** class handles the creation of the review in the database.
+- **GET api/v1/reviews**: This endpoint retrieves all reviews, with optional filters like a search query or a specific user or restaurant. The **`ReviewServiceImpl`** class fetches the reviews from the database using the **`ReviewRepository`**.
+- **GET api/v1/reviews/{id}**: This endpoint retrieves a specific review by its ID. The **`ReviewServiceImpl`** class fetches the review from the database using the **`ReviewRepository`**.
+- **PUT api/v1/reviews/{id}**: This endpoint updates a review by its ID. It takes a JSON payload containing the updated review information, such as rating and comment. The **`ReviewServiceImpl`** class is responsible for updating the review in the database.
+- **DELETE api/v1/reviews/{id}**: This endpoint deletes a review by its ID. The **`ReviewServiceImpl`** class handles the deletion of the review from the database.
 
 ### **6.4 Authentication and Authorization**
 
@@ -367,8 +367,8 @@ The application provides authentication and authorization features using the **`
 
 **Endpoints:**
 
-- **POST /auth/login**: This endpoint is used for user authentication. It takes a JSON payload containing the user's username and password. The **`JpaUserDetailsService`** class is responsible for loading user details and checking the provided credentials.
-- **POST /auth/register**: This endpoint is used for user registration. It takes a JSON payload containing the user's username, password, and email. The **`UserServiceImpl`** class handles the creation of the new user in the database.
+- **POST api/v1/auth/login**: This endpoint is used for user authentication. It takes a JSON payload containing the user's username and password. The **`JpaUserDetailsService`** class is responsible for loading user details and checking the provided credentials.
+- **POST api/v1/auth/authenticate**: This endpoint is used for user authentication. It takes a JSON payload containing the user's username and password. It returns a valid JWT token.
 
 **Business Rules:**
 
