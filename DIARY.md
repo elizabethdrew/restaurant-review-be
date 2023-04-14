@@ -34,9 +34,8 @@ Diary:
 - Mon 3rd April: Back on integration tests. 
 - Tuesday 11th April: Updated documentation. Changed database tables to link to other tables. Removed the lombok @EqualsAndHashCode from entity classes. Updated yaml for api version control.
 - Thursday 13th April: Failed on the JWT front yesterday so went back to where I was on tuesday. Seem to have got the authentication working with the JWT token alongside the database of users which is good. Not sure I understand how exactly, but it's a good start. The entity classes are still using the incorrect lombok so that needs re-fixing, and unit and integration tests need updating.
+- Friday 14th April: Tidied up the code and got the entities working correctly. I'm now going to do a Udemy course that goes over most of what I've learnt through this project, but will hopefully explain a few of the concepts I'm not clear on in more depth and fill in any gaps that I may have missed. It'll also hopefully lead onto using Docker and Kubernetes in this context. Yet again, integration and unti tests need updating (and more doing).
 
 To Do:
-- Integration Tests end in IT and own folder
-- Create unit tests
-- JWT
-- When restaurant updated, rating returns to null
+- Integration Tests
+- Unit tests
