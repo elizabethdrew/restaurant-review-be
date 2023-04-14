@@ -114,7 +114,10 @@ Finally, the mapper layer provides mapping between entities and DTOs, used by th
 - **Description:** This class is a REST controller that handles authentication requests for the application. It maps the **`POST /api/v1/auth/authenticate`** endpoint to the **`authenticate`** method, which delegates the authentication process to the **`AuthenticationService`**.
 
 **Class: `AuthenticationRequest`**
-- **Description:** This class is a data model representing an authentication request. It contains the **`username`** and **`password`** fields, which are used to authenticate a client. The class is annotated with Lombok annotations for generating getters, setters, constructors, and a builder.
+- **Description:** This class is a data model representing an authentication request. It contains the **`username`** and **`password`** fields, which are used to authenticate a client.
+
+**Class: `AuthenticationResponse`**
+- **Description:** This class is a data model representing an authentication response. It contains the **`token`** field, which holds the generated authentication token upon successful authentication.
 
 ---
 ### **Package: `dev.drew.restaurantreview`**
