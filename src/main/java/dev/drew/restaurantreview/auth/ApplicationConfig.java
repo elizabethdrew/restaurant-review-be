@@ -10,12 +10,15 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+// Configuration class for authentication and authorization settings
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
+    // UserDetailsService implementation for JPA-based user details retrieval
     private final JpaUserDetailsService jpaUserDetailsService;
 
+    // Declare an AuthenticationProvider bean to handle authentication using JpaUserDetailsService and password encoding
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -24,6 +27,7 @@ public class ApplicationConfig {
         return authProvider;
     }
 
+    // Declare an AuthenticationManager bean for managing authentication within the application
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();

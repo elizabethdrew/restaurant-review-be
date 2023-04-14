@@ -102,6 +102,15 @@ Finally, the mapper layer provides mapping between entities and DTOs, used by th
 **Naming Conventions:** Class names should be in `PascalCase`, describing their purpose. Method names should be in `camelCase` and start with a verb.
 
 ---
+### **Package: `dev.drew.restaurantreview.auth`**
+**Purpose:** This package contains classes related to authentication and authorization for the application. It includes the **`ApplicationConfig`** class, which sets up the authentication provider and manager, as well as the password encoder bean.
+
+**Directory Structure:** Authentication and authorization classes should be placed in an **`auth`** package within the application.
+
+**Class: `ApplicationConfig`**
+- **Description:** This class configures the authentication provider, manager, and password encoder for the application. It sets up a **`DaoAuthenticationProvider`** using the **`JpaUserDetailsService`** for user details and the **`BCryptPasswordEncoder`** for password encoding.
+
+---
 ### **Package: `dev.drew.restaurantreview`**
 **Purpose:** The dev.drew.restaurantreview package contains all the classes that are part of the restaurant review application. This package serves as the top-level package for the application.
 
