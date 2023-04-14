@@ -125,6 +125,8 @@ Finally, the mapper layer provides mapping between entities and DTOs, used by th
 **Class: `JwtAuthenticationFilter`**
 - **Description:** This class extends the **`OncePerRequestFilter`** and is responsible for filtering incoming requests. It extracts the JWT token from the **`Authorization`** header and, if valid, sets the authentication in the **`SecurityContextHolder`**.
 
+**Class: `JwtService`**
+- **Description:** This class provides methods to generate, validate, and extract information from JWT tokens. It uses the **`io.jsonwebtoken`** library for handling JWT tokens and is responsible for signing tokens with a secret key, extracting claims, and checking if tokens are valid and not expired.
 
 ---
 ### **Package: `dev.drew.restaurantreview`**
