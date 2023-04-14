@@ -2,6 +2,7 @@ package dev.drew.restaurantreview.mapper;
 
 import dev.drew.restaurantreview.entity.ReviewEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.openapitools.model.Review;
 import org.openapitools.model.ReviewInput;
 
@@ -10,6 +11,8 @@ import org.openapitools.model.ReviewInput;
 public interface ReviewMapper {
 
     // Method to convert a ReviewEntity object to a Review object
+    @Mapping(source = "restaurant.id", target = "restaurantId")
+    @Mapping(source = "user.id", target = "userId")
     Review toReview(ReviewEntity reviewEntity);
 
     // Method to convert a ReviewInput object to a ReviewEntity object

@@ -17,11 +17,13 @@ public class ReviewEntity extends org.openapitools.model.Review {
     private Long id;
 
     @NotNull
-    @Column(name = "restaurant_id")
-    private Long restaurantId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_id")
+    private RestaurantEntity restaurant;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
     @NotNull
     @Column(name = "rating")
@@ -42,10 +44,10 @@ public class ReviewEntity extends org.openapitools.model.Review {
     public ReviewEntity() {
     }
 
-    public ReviewEntity(Long id, Long restaurantId, Long userId, Float rating, String comment, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
+    public ReviewEntity(Long id, RestaurantEntity restaurant, UserEntity user, Float rating, String comment, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
         this.id = id;
-        this.restaurantId = restaurantId;
-        this.userId = userId;
+        this.restaurant = restaurant;
+        this.user = user;
         this.rating = rating;
         this.comment = comment;
         this.createdAt = createdAt;
@@ -60,20 +62,20 @@ public class ReviewEntity extends org.openapitools.model.Review {
         this.id = id;
     }
 
-    public Long getRestaurantId() {
-        return restaurantId;
+    public RestaurantEntity getRestaurant() {
+        return restaurant;
     }
 
-    public void setRestaurantId(Long restaurantId) {
-        this.restaurantId = restaurantId;
+    public void setRestaurant(RestaurantEntity restaurant) {
+        this.restaurant = restaurant;
     }
 
-    public Long getUserId() {
-        return userId;
+    public UserEntity getUser() {
+        return user;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
     public Float getRating() {
@@ -114,8 +116,8 @@ public class ReviewEntity extends org.openapitools.model.Review {
         if (o == null || getClass() != o.getClass()) return false;
         ReviewEntity that = (ReviewEntity) o;
         return Objects.equals(id, that.id) &&
-                Objects.equals(restaurantId, that.restaurantId) &&
-                Objects.equals(userId, that.userId) &&
+                Objects.equals(restaurant, that.restaurant) &&
+                Objects.equals(user, that.user) &&
                 Objects.equals(rating, that.rating) &&
                 Objects.equals(comment, that.comment) &&
                 Objects.equals(createdAt, that.createdAt) &&
@@ -124,6 +126,6 @@ public class ReviewEntity extends org.openapitools.model.Review {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, restaurantId, userId, rating, comment, createdAt, updatedAt);
+        return Objects.hash(id, restaurant, user, rating, comment, createdAt, updatedAt);
     }
 }

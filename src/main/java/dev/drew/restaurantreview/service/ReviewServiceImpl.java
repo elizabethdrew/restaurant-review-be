@@ -2,9 +2,11 @@ package dev.drew.restaurantreview.service;
 
 import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.entity.ReviewEntity;
+import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.mapper.ReviewMapper;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
 import dev.drew.restaurantreview.repository.ReviewRepository;
+import dev.drew.restaurantreview.repository.UserRepository;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import org.openapitools.model.Error;
 import org.openapitools.model.Review;
@@ -35,11 +37,13 @@ public class ReviewServiceImpl implements ReviewService {
 
     // Implement EntityUserIdProvider for ReviewEntity
     private final EntityUserIdProvider<ReviewEntity> reviewUserIdProvider = ReviewEntity::getUserId;
+    private UserRepository userRepository;
 
-    public ReviewServiceImpl(ReviewRepository reviewRepository, ReviewMapper reviewMapper, RestaurantRepository restaurantRepository) {
+    public ReviewServiceImpl(ReviewRepository reviewRepository, ReviewMapper reviewMapper, RestaurantRepository restaurantRepository, UserRepository userRepository) {
         this.reviewRepository = reviewRepository;
         this.reviewMapper = reviewMapper;
         this.restaurantRepository = restaurantRepository;
+        this.userRepository = userRepository;
     }
 
     // Add a new review to the database
@@ -48,16 +52,25 @@ public class ReviewServiceImpl implements ReviewService {
 
         // Check if restaurant exists
         Optional<RestaurantEntity> restaurantEntityOptional = restaurantRepository.findById(reviewInput.getRestaurantId());
-        if(!restaurantEntityOptional.isPresent()) {
+        if (!restaurantEntityOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ReviewResponse()
                             .success(false)
                             .error(new Error().message("Invalid Restaurant ID")));
         }
 
+        // Get the current user
+        Optional<UserEntity> userEntityOptional = userRepository.findById(currentUserId);
+        if (!userEntityOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ReviewResponse()
+                            .success(false)
+                            .error(new Error().message("Invalid User ID")));
+        }
+
         // Check if the user has already reviewed the restaurant within the last year
         OffsetDateTime oneYearAgo = OffsetDateTime.now().minusYears(1);
-        List<ReviewEntity> existingReviews = reviewRepository.findByUserIdAndRestaurantId(currentUserId, reviewInput.getRestaurantId());
+        List<ReviewEntity> existingReviews = reviewRepository.findByUser_IdAndRestaurant_Id(currentUserId, reviewInput.getRestaurantId());
 
         boolean hasReviewWithinOneYear = existingReviews.stream()
                 .anyMatch(review -> review.getCreatedAt().isAfter(oneYearAgo));
@@ -70,7 +83,10 @@ public class ReviewServiceImpl implements ReviewService {
         // Add the new review
         ReviewEntity review = reviewMapper.toReviewEntity(reviewInput);
         review.setCreatedAt(OffsetDateTime.now());
-        review.setUserId(currentUserId);
+
+        // Set the restaurant and user entities
+        review.setRestaurant(restaurantEntityOptional.get());
+        review.setUser(userEntityOptional.get());
 
         ReviewResponse reviewResponse = new ReviewResponse();
 
@@ -141,22 +157,21 @@ public class ReviewServiceImpl implements ReviewService {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
 
-            ReviewEntity updatedEntity = reviewMapper.toReviewEntity(reviewInput);
-            updatedEntity.setId(reviewEntity.getId());
-            updatedEntity.setCreatedAt(reviewEntity.getCreatedAt());
-            updatedEntity.setUserId(reviewEntity.getUserId());
-            updatedEntity.setRestaurantId(reviewEntity.getRestaurantId());
-            updatedEntity.setUpdatedAt(OffsetDateTime.now());
+            // Manually set the updated properties from the ReviewInput object
+            reviewEntity.setRating(reviewInput.getRating());
+            reviewEntity.setComment(reviewInput.getComment());
+            reviewEntity.setUpdatedAt(OffsetDateTime.now());
 
             try {
-                ReviewEntity savedReview = reviewRepository.save(updatedEntity);
+                ReviewEntity savedReview = reviewRepository.save(reviewEntity);
                 Review savedApiReview = reviewMapper.toReview(savedReview);
 
                 // Update the restaurant rating
-                updateRestaurantRating(savedReview.getRestaurantId());
+                updateRestaurantRating(savedReview.getRestaurant().getId());
 
                 ReviewResponse reviewResponse = new ReviewResponse();
                 reviewResponse.setReview(savedApiReview);
+                reviewResponse.setSuccess(true);
 
                 return ResponseEntity.ok(reviewResponse);
             } catch (DataIntegrityViolationException e) {
@@ -201,7 +216,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     public void updateRestaurantRating(Long restaurantId) {
-        List<ReviewEntity> reviews = reviewRepository.findByRestaurantId(restaurantId);
+        List<ReviewEntity> reviews = reviewRepository.findByRestaurant_Id(restaurantId);
 
         if (!reviews.isEmpty()) {
             double averageRating = reviews.stream()
