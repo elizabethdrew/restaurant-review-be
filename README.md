@@ -110,6 +110,10 @@ Finally, the mapper layer provides mapping between entities and DTOs, used by th
 **Class: `ApplicationConfig`**
 - **Description:** This class configures the authentication provider, manager, and password encoder for the application. It sets up a **`DaoAuthenticationProvider`** using the **`JpaUserDetailsService`** for user details and the **`BCryptPasswordEncoder`** for password encoding.
 
+**Class: `AuthenticationController`**
+- **Description:** This class is a REST controller that handles authentication requests for the application. It maps the **`POST /api/v1/auth/authenticate`** endpoint to the **`authenticate`** method, which delegates the authentication process to the **`AuthenticationService`**.
+
+
 ---
 ### **Package: `dev.drew.restaurantreview`**
 **Purpose:** The dev.drew.restaurantreview package contains all the classes that are part of the restaurant review application. This package serves as the top-level package for the application.
