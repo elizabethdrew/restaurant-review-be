@@ -119,6 +119,9 @@ Finally, the mapper layer provides mapping between entities and DTOs, used by th
 **Class: `AuthenticationResponse`**
 - **Description:** This class is a data model representing an authentication response. It contains the **`token`** field, which holds the generated authentication token upon successful authentication.
 
+**Class: `AuthenticationService`**
+- **Description:** This class is a service responsible for authenticating users by validating their provided credentials. If the authentication is successful, the service generates a JWT token using the **`JwtService`**.
+
 ---
 ### **Package: `dev.drew.restaurantreview`**
 **Purpose:** The dev.drew.restaurantreview package contains all the classes that are part of the restaurant review application. This package serves as the top-level package for the application.
