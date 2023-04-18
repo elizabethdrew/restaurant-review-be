@@ -59,7 +59,7 @@ public class SecurityConfig {
                 // Configure the response headers to allow frame options from the same origin
                 .headers(headers -> headers.frameOptions().sameOrigin())
                 // Enable basic HTTP authentication
-                .httpBasic(Customizer.withDefaults())
+                //.httpBasic(Customizer.withDefaults())
                 .build();
     }
 }
