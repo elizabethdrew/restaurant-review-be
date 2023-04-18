@@ -1,6 +1,7 @@
 package dev.drew.restaurantreview.controller;
 
 import dev.drew.restaurantreview.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.openapitools.api.UserApi;
 import org.openapitools.model.User;
 import org.openapitools.model.UserInput;
@@ -39,6 +40,9 @@ public class UserController implements UserApi {
      * @param userId the ID of the user to delete
      * @return response entity indicating success or failure of the operation
      */
+    @SecurityRequirement(
+            name = "Bearer Authentication"
+    )
     @Override
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUserById(Integer userId) {
@@ -51,6 +55,9 @@ public class UserController implements UserApi {
      * @param userId the ID of the user to retrieve
      * @return response entity containing the user data
      */
+    @SecurityRequirement(
+            name = "Bearer Authentication"
+    )
     @Override
     @GetMapping("/{userId}")
     public ResponseEntity<User> getUserById(Integer userId) {
@@ -64,6 +71,9 @@ public class UserController implements UserApi {
      * @param userInput the updated user data
      * @return response entity containing the updated user data
      */
+    @SecurityRequirement(
+            name = "Bearer Authentication"
+    )
     @Override
     @PutMapping("/{userId}")
     public ResponseEntity<UserResponse> updateUserById(Integer userId, UserInput userInput) {
