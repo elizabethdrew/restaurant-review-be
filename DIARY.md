@@ -21,7 +21,7 @@ Additional Challenge(set personally)
 - Design yaml using Swagger Editor
 - Explore Spring Security (step a: Use hardcoded user details. step b: use user database. step 3: use JWT?)
 
-Diary:
+### Diary:
 - Tue 14th March: Restarted the project so I could take a contract first approach (different to the Codecademy project). Created the yaml file for the intended api, but am starting by implementing a small section of it at a time so I can understand how each part works without becoming confused. Used the OpenApi plugin to create the interfaces within the maven project - this took a while to get working as there were some dependancy issues. To implement this I have used a multi module setup (again, new to me today). I'm now at the stage where I can start building out some of the Api endpoints and will learn how to test with Postman as I go - that's the plan anyway!
 - Wed 15th March: A day of headaches attempting to get my head around using the multi module setup and mapping Entity to DTO (api side and database side). A bit of a two steps forward, three back kind of day. On the positive side came across lots of new concepts and have probably learnt something! Day rounded out with a git issue, thankfully sorted eventually.
 - Tue 21st March: Yesterday Rich helped me finally get the base project setup - looking back I had come close to the solution on a number of attempts but was mssing one key piece of information regarding the config options of the OpenApi Maven Plugin. Today I was able to push ahead and create the restaurant end points - get all, add, get by id, update and delete are now working and ready to be improved. Before adding the user and review endpoints I'm going to improve what I have, create tests and learn postman.
@@ -34,9 +34,14 @@ Diary:
 - Mon 3rd April: Back on integration tests. 
 - Tuesday 11th April: Updated documentation. Changed database tables to link to other tables. Removed the lombok @EqualsAndHashCode from entity classes. Updated yaml for api version control.
 - Thursday 13th April: Failed on the JWT front yesterday so went back to where I was on tuesday. Seem to have got the authentication working with the JWT token alongside the database of users which is good. Not sure I understand how exactly, but it's a good start. The entity classes are still using the incorrect lombok so that needs re-fixing, and unit and integration tests need updating.
+- Friday 14th April: Tidied up the code and got the entities working correctly. I'm now going to do a Udemy course that goes over most of what I've learnt through this project, but will hopefully explain a few of the concepts I'm not clear on in more depth and fill in any gaps that I may have missed. It'll also hopefully lead onto using Docker and Kubernetes in this context. Yet again, integration and unti tests need updating (and more doing).
 
-To Do:
-- Integration Tests end in IT and own folder
-- Create unit tests
-- JWT
-- When restaurant updated, rating returns to null
+### To Do:
+- Integration Tests
+- Unit tests
+
+### Design Improvements
+- I should have had the user creation tie in to the authorisation endpoint - so /api/v1/auth/register would have been more appropriate
+- Impl Service files should be placed in Service.Impl package to keep tidy
+- Pagination and Sorting could have been added for Get All Restaurants and Reviews endpoints
+- Swagger annotations are useful but I prefer to add the relevant information via the yaml file as it's much cleaner.
