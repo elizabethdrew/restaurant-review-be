@@ -1,6 +1,7 @@
 package dev.drew.restaurantreview.controller;
 
 import dev.drew.restaurantreview.service.ReviewService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.openapitools.api.ReviewsApi;
 import org.openapitools.model.Review;
 import org.openapitools.model.ReviewInput;
@@ -29,6 +30,9 @@ public class ReviewController implements ReviewsApi {
      * @param reviewInput input data for the new review
      * @return response entity containing the new review data
      */
+    @SecurityRequirement(
+            name = "Bearer Authentication"
+    )
     @PostMapping
     @Override
     public ResponseEntity<ReviewResponse> addNewReview(ReviewInput reviewInput) {
@@ -41,6 +45,9 @@ public class ReviewController implements ReviewsApi {
      * @param reviewId the ID of the review to delete
      * @return response entity indicating success or failure of the operation
      */
+    @SecurityRequirement(
+            name = "Bearer Authentication"
+    )
     @Override
     @DeleteMapping("/{reviewId}")
     public ResponseEntity<Void> deleteReviewById(Integer reviewId) {
@@ -83,6 +90,9 @@ public class ReviewController implements ReviewsApi {
      * @param reviewInput the updated review data
      * @return response entity containing the updated review data
      */
+    @SecurityRequirement(
+            name = "Bearer Authentication"
+    )
     @Override
     @PutMapping("/{reviewId}")
     public ResponseEntity<ReviewResponse> updateReviewById(Integer reviewId, ReviewInput reviewInput) {

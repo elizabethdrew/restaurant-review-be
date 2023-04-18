@@ -34,17 +34,9 @@ Additional Challenge(set personally)
 - Mon 3rd April: Back on integration tests. 
 - Tuesday 11th April: Updated documentation. Changed database tables to link to other tables. Removed the lombok @EqualsAndHashCode from entity classes. Updated yaml for api version control.
 - Thursday 13th April: Failed on the JWT front yesterday so went back to where I was on tuesday. Seem to have got the authentication working with the JWT token alongside the database of users which is good. Not sure I understand how exactly, but it's a good start. The entity classes are still using the incorrect lombok so that needs re-fixing, and unit and integration tests need updating.
-- Friday 14th April: Tidied up the code and got the entities working correctly. I'm now going to do a Udemy course that goes over most of what I've learnt through this project, but will hopefully explain a few of the concepts I'm not clear on in more depth and fill in any gaps that I may have missed. It'll also hopefully lead onto using Docker and Kubernetes in this context. Yet again, integration and unti tests need updating (and more doing).
-- Tuesday 18th April: Following along with Udemy course. Explored swagger annotations. Watched changing to a MySql database and setting up application.properties dev and prod profiles (although I haven't been able to implement this as MySql won't download onto laptop. Will explore using Docker Compose instead). Watched how to deploy using AWS.
 
-### To Do:
-- Integration Tests
-- Unit tests
-- Chamge to using MySQL for production database 
-- Use Docker
-
-### Design Improvements
-- I should have had the user creation tie in to the authorisation endpoint - so /api/v1/auth/register would have been more appropriate
-- Impl Service files should be placed in Service.Impl package to keep tidy
-- Pagination and Sorting could have been added for Get All Restaurants and Reviews endpoints
-- Swagger annotations are useful but I prefer to add the relevant information via the yaml file as it's much cleaner.
+To Do:
+- Integration Tests end in IT and own folder
+- Create unit tests
+- JWT
+- When restaurant updated, rating returns to null
