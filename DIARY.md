@@ -44,3 +44,4 @@ Additional Challenge(set personally)
 - I should have had the user creation tie in to the authorisation endpoint - so /api/v1/auth/register would have been more appropriate
 - Impl Service files should be placed in Service.Impl package to keep tidy
 - Pagination and Sorting could have been added for Get All Restaurants and Reviews endpoints
+- Swagger annotations are useful but I prefer to add the relevant information via the yaml file as it's much cleaner.
