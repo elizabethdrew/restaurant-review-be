@@ -1,0 +1,130 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: elizabeth_drew
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: username
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: datetime
+              - column:
+                  name: role
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 2
+      author: elizabeth_drew
+      changes:
+        - createTable:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: city
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: true
+                    foreignKeyName: fk_restaurant_user_id
+                    references: users(id)
+              - column:
+                  name: rating
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: datetime
+
+  - changeSet:
+      id: 3
+      author: elizabeth_drew
+      changes:
+        - createTable:
+            tableName: review
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: restaurant_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_review_restaurant_id
+                    references: restaurant(id)
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: true
+                    foreignKeyName: fk_review_user_id
+                    references: users(id)
+              - column:
+                  name: rating
+                  type: float
+                  constraints:
+                    nullable: false
+              - column:
+                  name: comment
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: datetime
+              - column:
+                  name: updated_at
+                  type: datetime

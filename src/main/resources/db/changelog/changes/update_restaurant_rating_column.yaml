@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 4
+      author: elizabeth_drew
+      changes:
+        - modifyDataType:
+            tableName: restaurant
+            columnName: rating
+            newDataType: int
+            nullable: true
