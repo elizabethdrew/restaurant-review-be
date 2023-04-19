@@ -40,6 +40,7 @@ Additional Challenge(set personally)
 ### To Do:
 - Integration Tests end in IT and own folder
 - Create unit tests
+- Add transaction management for addition, deletion and updating of reviews and restaurant ratings.
 
 ### Design Improvements
 - I should have had the user creation tie in to the authorisation endpoint - so /api/v1/auth/register would have been more appropriate
