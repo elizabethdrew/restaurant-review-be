@@ -34,9 +34,15 @@ Additional Challenge(set personally)
 - Mon 3rd April: Back on integration tests. 
 - Tuesday 11th April: Updated documentation. Changed database tables to link to other tables. Removed the lombok @EqualsAndHashCode from entity classes. Updated yaml for api version control.
 - Thursday 13th April: Failed on the JWT front yesterday so went back to where I was on tuesday. Seem to have got the authentication working with the JWT token alongside the database of users which is good. Not sure I understand how exactly, but it's a good start. The entity classes are still using the incorrect lombok so that needs re-fixing, and unit and integration tests need updating.
+- Friday 14th April: Tidied up the code and got the entities working correctly. I'm now going to do a Udemy course that goes over most of what I've learnt through this project, but will hopefully explain a few of the concepts I'm not clear on in more depth and fill in any gaps that I may have missed. It'll also hopefully lead onto using Docker and Kubernetes in this context. Yet again, integration and unti tests need updating (and more doing).
+- Wednesday 19th April: Replaced the H2 database with MySQL.Integrated Liquibase to manage and track changes to the database schema. Dockerized the application. Utilized Docker Compose to orchestrate the application and its dependencies. Watched video about transaction management with Spring Data JPA - not implemented.
 
-To Do:
+### To Do:
 - Integration Tests end in IT and own folder
 - Create unit tests
-- JWT
-- When restaurant updated, rating returns to null
+
+### Design Improvements
+- I should have had the user creation tie in to the authorisation endpoint - so /api/v1/auth/register would have been more appropriate
+- Impl Service files should be placed in Service.Impl package to keep tidy
+- Impl Service files should be placed in Service.Impl package to keep tidy
+- Pagination and Sorting could have been added for Get All Restaurants and Reviews endpoints
