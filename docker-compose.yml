@@ -3,7 +3,7 @@ version: '3.8'
 services:
   app:
     build: .
-    image: restaurant-review:latest
+    image: restaurant-review:0.0.1-SNAPSHOT
     container_name: restaurant-review-container
     ports:
       - "8080:8080"
