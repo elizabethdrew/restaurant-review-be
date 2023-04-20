@@ -26,7 +26,6 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
-      - ./databaseChangeLog.yml:/docker-entrypoint-initdb.d/databaseChangeLog.yml
 
 volumes:
   db_data:
