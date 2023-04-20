@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    generate-unique-name: false
+    name: reviewSystem
+    url: jdbc:mysql://localhost:3306/reviewdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: admin
+    password: password
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
