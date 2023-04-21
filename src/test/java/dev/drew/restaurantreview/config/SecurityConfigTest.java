@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -15,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 // Use the SpringExtension for JUnit 5 to integrate with Spring Boot
 @ExtendWith(SpringExtension.class)
+@ActiveProfiles("test")
 // Load the Spring Boot application context to create necessary beans
 @SpringBootTest
 public class SecurityConfigTest {

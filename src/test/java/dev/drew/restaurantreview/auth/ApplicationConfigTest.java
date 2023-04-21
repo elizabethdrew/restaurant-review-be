@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Collections;
 
@@ -23,6 +24,7 @@ import static org.mockito.Mockito.when;
 
 // Use MockitoExtension to enable Mockito annotations in the test class
 @ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
 public class ApplicationConfigTest {
 
     // Inject the mocked dependencies into the ApplicationConfig instance
