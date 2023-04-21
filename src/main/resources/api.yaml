@@ -1,8 +1,10 @@
 openapi: 3.0.3
 info:
-  title: Restaurant Review API
+  title: Restaurant Review REST API
   version: 1.0.0
-  description: An API for managing restaurant reviews
+  description: Spring Boot Restaurant Review REST API Documentation
+  contact:
+    name: Elizabeth Drew
 paths:
   /api/v1/restaurants:
     get:
