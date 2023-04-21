@@ -17,6 +17,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -47,6 +48,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     // Add a new review to the database
+    @Transactional
     public ResponseEntity<ReviewResponse> addNewReview(ReviewInput reviewInput) {
         Long currentUserId = getCurrentUserId();
 
@@ -147,6 +149,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
     }
 
+    @Transactional
     public ResponseEntity<ReviewResponse> updateReviewById(Integer reviewId, ReviewInput reviewInput) {
         Optional<ReviewEntity> reviewEntityOptional = reviewRepository.findById(reviewId.longValue());
 
@@ -189,6 +192,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
     }
 
+    @Transactional
     public ResponseEntity<Void> deleteReviewById(Integer reviewId) {
         Optional<ReviewEntity> reviewEntityOptional = reviewRepository.findById(reviewId.longValue());
 
