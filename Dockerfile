@@ -6,8 +6,8 @@ LABEL   metaainer="hello@elizabethdrew.co" \
 
 WORKDIR /app
 
-COPY target/restaurant-review-*.jar /app/restaurant-review.jar
+COPY target/restaurant-review-api-*.jar /app/restaurant-review-api.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "/app/restaurant-review.jar"]
+ENTRYPOINT ["java", "-jar", "/app/restaurant-review-api.jar"]
