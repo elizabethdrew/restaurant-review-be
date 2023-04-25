@@ -105,7 +105,8 @@ public class RestaurantServiceImpl implements RestaurantService {
         }
 
         if (rating != null) {
-            filteredEntities = filteredEntities.filter(r -> r.getRating().equals(rating));
+            filteredEntities = filteredEntities
+                    .filter(r -> rating.equals(r.getRating()));
         }
 
         if (userId != null) {
