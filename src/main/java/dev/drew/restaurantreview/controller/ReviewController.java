@@ -65,8 +65,8 @@ public class ReviewController implements ReviewsApi {
     @GetMapping
     @PreAuthorize("permitAll()")
     public ResponseEntity<List<Review>> getAllReviews(
-            @Valid @RequestParam(value = "restaurantId", required = false) Long restaurantId,
-            @Valid @RequestParam(value = "userId", required = false) Long userId) {
+            @Valid @RequestParam(value = "restaurant_id", required = false) Long restaurantId,
+            @Valid @RequestParam(value = "user_id", required = false) Long userId) {
         return reviewService.getAllReviews(restaurantId, userId);
     }
 

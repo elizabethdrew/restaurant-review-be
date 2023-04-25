@@ -125,11 +125,12 @@ public class ReviewServiceImpl implements ReviewService {
         Stream<ReviewEntity> filteredEntities = reviewRepository.findAll().stream();
 
         if (restaurantId != null) {
-            filteredEntities = filteredEntities.filter(r -> r.getRestaurantId().equals(restaurantId));
+            filteredEntities = filteredEntities
+                    .filter(r -> r.getRestaurant().getId().equals(restaurantId));
         }
 
         if (userId != null) {
-            filteredEntities = filteredEntities.filter(r -> r.getUserId().equals(userId));
+            filteredEntities = filteredEntities.filter(r -> r.getUser().getId().equals(userId));
         }
 
         List<Review> reviews = filteredEntities
