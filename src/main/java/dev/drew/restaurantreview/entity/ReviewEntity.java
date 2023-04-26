@@ -42,6 +42,12 @@ public class ReviewEntity extends org.openapitools.model.Review {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime updatedAt;
 
+    @Transient
+    private String restaurant_name;
+
+    @Transient
+    private String restaurant_city;
+
     public ReviewEntity() {
     }
 
@@ -53,6 +59,10 @@ public class ReviewEntity extends org.openapitools.model.Review {
         this.comment = comment;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        if(restaurant != null) {
+            this.restaurant_name = restaurant.getName();
+            this.restaurant_city = restaurant.getCity();
+        }
     }
 
     public Long getId() {
@@ -109,6 +119,22 @@ public class ReviewEntity extends org.openapitools.model.Review {
 
     public void setUpdatedAt(OffsetDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getRestaurant_name() {
+        return restaurant_name;
+    }
+
+    public void setRestaurant_name(String restaurant_name) {
+        this.restaurant_name = restaurant_name;
+    }
+
+    public String getRestaurant_city() {
+        return restaurant_city;
+    }
+
+    public void setRestaurant_city(String restaurant_city) {
+        this.restaurant_city = restaurant_city;
     }
 
     @Override

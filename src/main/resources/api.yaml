@@ -570,6 +570,10 @@ components:
         restaurant_id:
           type: integer
           format: int64
+        restaurant_name:
+          type: String
+        restaurant_city:
+          type: String
         user_id:
           type: integer
           format: int64
@@ -590,6 +594,8 @@ components:
         - restaurant_id
         - user_id
         - rating
+        - restaurant_name
+        - restaurant_city
 
     ReviewInput:
       type: object
