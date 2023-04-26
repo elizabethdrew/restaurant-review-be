@@ -574,8 +574,7 @@ components:
           type: integer
           format: int64
         rating:
-          type: number
-          format: float
+          type: integer
           minimum: 1
           maximum: 5
         comment:
@@ -599,8 +598,7 @@ components:
           type: integer
           format: int64
         rating:
-          type: number
-          format: float
+          type: integer
           minimum: 1
           maximum: 5
         comment:

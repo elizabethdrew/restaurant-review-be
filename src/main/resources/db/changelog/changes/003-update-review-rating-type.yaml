@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 5
+      author: elizabeth_drew
+      changes:
+        - modifyDataType:
+            tableName: review
+            columnName: rating
+            newDataType: int
+            nullable: false

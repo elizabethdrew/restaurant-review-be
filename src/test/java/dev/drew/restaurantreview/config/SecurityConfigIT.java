@@ -95,7 +95,7 @@ public class SecurityConfigIT {
         reviewEntity.setId(1L);
         reviewEntity.setRestaurantId(1L);
         reviewEntity.setUserId(1L);
-        reviewEntity.setRating(4.0f);
+        reviewEntity.setRating(4);
         reviewEntity.setComment("Great food!");
 
         userEntity = new UserEntity();

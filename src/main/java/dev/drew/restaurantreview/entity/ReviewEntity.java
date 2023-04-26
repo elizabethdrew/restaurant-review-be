@@ -1,5 +1,6 @@
 package dev.drew.restaurantreview.entity;
 
+import io.swagger.models.auth.In;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -27,7 +28,7 @@ public class ReviewEntity extends org.openapitools.model.Review {
 
     @NotNull
     @Column(name = "rating")
-    private Float rating;
+    private Integer rating;
 
     @NotNull
     @Column(name = "comment")
@@ -44,7 +45,7 @@ public class ReviewEntity extends org.openapitools.model.Review {
     public ReviewEntity() {
     }
 
-    public ReviewEntity(Long id, RestaurantEntity restaurant, UserEntity user, Float rating, String comment, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
+    public ReviewEntity(Long id, RestaurantEntity restaurant, UserEntity user, Integer rating, String comment, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
         this.id = id;
         this.restaurant = restaurant;
         this.user = user;
@@ -78,11 +79,11 @@ public class ReviewEntity extends org.openapitools.model.Review {
         this.user = user;
     }
 
-    public Float getRating() {
+    public Integer getRating() {
         return rating;
     }
 
-    public void setRating(Float rating) {
+    public void setRating(Integer rating) {
         this.rating = rating;
     }
 
