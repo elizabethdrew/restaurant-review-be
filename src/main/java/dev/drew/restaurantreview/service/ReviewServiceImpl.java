@@ -120,13 +120,18 @@ public class ReviewServiceImpl implements ReviewService {
         }
     }
 
-    public ResponseEntity<List<Review>> getAllReviews(Long restaurantId, Long userId) {
+    public ResponseEntity<List<Review>> getAllReviews(Long restaurantId, Long userId, Integer rating) {
 
         Stream<ReviewEntity> filteredEntities = reviewRepository.findAll().stream();
 
         if (restaurantId != null) {
             filteredEntities = filteredEntities
                     .filter(r -> r.getRestaurant().getId().equals(restaurantId));
+        }
+
+        if (rating != null) {
+            filteredEntities = filteredEntities
+                    .filter(r -> r.getRating().equals(rating));
         }
 
         if (userId != null) {

@@ -59,6 +59,7 @@ public class ReviewController implements ReviewsApi {
      *
      * @param restaurantId optional filter by restaurant ID
      * @param userId optional filter by user ID
+     * @param rating optional filter by rating
      * @return response entity containing the list of reviews
      */
     @Override
@@ -66,9 +67,12 @@ public class ReviewController implements ReviewsApi {
     @PreAuthorize("permitAll()")
     public ResponseEntity<List<Review>> getAllReviews(
             @Valid @RequestParam(value = "restaurant_id", required = false) Long restaurantId,
-            @Valid @RequestParam(value = "user_id", required = false) Long userId) {
-        return reviewService.getAllReviews(restaurantId, userId);
+            @Valid @RequestParam(value = "user_id", required = false) Long userId,
+            @Valid @RequestParam(value = "rating", required = false) Integer rating
+    ){
+        return reviewService.getAllReviews(restaurantId, userId, rating);
     }
+
 
     /**
      * Get a specific review by its ID.
