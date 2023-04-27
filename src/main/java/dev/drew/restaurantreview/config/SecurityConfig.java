@@ -35,7 +35,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         return http
-                .csrf(csrf -> csrf.disable()) // Disable CSRF protection
+                .cors()
+                .and()
+                .csrf()
+                .disable()
+                //.csrf(csrf -> csrf.disable()) // Disable CSRF protection
                 .authorizeHttpRequests()
                 // Allow unauthenticated access to the following endpoints
                 .requestMatchers("/api/v1/login/**").permitAll()
