@@ -51,6 +51,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  /api/v1/restaurants/add:
     post:
       summary: Add a new restaurant
       operationId: addNewRestaurant

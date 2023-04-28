@@ -36,7 +36,7 @@ public class RestaurantController implements RestaurantsApi {
     @SecurityRequirement(
             name = "Bearer Authentication"
     )
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<RestaurantResponse> addNewRestaurant(
             @RequestBody @Valid RestaurantInput restaurantInput) {
         return restaurantService.addNewRestaurant(restaurantInput);
