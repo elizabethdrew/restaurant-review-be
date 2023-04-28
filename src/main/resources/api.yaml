@@ -175,7 +175,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /api/v1/user:
+  /api/v1/user/add:
     post:
       summary: Add a new user
       tags:
@@ -248,6 +248,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  /api/v1/user/{userId}/edit:
     put:
       summary: Update a user
       tags:
@@ -296,6 +298,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  /api/v1/user/{userId}/delete:
     delete:
       summary: Delete a user by ID
       tags:
@@ -326,6 +330,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
   /api/v1/reviews:
     get:
       security: []
@@ -372,6 +377,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  /api/v1/review/add:
     post:
       summary: Add a new review
       operationId: addNewReview
@@ -406,7 +413,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /api/v1/reviews/{reviewId}:
+
+  /api/v1/review/{reviewId}:
     get:
       security: []
       summary: Get a review by ID
@@ -441,6 +449,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  /api/v1/review/{reviewId}/edit:
     put:
       summary: Update a review
       operationId: updateReviewById
@@ -490,6 +500,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /api/v1/review/{reviewId}/delete:
     delete:
       summary: Delete a review
       operationId: deleteReviewById

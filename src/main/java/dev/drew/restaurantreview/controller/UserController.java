@@ -11,7 +11,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/v1")
+@CrossOrigin(origins ="http://localhost:3000")
 @PreAuthorize("isAuthenticated()")
 public class UserController implements UserApi {
 
@@ -28,7 +29,7 @@ public class UserController implements UserApi {
      * @return response entity containing the new user data
      */
     @Override
-    @PostMapping
+    @PostMapping("/user/add")
     @PreAuthorize("permitAll()")
     public ResponseEntity<UserResponse> addUser(UserInput userInput) {
         return userService.addNewUser(userInput);
@@ -44,7 +45,7 @@ public class UserController implements UserApi {
             name = "Bearer Authentication"
     )
     @Override
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/user/{userId}/delete")
     public ResponseEntity<Void> deleteUserById(Integer userId) {
         return userService.deleteUserById(userId);
     }
@@ -59,7 +60,7 @@ public class UserController implements UserApi {
             name = "Bearer Authentication"
     )
     @Override
-    @GetMapping("/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<User> getUserById(Integer userId) {
         return userService.getUserById(userId);
     }
@@ -75,7 +76,7 @@ public class UserController implements UserApi {
             name = "Bearer Authentication"
     )
     @Override
-    @PutMapping("/{userId}")
+    @PutMapping("/user/{userId}/edit")
     public ResponseEntity<UserResponse> updateUserById(Integer userId, UserInput userInput) {
         return userService.updateUserById(userId, userInput);
     }

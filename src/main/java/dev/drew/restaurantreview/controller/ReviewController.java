@@ -14,7 +14,8 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/reviews")
+@RequestMapping("/api/v1")
+@CrossOrigin(origins ="http://localhost:3000")
 @PreAuthorize("isAuthenticated()")
 public class ReviewController implements ReviewsApi {
 
@@ -33,7 +34,7 @@ public class ReviewController implements ReviewsApi {
     @SecurityRequirement(
             name = "Bearer Authentication"
     )
-    @PostMapping
+    @PostMapping("/review/add")
     @Override
     public ResponseEntity<ReviewResponse> addNewReview(ReviewInput reviewInput) {
         return reviewService.addNewReview(reviewInput);
@@ -49,7 +50,7 @@ public class ReviewController implements ReviewsApi {
             name = "Bearer Authentication"
     )
     @Override
-    @DeleteMapping("/{reviewId}")
+    @DeleteMapping("/review/{reviewId}/delete")
     public ResponseEntity<Void> deleteReviewById(Integer reviewId) {
         return reviewService.deleteReviewById(reviewId);
     }
@@ -63,7 +64,7 @@ public class ReviewController implements ReviewsApi {
      * @return response entity containing the list of reviews
      */
     @Override
-    @GetMapping
+    @GetMapping("/reviews")
     @PreAuthorize("permitAll()")
     public ResponseEntity<List<Review>> getAllReviews(
             @Valid @RequestParam(value = "restaurant_id", required = false) Long restaurantId,
@@ -81,7 +82,7 @@ public class ReviewController implements ReviewsApi {
      * @return response entity containing the review data
      */
     @Override
-    @GetMapping("/{reviewId}")
+    @GetMapping("/review/{reviewId}")
     @PreAuthorize("permitAll()")
     public ResponseEntity<Review> getReviewById(Integer reviewId) {
         return reviewService.getReviewById(reviewId);
@@ -98,7 +99,7 @@ public class ReviewController implements ReviewsApi {
             name = "Bearer Authentication"
     )
     @Override
-    @PutMapping("/{reviewId}")
+    @PutMapping("review/{reviewId}/edit")
     public ResponseEntity<ReviewResponse> updateReviewById(Integer reviewId, ReviewInput reviewInput) {
         return reviewService.updateReviewById(reviewId, reviewInput);
     }
