@@ -175,6 +175,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
   /api/v1/user/add:
     post:
       summary: Add a new user

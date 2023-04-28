@@ -47,10 +47,10 @@ public class SecurityConfig {
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
                 .requestMatchers(HttpMethod.GET,"/api/v1/restaurants").permitAll()
-                .requestMatchers(HttpMethod.GET,"/api/v1/restaurants/**" ).permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/v1/restaurant/**" ).permitAll()
                 .requestMatchers(HttpMethod.GET,"/api/v1/reviews").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/reviews/**" ).permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/v1/user" ).permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/review/**" ).permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/user/add" ).permitAll()
                 // Require authentication for all other requests
                 .anyRequest().authenticated()
                 // Set session management
