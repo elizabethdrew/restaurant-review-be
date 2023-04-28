@@ -176,7 +176,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/v1/user/add:
+  /api/v1/signup:
     post:
       summary: Add a new user
       tags:

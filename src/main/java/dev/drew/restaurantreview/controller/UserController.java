@@ -29,7 +29,7 @@ public class UserController implements UserApi {
      * @return response entity containing the new user data
      */
     @Override
-    @PostMapping("/user/add")
+    @PostMapping("/signup")
     @PreAuthorize("permitAll()")
     public ResponseEntity<UserResponse> addUser(UserInput userInput) {
         return userService.addNewUser(userInput);
