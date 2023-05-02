@@ -9,9 +9,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 // Annotate the class as a service
 @Service
-// Lombok annotation for generating a constructor for required dependencies
 @RequiredArgsConstructor
 public class AuthenticationService {
 
@@ -39,9 +40,17 @@ public class AuthenticationService {
         SecurityUser securityUser = new SecurityUser(user);
         // Generate the JWT token
         var jwtToken = jwtService.generateToken(securityUser);
+        // Generate expiration
+        var expirationTime = JwtService.extractExpiration(jwtToken);
         // Build and return the AuthenticationResponse
+
+        System.out.println("Generated JWT Token: " + jwtToken);
+        System.out.println("Generated Expiration Time: " + expirationTime);
+
         return AuthenticationResponse.builder()
                 .token(jwtToken)
+                .userId(securityUser.getId())
+                .expirationTime(expirationTime)
                 .build();
     }
 }
