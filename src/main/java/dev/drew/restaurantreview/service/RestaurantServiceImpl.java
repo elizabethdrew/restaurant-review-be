@@ -2,6 +2,7 @@ package dev.drew.restaurantreview.service;
 
 import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.entity.UserEntity;
+import dev.drew.restaurantreview.exception.UserNotFoundException;
 import dev.drew.restaurantreview.mapper.RestaurantMapper;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
 import dev.drew.restaurantreview.repository.ReviewRepository;
@@ -43,25 +44,25 @@ public class RestaurantServiceImpl implements RestaurantService {
         this.userRepository = userRepository;
     }
 
-    // Add a new restaurant to the database
-    public RestaurantResponse addNewRestaurant(RestaurantInput restaurantInput) {
+    private RestaurantResponse createErrorResponse(String message, Throwable cause) {
+        RestaurantResponse errorResponse = new RestaurantResponse();
+        errorResponse.setSuccess(false);
+        errorResponse.setError(new Error().message(message + (cause != null ? ": " + cause.getMessage() : "")));
+        return errorResponse;
+    }
 
+    public RestaurantResponse addNewRestaurant(RestaurantInput restaurantInput) {
         // Convert the input data to a RestaurantEntity object and set the created timestamp
         RestaurantEntity restaurant = restaurantMapper.toRestaurantEntity(restaurantInput);
         restaurant.setCreatedAt(OffsetDateTime.now());
 
         // Fetch the current user entity
         Long currentUserId = getCurrentUserId();
-        Optional<UserEntity> currentUserOptional = userRepository.findById(currentUserId);
-        if (!currentUserOptional.isPresent()) {
-            // Handle the case when the user is not found, return an error response
-            RestaurantResponse errorResponse = new RestaurantResponse();
-            errorResponse.setSuccess(false);
-            errorResponse.setError(new Error().message("User not found"));
-            return errorResponse;
-        }
+        UserEntity currentUser = userRepository.findById(currentUserId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
         // Set the current user to the restaurant
-        restaurant.setUser(currentUserOptional.get());
+        restaurant.setUser(currentUser);
 
         // Initialize the RestaurantResponse object
         RestaurantResponse restaurantResponse = new RestaurantResponse();
@@ -74,23 +75,17 @@ public class RestaurantServiceImpl implements RestaurantService {
             // Set the response fields
             restaurantResponse.setRestaurant(savedApiRestaurant);
             restaurantResponse.setSuccess(true);
-            // Return the response with the CREATED status code
+            // Return the response
             return restaurantResponse;
         } catch (DataIntegrityViolationException e) {
             // Handle database constraint violations, such as unique constraints
-            restaurantResponse.setSuccess(false);
-            restaurantResponse.setError(new Error().message("Invalid input: " + e.getMessage()));
-            return restaurantResponse;
+            return createErrorResponse("Invalid input", e);
         } catch (DataAccessException e) {
             // Handle other database-related exceptions
-            restaurantResponse.setSuccess(false);
-            restaurantResponse.setError(new Error().message("Database error: " + e.getMessage()));
-            return restaurantResponse;
+            return createErrorResponse("Database error", e);
         } catch (Exception e) {
             // Handle general exceptions
-            restaurantResponse.setSuccess(false);
-            restaurantResponse.setError(new Error().message("An unexpected error occurred: " + e.getMessage()));
-            return restaurantResponse;
+            return createErrorResponse("An unexpected error occurred", e);
         }
     }
 
