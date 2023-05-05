@@ -1,5 +1,6 @@
 package dev.drew.restaurantreview.service;
 
+import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
@@ -22,8 +23,9 @@ public interface RestaurantService {
     Restaurant getRestaurantById(Integer restaurantId) throws RestaurantNotFoundException;
 
     // Update a restaurant by its ID
-    ResponseEntity<Restaurant> updateRestaurantById(Integer restaurantId, RestaurantInput restaurantInput);
+    Restaurant updateRestaurantById(Integer restaurantId, RestaurantInput restaurantInput)
+            throws RestaurantNotFoundException, InsufficientPermissionException;
 
     // Delete a restaurant by its ID
-    ResponseEntity<Void> deleteRestaurantById(Integer restaurantId);
+    void deleteRestaurantById(Integer restaurantId);
 }

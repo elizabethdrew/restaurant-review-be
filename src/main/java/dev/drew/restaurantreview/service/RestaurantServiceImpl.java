@@ -2,6 +2,7 @@ package dev.drew.restaurantreview.service;
 
 import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.entity.UserEntity;
+import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import dev.drew.restaurantreview.exception.UserNotFoundException;
 import dev.drew.restaurantreview.mapper.RestaurantMapper;
@@ -119,71 +120,44 @@ public class RestaurantServiceImpl implements RestaurantService {
                 .orElseThrow(() -> new RestaurantNotFoundException("Restaurant not found with ID: " + restaurantId));
     }
 
-    // Update a restaurant by ID
-    public ResponseEntity<Restaurant> updateRestaurantById(Integer restaurantId, RestaurantInput restaurantInput) {
+    public Restaurant updateRestaurantById(Integer restaurantId, RestaurantInput restaurantInput)
+            throws RestaurantNotFoundException, InsufficientPermissionException {
         // Retrieve the restaurant with the specified ID from the repository
-        Optional<RestaurantEntity> restaurantEntityOptional = restaurantRepository.findById(restaurantId.longValue());
+        RestaurantEntity restaurantEntity = restaurantRepository.findById(restaurantId.longValue())
+                .orElseThrow(() -> new RestaurantNotFoundException("Restaurant not found with ID: " + restaurantId));
 
-        // If the restaurant exists, proceed with the update
-        if (restaurantEntityOptional.isPresent()) {
-            RestaurantEntity restaurantEntity = restaurantEntityOptional.get();
-
-            // Check if the current user is an admin or the owner of the restaurant
-            if (!isAdminOrOwner(restaurantEntity, restaurantUserIdProvider)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
-
-            // Convert the input data to a RestaurantEntity object and set its ID, created timestamp, and user ID
-            RestaurantEntity updatedEntity = restaurantMapper.toRestaurantEntity(restaurantInput);
-            updatedEntity.setId(restaurantEntity.getId());
-            updatedEntity.setCreatedAt(restaurantEntity.getCreatedAt());
-            updatedEntity.setUser(restaurantEntity.getUser());
-            updatedEntity.setRating(restaurantEntity.getRating());
-
-            try {
-                // Save the updated restaurant to the database
-                RestaurantEntity savedRestaurant = restaurantRepository.save(updatedEntity);
-                // Convert the saved RestaurantEntity object to a Restaurant object
-                Restaurant savedApiRestaurant = restaurantMapper.toRestaurant(savedRestaurant);
-                // Return the updated restaurant
-                return ResponseEntity.ok(savedApiRestaurant);
-            } catch (DataIntegrityViolationException e) {
-                // Handle database constraint violations, such as unique constraints
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-            } catch (DataAccessException e) {
-                // Handle other database-related exceptions
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            } catch (Exception e) {
-                // Handle general exceptions
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            }
-        } else {
-            // If the restaurant does not exist, return a NOT_FOUND status
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        // Check if the current user is an admin or the owner of the restaurant
+        if (!isAdminOrOwner(restaurantEntity, restaurantUserIdProvider)) {
+            throw new InsufficientPermissionException("User does not have permission to update this restaurant");
         }
+
+        // Convert the input data to a RestaurantEntity object and set its ID, created timestamp, and user ID
+        RestaurantEntity updatedEntity = restaurantMapper.toRestaurantEntity(restaurantInput);
+        updatedEntity.setId(restaurantEntity.getId());
+        updatedEntity.setCreatedAt(restaurantEntity.getCreatedAt());
+        updatedEntity.setUser(restaurantEntity.getUser());
+        updatedEntity.setRating(restaurantEntity.getRating());
+
+        // Save the updated restaurant to the database
+        RestaurantEntity savedRestaurant = restaurantRepository.save(updatedEntity);
+
+        // Convert the saved RestaurantEntity object to a Restaurant object
+        return restaurantMapper.toRestaurant(savedRestaurant);
     }
 
     // Delete a restaurant by ID
-    public ResponseEntity<Void> deleteRestaurantById(Integer restaurantId) {
+    public void deleteRestaurantById(Integer restaurantId) {
         // Retrieve the restaurant with the specified ID from the repository
-        Optional<RestaurantEntity> restaurantEntityOptional = restaurantRepository.findById(restaurantId.longValue());
+        RestaurantEntity restaurantEntity = restaurantRepository.findById(restaurantId.longValue())
+                .orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
 
-        // If the restaurant exists, proceed with the deletion
-        if (restaurantEntityOptional.isPresent()) {
-            RestaurantEntity restaurantEntity = restaurantEntityOptional.get();
-
-            // Check if the current user is an admin or the owner of the restaurant
-            if (!isAdminOrOwner(restaurantEntity, restaurantUserIdProvider)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
-
-            // Delete the restaurant by ID
-            restaurantRepository.deleteById(restaurantId.longValue());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } else {
-            // If the restaurant does not exist, return a NOT_FOUND status
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        // Check if the current user is an admin or the owner of the restaurant
+        if (!isAdminOrOwner(restaurantEntity, restaurantUserIdProvider)) {
+            throw new InsufficientPermissionException("User does not have permission to delete this restaurant");
         }
+
+        // Delete the restaurant by ID
+        restaurantRepository.deleteById(restaurantId.longValue());
     }
 
 }

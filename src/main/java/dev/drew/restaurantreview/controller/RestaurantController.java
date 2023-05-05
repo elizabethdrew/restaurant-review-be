@@ -1,5 +1,6 @@
 package dev.drew.restaurantreview.controller;
 
+import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import dev.drew.restaurantreview.service.RestaurantService;
 import java.util.List;
@@ -98,8 +99,10 @@ public class RestaurantController implements RestaurantsApi {
     @PutMapping("/restaurant/{restaurantId}/edit")
     public ResponseEntity<Restaurant> updateRestaurantById(
             @PathVariable Integer restaurantId,
-            @RequestBody @Valid RestaurantInput restaurantInput) {
-        return restaurantService.updateRestaurantById(restaurantId, restaurantInput);
+            @RequestBody @Valid RestaurantInput restaurantInput)
+            throws RestaurantNotFoundException, InsufficientPermissionException {
+        Restaurant updatedRestaurant = restaurantService.updateRestaurantById(restaurantId, restaurantInput);
+        return ResponseEntity.ok(updatedRestaurant);
     }
 
     /**
@@ -114,6 +117,8 @@ public class RestaurantController implements RestaurantsApi {
     @DeleteMapping("restaurant/{restaurantId}/delete")
     public ResponseEntity<Void> deleteRestaurantById(
             @PathVariable Integer restaurantId) {
-        return restaurantService.deleteRestaurantById(restaurantId);
+        restaurantService.deleteRestaurantById(restaurantId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
 }
