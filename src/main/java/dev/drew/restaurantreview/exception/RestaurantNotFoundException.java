@@ -1,4 +1,4 @@
-package dev.drew.restaurantreview.exceptions;
+package dev.drew.restaurantreview.exception;
 
 public class RestaurantNotFoundException extends RuntimeException {
     public RestaurantNotFoundException(String message) {
