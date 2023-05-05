@@ -1,6 +1,6 @@
 package dev.drew.restaurantreview.exception;
 
-public class InsufficientPermissionException() extends RuntimeException {
+public class InsufficientPermissionException extends RuntimeException {
     public InsufficientPermissionException() {
         super();
     }
