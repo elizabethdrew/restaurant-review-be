@@ -12,6 +12,7 @@ import org.openapitools.api.RestaurantsApi;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
 import org.openapitools.model.RestaurantResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +41,9 @@ public class RestaurantController implements RestaurantsApi {
     @PostMapping("/restaurant/add")
     public ResponseEntity<RestaurantResponse> addNewRestaurant(
             @RequestBody @Valid RestaurantInput restaurantInput) {
-        return restaurantService.addNewRestaurant(restaurantInput);
+        RestaurantResponse restaurantResponse = restaurantService.addNewRestaurant(restaurantInput);
+        HttpStatus status = restaurantResponse.getError() == null ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
+        return new ResponseEntity<>(restaurantResponse, status);
     }
 
     /**

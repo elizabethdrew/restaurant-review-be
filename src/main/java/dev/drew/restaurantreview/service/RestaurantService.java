@@ -12,7 +12,7 @@ import java.util.List;
 public interface RestaurantService {
 
     // Add a new restaurant
-    ResponseEntity<RestaurantResponse> addNewRestaurant(RestaurantInput restaurantInput);
+    RestaurantResponse addNewRestaurant(RestaurantInput restaurantInput);
 
     // Get all restaurants with optional filters (city, rating, and userId)
     ResponseEntity<List<Restaurant>> getAllRestaurants(String city, Integer rating, Long userId);

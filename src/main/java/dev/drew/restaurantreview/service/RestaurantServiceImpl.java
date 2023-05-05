@@ -44,7 +44,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     // Add a new restaurant to the database
-    public ResponseEntity<RestaurantResponse> addNewRestaurant(RestaurantInput restaurantInput) {
+    public RestaurantResponse addNewRestaurant(RestaurantInput restaurantInput) {
 
         // Convert the input data to a RestaurantEntity object and set the created timestamp
         RestaurantEntity restaurant = restaurantMapper.toRestaurantEntity(restaurantInput);
@@ -58,7 +58,7 @@ public class RestaurantServiceImpl implements RestaurantService {
             RestaurantResponse errorResponse = new RestaurantResponse();
             errorResponse.setSuccess(false);
             errorResponse.setError(new Error().message("User not found"));
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+            return errorResponse;
         }
         // Set the current user to the restaurant
         restaurant.setUser(currentUserOptional.get());
@@ -75,22 +75,22 @@ public class RestaurantServiceImpl implements RestaurantService {
             restaurantResponse.setRestaurant(savedApiRestaurant);
             restaurantResponse.setSuccess(true);
             // Return the response with the CREATED status code
-            return new ResponseEntity<>(restaurantResponse, HttpStatus.CREATED);
+            return restaurantResponse;
         } catch (DataIntegrityViolationException e) {
             // Handle database constraint violations, such as unique constraints
             restaurantResponse.setSuccess(false);
             restaurantResponse.setError(new Error().message("Invalid input: " + e.getMessage()));
-            return new ResponseEntity<>(restaurantResponse, HttpStatus.BAD_REQUEST);
+            return restaurantResponse;
         } catch (DataAccessException e) {
             // Handle other database-related exceptions
             restaurantResponse.setSuccess(false);
             restaurantResponse.setError(new Error().message("Database error: " + e.getMessage()));
-            return new ResponseEntity<>(restaurantResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+            return restaurantResponse;
         } catch (Exception e) {
             // Handle general exceptions
             restaurantResponse.setSuccess(false);
             restaurantResponse.setError(new Error().message("An unexpected error occurred: " + e.getMessage()));
-            return new ResponseEntity<>(restaurantResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+            return restaurantResponse;
         }
     }
 
