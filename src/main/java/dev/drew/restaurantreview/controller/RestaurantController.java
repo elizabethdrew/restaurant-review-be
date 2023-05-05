@@ -17,7 +17,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/restaurants")
+@CrossOrigin(origins ="http://localhost:3000")
+@RequestMapping("/api/v1")
 @PreAuthorize("isAuthenticated()")
 public class RestaurantController implements RestaurantsApi {
 
@@ -36,7 +37,7 @@ public class RestaurantController implements RestaurantsApi {
     @SecurityRequirement(
             name = "Bearer Authentication"
     )
-    @PostMapping
+    @PostMapping("/restaurant/add")
     public ResponseEntity<RestaurantResponse> addNewRestaurant(
             @RequestBody @Valid RestaurantInput restaurantInput) {
         return restaurantService.addNewRestaurant(restaurantInput);
@@ -50,7 +51,7 @@ public class RestaurantController implements RestaurantsApi {
      * @param userId the ID of the user to filter by
      * @return response entity containing the list of restaurants
      */
-    @GetMapping
+    @GetMapping("/restaurants")
     @PreAuthorize("permitAll()")
     public ResponseEntity<List<Restaurant>> getAllRestaurants(
             @RequestParam(value = "city", required = false) String city,
@@ -66,7 +67,7 @@ public class RestaurantController implements RestaurantsApi {
      * @param restaurantId the ID of the restaurant to retrieve
      * @return response entity containing the restaurant data
      */
-    @GetMapping("/{restaurantId}")
+    @GetMapping("/restaurant/{restaurantId}")
     @PreAuthorize("permitAll()")
     public ResponseEntity<Restaurant> getRestaurantById(
             @PathVariable Integer restaurantId) {
@@ -83,7 +84,7 @@ public class RestaurantController implements RestaurantsApi {
     @SecurityRequirement(
             name = "Bearer Authentication"
     )
-    @PutMapping("/{restaurantId}")
+    @PutMapping("/restaurant/{restaurantId}/edit")
     public ResponseEntity<Restaurant> updateRestaurantById(
             @PathVariable Integer restaurantId,
             @RequestBody @Valid RestaurantInput restaurantInput) {
@@ -99,7 +100,7 @@ public class RestaurantController implements RestaurantsApi {
     @SecurityRequirement(
             name = "Bearer Authentication"
     )
-    @DeleteMapping("/{restaurantId}")
+    @DeleteMapping("restaurant/{restaurantId}/delete")
     public ResponseEntity<Void> deleteRestaurantById(
             @PathVariable Integer restaurantId) {
         return restaurantService.deleteRestaurantById(restaurantId);

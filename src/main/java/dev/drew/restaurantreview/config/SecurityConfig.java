@@ -35,18 +35,22 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         return http
-                .csrf(csrf -> csrf.disable()) // Disable CSRF protection
+                .cors()
+                .and()
+                .csrf()
+                .disable()
+                //.csrf(csrf -> csrf.disable()) // Disable CSRF protection
                 .authorizeHttpRequests()
                 // Allow unauthenticated access to the following endpoints
-                .requestMatchers("/api/v1/auth/**").permitAll()
+                .requestMatchers("/api/v1/login/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
                 .requestMatchers(HttpMethod.GET,"/api/v1/restaurants").permitAll()
-                .requestMatchers(HttpMethod.GET,"/api/v1/restaurants/**" ).permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/v1/restaurant/**" ).permitAll()
                 .requestMatchers(HttpMethod.GET,"/api/v1/reviews").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/reviews/**" ).permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/v1/user" ).permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/review/**" ).permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/signup" ).permitAll()
                 // Require authentication for all other requests
                 .anyRequest().authenticated()
                 // Set session management

@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>dev.drew</groupId>
-	<artifactId>restaurant-review</artifactId>
+	<artifactId>restaurant-review-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>restaurant-review</name>
-	<description>Restaurant Review Project</description>
+	<name>restaurant-review-api</name>
+	<description>Restaurant Review Rest API</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>

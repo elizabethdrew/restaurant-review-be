@@ -1,6 +1,7 @@
 package dev.drew.restaurantreview.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.drew.restaurantreview.auth.JwtService;
 import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.entity.ReviewEntity;
 import dev.drew.restaurantreview.entity.SecurityUser;
@@ -23,6 +24,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -37,10 +39,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 public class SecurityConfigIT {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private JwtService jwtService;
 
     @MockBean
     private RestaurantRepository restaurantRepository;
@@ -65,11 +71,16 @@ public class SecurityConfigIT {
     private SecurityUser createSecurityUserWithRole(User.RoleEnum role) {
         userEntity = new UserEntity();
         userEntity.setId(1L);
-        userEntity.setUsername("adminUser");
+        userEntity.setUsername("admin");
         userEntity.setPassword(passwordEncoder.encode("password"));
         userEntity.setRole(role);
 
         return new SecurityUser(userEntity);
+    }
+
+    private String generateJwtToken(SecurityUser securityUser) {
+        //SecurityUser securityUser = new SecurityUser(userEntity);
+        return jwtService.generateToken(securityUser);
     }
 
     // Set up the test environment before each test
@@ -84,7 +95,7 @@ public class SecurityConfigIT {
         reviewEntity.setId(1L);
         reviewEntity.setRestaurantId(1L);
         reviewEntity.setUserId(1L);
-        reviewEntity.setRating(4.0f);
+        reviewEntity.setRating(4);
         reviewEntity.setComment("Great food!");
 
         userEntity = new UserEntity();
@@ -105,82 +116,81 @@ public class SecurityConfigIT {
 
         @Test
         public void testGetRestaurants() throws Exception {
-            mockMvc.perform(get("/restaurants")).andExpect(status().isOk());
+            mockMvc.perform(get("/api/v1/restaurants")).andExpect(status().isOk());
         }
 
         @Test
         public void testGetRestaurantById() throws Exception {
-            mockMvc.perform(get("/restaurants/1")).andExpect(status().isOk());
+            mockMvc.perform(get("/api/v1/restaurants/1")).andExpect(status().isOk());
         }
 
         @Test
         public void testGetReviews() throws Exception {
-            mockMvc.perform(get("/reviews")).andExpect(status().isOk());
+            mockMvc.perform(get("/api/v1/reviews")).andExpect(status().isOk());
         }
 
         @Test
         public void testGetReviewById() throws Exception {
-            mockMvc.perform(get("/reviews/1")).andExpect(status().isOk());
+            mockMvc.perform(get("/api/v1/reviews/1")).andExpect(status().isOk());
         }
 
         @Test
         public void testPostUser() throws Exception {
             // Create a new user to be added
-            UserEntity newUser = new UserEntity();
+            User newUser = new User();
             newUser.setUsername("newUser");
-            newUser.setPassword(passwordEncoder.encode("password"));
-            newUser.setRole(UserEntity.RoleEnum.REVIEWER);
+            newUser.setPassword("password");
+            newUser.setRole(User.RoleEnum.REVIEWER);
 
             // Convert the newUser object to a JSON string
             ObjectMapper objectMapper = new ObjectMapper();
             String newUserJson = objectMapper.writeValueAsString(newUser);
 
-            mockMvc.perform(post("/user")
+            mockMvc.perform(post("/api/v1/user")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(newUserJson))
                     .andExpect(status().isCreated());
         }
-
     }
-
-
 
     // Test accessing protected endpoints without authentication
     @Nested
     class ProtectedWithoutAuthentication {
         @Test
         public void testGetUserById() throws Exception {
-            mockMvc.perform(get("/user/1")).andExpect(status().isUnauthorized());
+            mockMvc.perform(get("/api/v1/user/1")).andExpect(status().isForbidden());
         }
 
         @Test
         public void testDeleteUserById() throws Exception {
-            mockMvc.perform(delete("/user/1")).andExpect(status().isUnauthorized());
+            mockMvc.perform(delete("/api/v1/user/1")).andExpect(status().isForbidden());
         }
 
         @Test
         public void testPutUserById() throws Exception {
             // Create an object to represent the updated user data
-            UserEntity updatedUser = new UserEntity();
+            User updatedUser = new User();
             updatedUser.setId(1L);
             updatedUser.setUsername("updatedUsername");
             updatedUser.setPassword("updatedPassword");
-            updatedUser.setRole(UserEntity.RoleEnum.ADMIN);
+            updatedUser.setRole(User.RoleEnum.ADMIN);
 
             // Convert the updatedUser object to a JSON string
             ObjectMapper objectMapper = new ObjectMapper();
             String updatedUserJson = objectMapper.writeValueAsString(updatedUser);
 
-            mockMvc.perform(put("/user/1")
+            mockMvc.perform(put("/api/v1/user/1")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(updatedUserJson))
-                    .andExpect(status().isUnauthorized());
+                    .andExpect(status().isForbidden());
         }
     }
 
     // Test accessing protected endpoints with authentication
     @Nested
     class ProtectedWithAuthentication {
+
+        private String bearerToken;
 
         @BeforeEach
         public void setUpProtectedWithAuthentication() {
@@ -194,36 +204,41 @@ public class SecurityConfigIT {
             // Set the Authentication object in the SecurityContextHolder
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
+            // Generate the JWT bearer token
+            bearerToken = generateJwtToken(securityUser);
+
         }
         @Test
-        @WithMockUser
         public void testAuthenticatedGetUserById() throws Exception {
-            mockMvc.perform(get("/user/1")).andExpect(status().isOk());
+            mockMvc.perform(get("/api/v1/user/1")
+                            .header("Authorization", "Bearer " + bearerToken))
+                    .andExpect(status().isOk());
         }
 
         @Test
-        @WithMockUser
         public void testAuthenticatedDeleteUserById() throws Exception {
-            mockMvc.perform(delete("/user/1")).andExpect(status().isNoContent());
+            mockMvc.perform(delete("/api/v1/user/1")
+                            .header("Authorization", "Bearer " + bearerToken))
+                    .andExpect(status().isNoContent());
         }
 
         @Test
-        @WithMockUser
         public void testAuthenticatedPutUserById() throws Exception {
             // Create an object to represent the updated user data
-            UserEntity updatedUser = new UserEntity();
+            User updatedUser = new User();
             updatedUser.setId(1L);
             updatedUser.setUsername("updatedUsername");
             updatedUser.setPassword("updatedPassword");
-            updatedUser.setRole(UserEntity.RoleEnum.ADMIN);
+            updatedUser.setRole(User.RoleEnum.ADMIN);
 
             // Convert the updatedUser object to a JSON string
             ObjectMapper objectMapper = new ObjectMapper();
             String updatedUserJson = objectMapper.writeValueAsString(updatedUser);
 
-            mockMvc.perform(put("/user/1")
+            mockMvc.perform(put("/api/v1/user/1")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(updatedUserJson))
+                            .content(updatedUserJson)
+                            .header("Authorization", "Bearer " + bearerToken))
                     .andExpect(status().isOk());
         }
     }

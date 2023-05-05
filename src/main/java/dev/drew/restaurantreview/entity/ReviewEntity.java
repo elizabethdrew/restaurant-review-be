@@ -1,5 +1,6 @@
 package dev.drew.restaurantreview.entity;
 
+import io.swagger.models.auth.In;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -27,7 +28,7 @@ public class ReviewEntity extends org.openapitools.model.Review {
 
     @NotNull
     @Column(name = "rating")
-    private Float rating;
+    private Integer rating;
 
     @NotNull
     @Column(name = "comment")
@@ -41,10 +42,16 @@ public class ReviewEntity extends org.openapitools.model.Review {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime updatedAt;
 
+    @Transient
+    private String restaurant_name;
+
+    @Transient
+    private String restaurant_city;
+
     public ReviewEntity() {
     }
 
-    public ReviewEntity(Long id, RestaurantEntity restaurant, UserEntity user, Float rating, String comment, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
+    public ReviewEntity(Long id, RestaurantEntity restaurant, UserEntity user, Integer rating, String comment, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
         this.id = id;
         this.restaurant = restaurant;
         this.user = user;
@@ -52,6 +59,10 @@ public class ReviewEntity extends org.openapitools.model.Review {
         this.comment = comment;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        if(restaurant != null) {
+            this.restaurant_name = restaurant.getName();
+            this.restaurant_city = restaurant.getCity();
+        }
     }
 
     public Long getId() {
@@ -78,11 +89,11 @@ public class ReviewEntity extends org.openapitools.model.Review {
         this.user = user;
     }
 
-    public Float getRating() {
+    public Integer getRating() {
         return rating;
     }
 
-    public void setRating(Float rating) {
+    public void setRating(Integer rating) {
         this.rating = rating;
     }
 
@@ -108,6 +119,22 @@ public class ReviewEntity extends org.openapitools.model.Review {
 
     public void setUpdatedAt(OffsetDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getRestaurant_name() {
+        return restaurant_name;
+    }
+
+    public void setRestaurant_name(String restaurant_name) {
+        this.restaurant_name = restaurant_name;
+    }
+
+    public String getRestaurant_city() {
+        return restaurant_city;
+    }
+
+    public void setRestaurant_city(String restaurant_city) {
+        this.restaurant_city = restaurant_city;
     }
 
     @Override

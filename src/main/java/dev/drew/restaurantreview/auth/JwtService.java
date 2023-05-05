@@ -20,12 +20,12 @@ public class JwtService {
     private static final String SECRET_KEY = "472B4B6250645367566B5970337336763979244226452948404D635166546A57";
 
     // Extract the username from the JWT token
-    public String extractUsername(String token) {
+    public static String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
     // Extract a claim from the JWT token using a provided function
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    public static <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
@@ -36,13 +36,16 @@ public class JwtService {
     }
 
     // Generate a JWT token with additional claims for the given UserDetails
-    public String generateToken(Map<String, Object> extractClaims, UserDetails userDetails) {
+    public String generateToken(Map<String, Object> claims, UserDetails userDetails) {
+        Date issuedAt = new Date(System.currentTimeMillis());
+        Date expiration = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24); // 24 hours
+
         return Jwts
                 .builder()
-                .setClaims(extractClaims)
+                .setClaims(claims)
                 .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .setIssuedAt(issuedAt)
+                .setExpiration(expiration)
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -59,12 +62,12 @@ public class JwtService {
     }
 
     // Extract the expiration date from the JWT token
-    private Date extractExpiration(String token){
+    static Date extractExpiration(String token){
         return extractClaim(token, Claims::getExpiration);
     }
 
     // Extract all claims from the JWT token
-    private Claims extractAllClaims(String token) {
+    private static Claims extractAllClaims(String token) {
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getSignInKey())
@@ -74,7 +77,7 @@ public class JwtService {
     }
 
     // Get the signing key for JWT tokens
-    private Key getSignInKey(){
+    private static Key getSignInKey(){
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }

@@ -1,10 +1,9 @@
 version: '3.8'
 
 services:
-  app:
+  api:
     build: .
-    image: restaurant-review:0.0.1-SNAPSHOT
-    container_name: restaurant-review-container
+    image: restaurant-review-api:0.0.1-SNAPSHOT
     ports:
       - "8080:8080"
     depends_on:
@@ -16,7 +15,6 @@ services:
 
   db:
     image: mysql:8.0
-    container_name: restaurant-review-mysql
     environment:
       - MYSQL_ROOT_PASSWORD=root_password
       - MYSQL_DATABASE=reviewdb
