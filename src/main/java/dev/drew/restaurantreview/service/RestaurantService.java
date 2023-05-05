@@ -15,7 +15,7 @@ public interface RestaurantService {
     RestaurantResponse addNewRestaurant(RestaurantInput restaurantInput);
 
     // Get all restaurants with optional filters (city, rating, and userId)
-    ResponseEntity<List<Restaurant>> getAllRestaurants(String city, Integer rating, Long userId);
+    List<Restaurant> getAllRestaurants(String city, Integer rating, Long userId);
 
     // Get a restaurant by its ID
     ResponseEntity<Restaurant> getRestaurantById(Integer restaurantId);

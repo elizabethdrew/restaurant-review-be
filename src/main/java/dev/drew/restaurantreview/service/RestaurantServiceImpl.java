@@ -89,9 +89,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         }
     }
 
-    // Get all restaurants from the database
-    public ResponseEntity<List<Restaurant>> getAllRestaurants(String city, Integer rating, Long userId) {
-
+    public List<Restaurant> getAllRestaurants(String city, Integer rating, Long userId) {
         // Get a stream of all restaurants and apply filters if provided
         Stream<RestaurantEntity> filteredEntities = restaurantRepository.findAll().stream();
 
@@ -100,8 +98,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         }
 
         if (rating != null) {
-            filteredEntities = filteredEntities
-                    .filter(r -> rating.equals(r.getRating()));
+            filteredEntities = filteredEntities.filter(r -> rating.equals(r.getRating()));
         }
 
         if (userId != null) {
@@ -109,11 +106,9 @@ public class RestaurantServiceImpl implements RestaurantService {
         }
 
         // Convert the filtered RestaurantEntity objects to Restaurant objects and return them as a list
-        List<Restaurant> restaurants = filteredEntities
-                .map(restaurantMapper::toRestaurant)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(restaurants);
+        return filteredEntities.map(restaurantMapper::toRestaurant).collect(Collectors.toList());
     }
+
 
     // Get a restaurant by ID
     public ResponseEntity<Restaurant> getRestaurantById(Integer restaurantId) {
