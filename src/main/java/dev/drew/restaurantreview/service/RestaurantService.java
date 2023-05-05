@@ -1,5 +1,6 @@
 package dev.drew.restaurantreview.service;
 
+import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
 import org.openapitools.model.RestaurantResponse;
@@ -18,7 +19,7 @@ public interface RestaurantService {
     List<Restaurant> getAllRestaurants(String city, Integer rating, Long userId);
 
     // Get a restaurant by its ID
-    ResponseEntity<Restaurant> getRestaurantById(Integer restaurantId);
+    Restaurant getRestaurantById(Integer restaurantId) throws RestaurantNotFoundException;
 
     // Update a restaurant by its ID
     ResponseEntity<Restaurant> updateRestaurantById(Integer restaurantId, RestaurantInput restaurantInput);

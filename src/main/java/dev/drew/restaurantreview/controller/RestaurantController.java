@@ -1,5 +1,6 @@
 package dev.drew.restaurantreview.controller;
 
+import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import dev.drew.restaurantreview.service.RestaurantService;
 import java.util.List;
 import javax.validation.Valid;
@@ -75,8 +76,14 @@ public class RestaurantController implements RestaurantsApi {
     @PreAuthorize("permitAll()")
     public ResponseEntity<Restaurant> getRestaurantById(
             @PathVariable Integer restaurantId) {
-        return restaurantService.getRestaurantById(restaurantId);
+        try {
+            Restaurant restaurant = restaurantService.getRestaurantById(restaurantId);
+            return ResponseEntity.ok(restaurant);
+        } catch (RestaurantNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
+
 
     /**
      * Update a restaurant's data by ID.

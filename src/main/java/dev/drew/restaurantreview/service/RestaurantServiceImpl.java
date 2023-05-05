@@ -2,6 +2,7 @@ package dev.drew.restaurantreview.service;
 
 import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.entity.UserEntity;
+import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import dev.drew.restaurantreview.exception.UserNotFoundException;
 import dev.drew.restaurantreview.mapper.RestaurantMapper;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
@@ -111,18 +112,11 @@ public class RestaurantServiceImpl implements RestaurantService {
 
 
     // Get a restaurant by ID
-    public ResponseEntity<Restaurant> getRestaurantById(Integer restaurantId) {
+    public Restaurant getRestaurantById(Integer restaurantId) throws RestaurantNotFoundException {
         // Retrieve the restaurant with the specified ID from the repository
-        Optional<RestaurantEntity> restaurantEntityOptional = restaurantRepository.findById(restaurantId.longValue());
-
-        // If the restaurant exists, convert it to a Restaurant object and return it
-        if (restaurantEntityOptional.isPresent()) {
-            Restaurant restaurant = restaurantMapper.toRestaurant(restaurantEntityOptional.get());
-            return ResponseEntity.ok(restaurant);
-        } else {
-            // If the restaurant does not exist, return a NOT_FOUND status
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        return restaurantRepository.findById(restaurantId.longValue())
+                .map(restaurantMapper::toRestaurant)
+                .orElseThrow(() -> new RestaurantNotFoundException("Restaurant not found with ID: " + restaurantId));
     }
 
     // Update a restaurant by ID
