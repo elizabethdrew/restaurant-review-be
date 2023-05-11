@@ -46,10 +46,10 @@ public class RestaurantServiceImpl implements RestaurantService {
         this.userRepository = userRepository;
     }
 
-    private RestaurantResponse createErrorResponse(String message, Throwable cause) {
+    private RestaurantResponse createErrorResponse(String message) {
         RestaurantResponse errorResponse = new RestaurantResponse();
         errorResponse.setSuccess(false);
-        errorResponse.setError(new Error().message(message + (cause != null ? ": " + cause.getMessage() : "")));
+        errorResponse.setError(new Error().message(message));
         return errorResponse;
     }
 
@@ -79,16 +79,15 @@ public class RestaurantServiceImpl implements RestaurantService {
             restaurantResponse.setSuccess(true);
             // Return the response
             return restaurantResponse;
-        } catch (DataIntegrityViolationException e) {
-            // Handle database constraint violations, such as unique constraints
-            return createErrorResponse("Invalid input", e);
-        } catch (DataAccessException e) {
-            // Handle other database-related exceptions
-            return createErrorResponse("Database error", e);
+        } catch (DataIntegrityViolationException | UserNotFoundException e) {
+            // Handle exceptions related to database constraints or user not found
+            restaurantResponse = createErrorResponse("An error occurred while processing the request");
         } catch (Exception e) {
-            // Handle general exceptions
-            return createErrorResponse("An unexpected error occurred", e);
+            // Handle other exceptions
+            restaurantResponse = createErrorResponse("An unexpected error occurred");
         }
+
+        return restaurantResponse;
     }
 
     public List<Restaurant> getAllRestaurants(String city, Integer rating, Long userId) {
