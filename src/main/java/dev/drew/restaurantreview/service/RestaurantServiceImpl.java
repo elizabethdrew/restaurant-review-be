@@ -82,9 +82,6 @@ public class RestaurantServiceImpl implements RestaurantService {
         } catch (DataIntegrityViolationException | UserNotFoundException e) {
             // Handle exceptions related to database constraints or user not found
             restaurantResponse = createErrorResponse("An error occurred while processing the request");
-        } catch (Exception e) {
-            // Handle other exceptions
-            restaurantResponse = createErrorResponse("An unexpected error occurred");
         }
 
         return restaurantResponse;
