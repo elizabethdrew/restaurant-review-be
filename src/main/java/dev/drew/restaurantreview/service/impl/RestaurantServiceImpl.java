@@ -15,15 +15,11 @@ import org.openapitools.model.Error;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
 import org.openapitools.model.RestaurantResponse;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -70,21 +66,17 @@ public class RestaurantServiceImpl implements RestaurantService {
         // Initialize the RestaurantResponse object
         RestaurantResponse restaurantResponse = new RestaurantResponse();
 
-        try {
-            // Save the new restaurant to the database
-            RestaurantEntity savedRestaurant = restaurantRepository.save(restaurant);
-            // Convert the saved RestaurantEntity object to a Restaurant object
-            Restaurant savedApiRestaurant = restaurantMapper.toRestaurant(savedRestaurant);
-            // Set the response fields
-            restaurantResponse.setRestaurant(savedApiRestaurant);
-            restaurantResponse.setSuccess(true);
-            // Return the response
-            return restaurantResponse;
-        } catch (DataIntegrityViolationException | UserNotFoundException e) {
-            // Handle exceptions related to database constraints or user not found
-            restaurantResponse = createErrorResponse("An error occurred while processing the request");
-        }
+        // Save the new restaurant to the database
+        RestaurantEntity savedRestaurant = restaurantRepository.save(restaurant);
 
+        // Convert the saved RestaurantEntity object to a Restaurant object
+        Restaurant savedApiRestaurant = restaurantMapper.toRestaurant(savedRestaurant);
+
+        // Set the response fields
+        restaurantResponse.setRestaurant(savedApiRestaurant);
+        restaurantResponse.setSuccess(true);
+
+        // Return the response
         return restaurantResponse;
     }
 
