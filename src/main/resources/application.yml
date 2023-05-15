@@ -11,3 +11,9 @@ spring:
       ddl-auto: none
 liquibase:
   change-log: classpath:/db/changelog/db.changelog-master.yml
+logging:
+  level:
+    root: INFO
+    org:
+      springframework.web: WARN
+      hibernate: ERROR
