@@ -2,6 +2,8 @@ package dev.drew.restaurantreview.controller;
 
 import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
+import dev.drew.restaurantreview.exception.UserNotFoundException;
+import dev.drew.restaurantreview.model.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -9,50 +11,61 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException e) {
+        ErrorResponse error = new ErrorResponse();
+        error.setCode(HttpStatus.NOT_FOUND.value());
+        log.warn("User not found error", e);
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
 
     // Handle RestaurantNotFoundException
     @ExceptionHandler(RestaurantNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<?> handleRestaurantNotFoundException(RestaurantNotFoundException e) {
+    public ResponseEntity<ErrorResponse> handleRestaurantNotFoundException(RestaurantNotFoundException e) {
+        ErrorResponse error = new ErrorResponse();
+        error.setCode(HttpStatus.NOT_FOUND.value());
         log.warn("Restaurant not found error", e);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     // Handle InsufficientPermissionException
     @ExceptionHandler(InsufficientPermissionException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ResponseEntity<?> handleInsufficientPermissionException(InsufficientPermissionException e) {
+    public ResponseEntity<ErrorResponse> handleInsufficientPermissionException(InsufficientPermissionException e) {
+        ErrorResponse error = new ErrorResponse();
+        error.setCode(HttpStatus.FORBIDDEN.value());
         log.warn("Insufficient permission error", e);
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
     }
 
     // Handle DataIntegrityViolationException
     @ExceptionHandler(DataIntegrityViolationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<?> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+        ErrorResponse error = new ErrorResponse();
+        error.setCode(HttpStatus.BAD_REQUEST.value());
         log.warn("Data integrity error", e);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        return new ResponseEntity <>( error, HttpStatus.BAD_REQUEST);
     }
 
     // Handle DataAccessException
     @ExceptionHandler(DataAccessException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<?> handleDataAccessException(DataAccessException e) {
+        ErrorResponse error = new ErrorResponse();
+        error.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
         log.warn("Data access error", e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     // Handle other general exceptions
     @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<?> handleGeneralException(Exception e) {
+        ErrorResponse error = new ErrorResponse();
+        error.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
         log.warn("An unexpected error occurred", e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
