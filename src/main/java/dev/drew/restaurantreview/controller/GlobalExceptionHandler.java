@@ -20,6 +20,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException e) {
         ErrorResponse error = new ErrorResponse();
         error.setCode(HttpStatus.NOT_FOUND.value());
+        error.setMessage("Not Found");
         log.warn("User not found error", e);
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
@@ -29,6 +30,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleRestaurantNotFoundException(RestaurantNotFoundException e) {
         ErrorResponse error = new ErrorResponse();
         error.setCode(HttpStatus.NOT_FOUND.value());
+        error.setMessage("Not Found");
         log.warn("Restaurant not found error", e);
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
@@ -38,6 +40,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleInsufficientPermissionException(InsufficientPermissionException e) {
         ErrorResponse error = new ErrorResponse();
         error.setCode(HttpStatus.FORBIDDEN.value());
+        error.setMessage("Forbidden");
         log.warn("Insufficient permission error", e);
         return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
     }
@@ -47,6 +50,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
         ErrorResponse error = new ErrorResponse();
         error.setCode(HttpStatus.BAD_REQUEST.value());
+        error.setMessage("Bad request");
         log.warn("Data integrity error", e);
         return new ResponseEntity <>( error, HttpStatus.BAD_REQUEST);
     }
@@ -56,6 +60,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleDataAccessException(DataAccessException e) {
         ErrorResponse error = new ErrorResponse();
         error.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        error.setMessage("Internal Server Error");
         log.warn("Data access error", e);
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -65,6 +70,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleGeneralException(Exception e) {
         ErrorResponse error = new ErrorResponse();
         error.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        error.setMessage("Internal Server Error");
         log.warn("An unexpected error occurred", e);
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }

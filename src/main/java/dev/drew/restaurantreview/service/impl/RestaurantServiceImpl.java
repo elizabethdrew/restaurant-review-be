@@ -11,6 +11,7 @@ import dev.drew.restaurantreview.repository.ReviewRepository;
 import dev.drew.restaurantreview.repository.UserRepository;
 import dev.drew.restaurantreview.service.RestaurantService;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
+import lombok.extern.slf4j.Slf4j;
 import org.openapitools.model.Error;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
@@ -25,6 +26,7 @@ import java.util.stream.Stream;
 
 import static dev.drew.restaurantreview.util.SecurityUtils.*;
 
+@Slf4j
 @Service
 public class RestaurantServiceImpl implements RestaurantService {
 

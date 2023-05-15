@@ -75,14 +75,9 @@ public class RestaurantController implements RestaurantsApi {
      */
     @GetMapping("/restaurant/{restaurantId}")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<Restaurant> getRestaurantById(
-            @PathVariable Integer restaurantId) {
-        try {
-            Restaurant restaurant = restaurantService.getRestaurantById(restaurantId);
-            return ResponseEntity.ok(restaurant);
-        } catch (RestaurantNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public ResponseEntity<Restaurant> getRestaurantById( @PathVariable Integer restaurantId) {
+        Restaurant restaurant = restaurantService.getRestaurantById(restaurantId);
+        return ResponseEntity.ok(restaurant);
     }
 
 

@@ -2,15 +2,16 @@ package dev.drew.restaurantreview.model;
 
 public class ErrorResponse extends org.openapitools.model.Error {
 
-    private int statusCode;
+    private Integer code;
     private String message;
 
-    public int getStatusCode() {
-        return statusCode;
+
+    public Integer getCode() {
+        return code;
     }
 
-    public void setStatusCode(int statusCode) {
-        this.statusCode = statusCode;
+    public void setCode(Integer code) {
+        this.code = code;
     }
 
     @Override
