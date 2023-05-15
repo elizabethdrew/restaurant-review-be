@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
 
     // Handle DataIntegrityViolationException
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<?> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
         ErrorResponse error = new ErrorResponse();
         error.setCode(HttpStatus.BAD_REQUEST.value());
         log.warn("Data integrity error", e);
@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
 
     // Handle DataAccessException
     @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<?> handleDataAccessException(DataAccessException e) {
+    public ResponseEntity<ErrorResponse> handleDataAccessException(DataAccessException e) {
         ErrorResponse error = new ErrorResponse();
         error.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
         log.warn("Data access error", e);
@@ -62,7 +62,7 @@ public class GlobalExceptionHandler {
 
     // Handle other general exceptions
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleGeneralException(Exception e) {
+    public ResponseEntity<ErrorResponse> handleGeneralException(Exception e) {
         ErrorResponse error = new ErrorResponse();
         error.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
         log.warn("An unexpected error occurred", e);
