@@ -14,6 +14,5 @@ liquibase:
 logging:
   level:
     root: INFO
-    org:
-      springframework.web: WARN
-      hibernate: ERROR
+    org:springframework.web: DEBUG
+    dev.drew.restaurantreview: DEBUG
