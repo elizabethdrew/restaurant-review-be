@@ -4,6 +4,7 @@ import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.entity.ReviewEntity;
 import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
+import dev.drew.restaurantreview.exception.ReviewNotFoundException;
 import dev.drew.restaurantreview.exception.UserNotFoundException;
 import dev.drew.restaurantreview.mapper.ReviewMapper;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
@@ -117,15 +118,10 @@ public class ReviewServiceImpl implements ReviewService {
         return filteredEntities.map(reviewMapper::toReview).collect(Collectors.toList());
     }
 
-    public ResponseEntity<Review> getReviewById(Integer reviewId) {
-        Optional<ReviewEntity> reviewEntityOptional = reviewRepository.findById(reviewId.longValue());
-
-        if (reviewEntityOptional.isPresent()) {
-            Review review = reviewMapper.toReview(reviewEntityOptional.get());
-            return ResponseEntity.ok(review);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public Review getReviewById(Integer reviewId) throws ReviewNotFoundException {
+        return reviewRepository.findById(reviewId.longValue())
+            .map(reviewMapper::toReview)
+                .orElseThrow(() -> new ReviewNotFoundException("Review not found with ID: " + reviewId));
     }
 
     @Transactional
