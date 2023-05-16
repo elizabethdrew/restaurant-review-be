@@ -45,13 +45,6 @@ public class RestaurantServiceImpl implements RestaurantService {
         this.userRepository = userRepository;
     }
 
-    private RestaurantResponse createErrorResponse(String message) {
-        RestaurantResponse errorResponse = new RestaurantResponse();
-        errorResponse.setSuccess(false);
-        errorResponse.setError(new Error().message(message));
-        return errorResponse;
-    }
-
     public Restaurant addNewRestaurant(RestaurantInput restaurantInput) {
         // Convert the input data to a RestaurantEntity object and set the created timestamp
         RestaurantEntity restaurant = restaurantMapper.toRestaurantEntity(restaurantInput);
@@ -65,18 +58,11 @@ public class RestaurantServiceImpl implements RestaurantService {
         // Set the current user to the restaurant
         restaurant.setUser(currentUser);
 
-        // Initialize the RestaurantResponse object
-        Restaurant restaurantResponse = new Restaurant();
-
         // Save the new restaurant to the database
         RestaurantEntity savedRestaurant = restaurantRepository.save(restaurant);
 
         // Convert the saved RestaurantEntity object to a Restaurant object
         Restaurant savedApiRestaurant = restaurantMapper.toRestaurant(savedRestaurant);
-
-        // Set the response fields
-        //restaurantResponse.setRestaurant(savedApiRestaurant);
-        //restaurantResponse.setSuccess(true);
 
         // Return the response
         return savedApiRestaurant;
