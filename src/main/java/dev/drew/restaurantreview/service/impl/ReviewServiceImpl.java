@@ -14,20 +14,14 @@ import dev.drew.restaurantreview.repository.UserRepository;
 import dev.drew.restaurantreview.service.ReviewService;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import lombok.extern.slf4j.Slf4j;
-import org.openapitools.model.Error;
 import org.openapitools.model.Review;
 import org.openapitools.model.ReviewInput;
 import org.openapitools.model.ReviewResponse;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -153,30 +147,25 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Transactional
-    public ResponseEntity<Void> deleteReviewById(Integer reviewId) {
-        Optional<ReviewEntity> reviewEntityOptional = reviewRepository.findById(reviewId.longValue());
+    public void deleteReviewById(Integer reviewId) {
 
-        if (reviewEntityOptional.isPresent()) {
-            ReviewEntity reviewEntity = reviewEntityOptional.get();
+        // Retrieve the review with the specified ID from the repository
+        ReviewEntity reviewEntity = reviewRepository.findById(reviewId.longValue())
+                .orElseThrow(() -> new ReviewNotFoundException("Review with id " + reviewId + " not found"));
 
-            // Check if the current user is an admin or the owner of the review
-            if (!isAdminOrOwner(reviewEntity, ReviewEntity::getUserId)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
-
-            // Save restaurant ID before deleting review
-            Long restaurantId = reviewEntity.getRestaurantId();
-
-            // Delete review
-            reviewRepository.deleteById(reviewId.longValue());
-
-            // Update restaurant rating
-            updateRestaurantRating(restaurantId);
-
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        // Check if the current user is an admin or the owner of the restaurant
+        if (!isAdminOrOwner(reviewEntity, reviewUserIdProvider)) {
+            throw new InsufficientPermissionException("User does not have permission to delete this review");
         }
+
+        // Save restaurant ID before deleting review
+        Long restaurantId = reviewEntity.getRestaurantId();
+
+        // Delete review
+        reviewRepository.deleteById(reviewId.longValue());
+
+        // Update restaurant rating
+        updateRestaurantRating(restaurantId);
     }
 
     public void updateRestaurantRating(Long restaurantId) {
