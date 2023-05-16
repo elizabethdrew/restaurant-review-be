@@ -1,5 +1,7 @@
 package dev.drew.restaurantreview.controller;
 
+import dev.drew.restaurantreview.exception.InsufficientPermissionException;
+import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import dev.drew.restaurantreview.service.RestaurantService;
 import java.util.List;
 import javax.validation.Valid;
@@ -12,6 +14,7 @@ import org.openapitools.api.RestaurantsApi;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
 import org.openapitools.model.RestaurantResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -37,10 +40,13 @@ public class RestaurantController implements RestaurantsApi {
     @SecurityRequirement(
             name = "Bearer Authentication"
     )
+    @Override
     @PostMapping("/restaurant/add")
-    public ResponseEntity<RestaurantResponse> addNewRestaurant(
+    public ResponseEntity<Restaurant> addNewRestaurant(
             @RequestBody @Valid RestaurantInput restaurantInput) {
-        return restaurantService.addNewRestaurant(restaurantInput);
+        Restaurant restaurant = restaurantService.addNewRestaurant(restaurantInput);
+        //HttpStatus status = restaurantResponse.getError() == null ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
+        return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
     }
 
     /**
@@ -58,7 +64,8 @@ public class RestaurantController implements RestaurantsApi {
             @RequestParam(value = "rating", required = false)
             @Min(1) @Max(5) Integer rating,
             @RequestParam(value = "user_id", required = false) Long userId) {
-        return restaurantService.getAllRestaurants(city, rating, userId);
+        List<Restaurant> restaurants = restaurantService.getAllRestaurants(city, rating, userId);
+        return ResponseEntity.ok(restaurants);
     }
 
     /**
@@ -69,10 +76,11 @@ public class RestaurantController implements RestaurantsApi {
      */
     @GetMapping("/restaurant/{restaurantId}")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<Restaurant> getRestaurantById(
-            @PathVariable Integer restaurantId) {
-        return restaurantService.getRestaurantById(restaurantId);
+    public ResponseEntity<Restaurant> getRestaurantById( @PathVariable Integer restaurantId) {
+        Restaurant restaurant = restaurantService.getRestaurantById(restaurantId);
+        return ResponseEntity.ok(restaurant);
     }
+
 
     /**
      * Update a restaurant's data by ID.
@@ -87,8 +95,10 @@ public class RestaurantController implements RestaurantsApi {
     @PutMapping("/restaurant/{restaurantId}/edit")
     public ResponseEntity<Restaurant> updateRestaurantById(
             @PathVariable Integer restaurantId,
-            @RequestBody @Valid RestaurantInput restaurantInput) {
-        return restaurantService.updateRestaurantById(restaurantId, restaurantInput);
+            @RequestBody @Valid RestaurantInput restaurantInput)
+            throws RestaurantNotFoundException, InsufficientPermissionException {
+        Restaurant updatedRestaurant = restaurantService.updateRestaurantById(restaurantId, restaurantInput);
+        return ResponseEntity.ok(updatedRestaurant);
     }
 
     /**
@@ -103,6 +113,8 @@ public class RestaurantController implements RestaurantsApi {
     @DeleteMapping("restaurant/{restaurantId}/delete")
     public ResponseEntity<Void> deleteRestaurantById(
             @PathVariable Integer restaurantId) {
-        return restaurantService.deleteRestaurantById(restaurantId);
+        restaurantService.deleteRestaurantById(restaurantId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
 }

@@ -74,7 +74,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestaurantResponse'
+                $ref: '#/components/schemas/Restaurant'
         '400':
           description: Invalid input
           content:
@@ -744,21 +744,9 @@ components:
           format: int32
         message:
           type: string
-        details:
-          type: string
       required:
         - code
         - message
-
-    RestaurantResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        restaurant:
-          $ref: '#/components/schemas/Restaurant'
-        error:
-          $ref: '#/components/schemas/Error'
 
     UserResponse:
       type: object

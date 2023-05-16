@@ -1,10 +1,10 @@
 package dev.drew.restaurantreview.service;
 
+import dev.drew.restaurantreview.exception.InsufficientPermissionException;
+import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
 import org.openapitools.model.RestaurantResponse;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -12,17 +12,18 @@ import java.util.List;
 public interface RestaurantService {
 
     // Add a new restaurant
-    ResponseEntity<RestaurantResponse> addNewRestaurant(RestaurantInput restaurantInput);
+    Restaurant addNewRestaurant(RestaurantInput restaurantInput);
 
     // Get all restaurants with optional filters (city, rating, and userId)
-    ResponseEntity<List<Restaurant>> getAllRestaurants(String city, Integer rating, Long userId);
+    List<Restaurant> getAllRestaurants(String city, Integer rating, Long userId);
 
     // Get a restaurant by its ID
-    ResponseEntity<Restaurant> getRestaurantById(Integer restaurantId);
+    Restaurant getRestaurantById(Integer restaurantId) throws RestaurantNotFoundException;
 
     // Update a restaurant by its ID
-    ResponseEntity<Restaurant> updateRestaurantById(Integer restaurantId, RestaurantInput restaurantInput);
+    Restaurant updateRestaurantById(Integer restaurantId, RestaurantInput restaurantInput)
+            throws RestaurantNotFoundException, InsufficientPermissionException;
 
     // Delete a restaurant by its ID
-    ResponseEntity<Void> deleteRestaurantById(Integer restaurantId);
+    void deleteRestaurantById(Integer restaurantId);
 }

@@ -37,6 +37,7 @@ Additional Challenge(set personally)
 - Friday 14th April: Tidied up the code and got the entities working correctly. I'm now going to do a Udemy course that goes over most of what I've learnt through this project, but will hopefully explain a few of the concepts I'm not clear on in more depth and fill in any gaps that I may have missed. It'll also hopefully lead onto using Docker and Kubernetes in this context. Yet again, integration and unti tests need updating (and more doing).
 - Wednesday 19th April: Replaced the H2 database with MySQL.Integrated Liquibase to manage and track changes to the database schema. Dockerized the application. Utilized Docker Compose to orchestrate the application and its dependencies. Watched video about transaction management with Spring Data JPA - not implemented.
 - Friday 21st April: Added transaction management to the review endpoints. Updating unit and integration tests to fit with updated security.
+- Monday 15th May: Going through the list of improvements needed by Rich. Need to change addNewRestaurant response to just contain the restaurant object as well as the correct status code. Once that's all done can move onto review and user improvements.
 
 
 ### To Do:

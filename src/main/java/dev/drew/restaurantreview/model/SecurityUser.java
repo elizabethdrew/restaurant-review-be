@@ -1,5 +1,6 @@
-package dev.drew.restaurantreview.entity;
+package dev.drew.restaurantreview.model;
 
+import dev.drew.restaurantreview.entity.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

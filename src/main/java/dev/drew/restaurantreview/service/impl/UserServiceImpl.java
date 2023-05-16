@@ -1,5 +1,6 @@
-package dev.drew.restaurantreview.service;
+package dev.drew.restaurantreview.service.impl;
 
+import dev.drew.restaurantreview.service.UserService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.mapper.UserMapper;

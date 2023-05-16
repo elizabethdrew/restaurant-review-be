@@ -1,6 +1,6 @@
 package dev.drew.restaurantreview.service;
 
-import dev.drew.restaurantreview.entity.SecurityUser;
+import dev.drew.restaurantreview.model.SecurityUser;
 import dev.drew.restaurantreview.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

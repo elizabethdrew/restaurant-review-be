@@ -1,6 +1,6 @@
 package dev.drew.restaurantreview.util;
 
-import dev.drew.restaurantreview.entity.SecurityUser;
+import dev.drew.restaurantreview.model.SecurityUser;
 import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import org.springframework.security.core.Authentication;

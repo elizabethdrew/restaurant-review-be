@@ -1,6 +1,6 @@
 package dev.drew.restaurantreview.auth;
 
-import dev.drew.restaurantreview.entity.SecurityUser;
+import dev.drew.restaurantreview.model.SecurityUser;
 import dev.drew.restaurantreview.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +8,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
 
 // Annotate the class as a service
 @Service
