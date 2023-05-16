@@ -40,12 +40,13 @@ public class RestaurantController implements RestaurantsApi {
     @SecurityRequirement(
             name = "Bearer Authentication"
     )
+    @Override
     @PostMapping("/restaurant/add")
-    public ResponseEntity<RestaurantResponse> addNewRestaurant(
+    public ResponseEntity<Restaurant> addNewRestaurant(
             @RequestBody @Valid RestaurantInput restaurantInput) {
-        RestaurantResponse restaurantResponse = restaurantService.addNewRestaurant(restaurantInput);
-        HttpStatus status = restaurantResponse.getError() == null ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
-        return new ResponseEntity<>(restaurantResponse, status);
+        Restaurant restaurant = restaurantService.addNewRestaurant(restaurantInput);
+        //HttpStatus status = restaurantResponse.getError() == null ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
+        return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
     }
 
     /**

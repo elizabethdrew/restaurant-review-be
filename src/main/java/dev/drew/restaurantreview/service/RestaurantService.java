@@ -12,7 +12,7 @@ import java.util.List;
 public interface RestaurantService {
 
     // Add a new restaurant
-    RestaurantResponse addNewRestaurant(RestaurantInput restaurantInput);
+    Restaurant addNewRestaurant(RestaurantInput restaurantInput);
 
     // Get all restaurants with optional filters (city, rating, and userId)
     List<Restaurant> getAllRestaurants(String city, Integer rating, Long userId);

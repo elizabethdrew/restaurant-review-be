@@ -52,7 +52,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         return errorResponse;
     }
 
-    public RestaurantResponse addNewRestaurant(RestaurantInput restaurantInput) {
+    public Restaurant addNewRestaurant(RestaurantInput restaurantInput) {
         // Convert the input data to a RestaurantEntity object and set the created timestamp
         RestaurantEntity restaurant = restaurantMapper.toRestaurantEntity(restaurantInput);
         restaurant.setCreatedAt(OffsetDateTime.now());
@@ -66,7 +66,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurant.setUser(currentUser);
 
         // Initialize the RestaurantResponse object
-        RestaurantResponse restaurantResponse = new RestaurantResponse();
+        Restaurant restaurantResponse = new Restaurant();
 
         // Save the new restaurant to the database
         RestaurantEntity savedRestaurant = restaurantRepository.save(restaurant);
@@ -75,11 +75,11 @@ public class RestaurantServiceImpl implements RestaurantService {
         Restaurant savedApiRestaurant = restaurantMapper.toRestaurant(savedRestaurant);
 
         // Set the response fields
-        restaurantResponse.setRestaurant(savedApiRestaurant);
-        restaurantResponse.setSuccess(true);
+        //restaurantResponse.setRestaurant(savedApiRestaurant);
+        //restaurantResponse.setSuccess(true);
 
         // Return the response
-        return restaurantResponse;
+        return savedApiRestaurant;
     }
 
     public List<Restaurant> getAllRestaurants(String city, Integer rating, Long userId) {
