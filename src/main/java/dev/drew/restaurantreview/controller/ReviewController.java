@@ -1,15 +1,12 @@
 package dev.drew.restaurantreview.controller;
 
 import dev.drew.restaurantreview.exception.InsufficientPermissionException;
-import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import dev.drew.restaurantreview.exception.ReviewNotFoundException;
 import dev.drew.restaurantreview.service.ReviewService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.openapitools.api.ReviewsApi;
-import org.openapitools.model.Restaurant;
 import org.openapitools.model.Review;
 import org.openapitools.model.ReviewInput;
-import org.openapitools.model.ReviewResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -80,7 +77,7 @@ public class ReviewController implements ReviewsApi {
             @Valid @RequestParam(value = "user_id", required = false) Long userId,
             @Valid @RequestParam(value = "rating", required = false) Integer rating
     ){
-        List<Review> reviews = reviewService.getAllReviews(restaurantId, rating, userId);
+        List<Review> reviews = reviewService.getAllReviews(restaurantId,  userId, rating);
         return ResponseEntity.ok(reviews);
     }
 
@@ -111,7 +108,7 @@ public class ReviewController implements ReviewsApi {
     )
     @Override
     @PutMapping("review/{reviewId}/edit")
-    public ResponseEntity<ReviewResponse> updateReviewById(
+    public ResponseEntity<Review> updateReviewById(
             @PathVariable Integer reviewId,
             @RequestBody @Valid ReviewInput reviewInput)
             throws ReviewNotFoundException, InsufficientPermissionException {

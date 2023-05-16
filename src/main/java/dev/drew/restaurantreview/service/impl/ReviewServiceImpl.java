@@ -16,7 +16,6 @@ import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.openapitools.model.Review;
 import org.openapitools.model.ReviewInput;
-import org.openapitools.model.ReviewResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,7 +69,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         if (hasReviewWithinOneYear) {
             // Return error response if a review within the last year exists
-            throw new IllegalArgumentException("User already reviewed")
+            throw new IllegalArgumentException("User already reviewed");
         }
 
         // Add the new review
@@ -80,8 +79,6 @@ public class ReviewServiceImpl implements ReviewService {
         // Set the restaurant and user entities
         review.setRestaurant(currentRestaurant);
         review.setUser(currentUser);
-
-        ReviewResponse reviewResponse = new ReviewResponse();
 
         ReviewEntity savedReview = reviewRepository.save(review);
         Review savedApiReview = reviewMapper.toReview(savedReview);
