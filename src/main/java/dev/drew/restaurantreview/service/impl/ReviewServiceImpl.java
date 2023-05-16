@@ -3,6 +3,7 @@ package dev.drew.restaurantreview.service.impl;
 import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.entity.ReviewEntity;
 import dev.drew.restaurantreview.entity.UserEntity;
+import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import dev.drew.restaurantreview.exception.ReviewNotFoundException;
 import dev.drew.restaurantreview.exception.UserNotFoundException;
@@ -125,46 +126,30 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Transactional
-    public ResponseEntity<ReviewResponse> updateReviewById(Integer reviewId, ReviewInput reviewInput) {
-        Optional<ReviewEntity> reviewEntityOptional = reviewRepository.findById(reviewId.longValue());
+    public Review updateReviewById(Integer reviewId, ReviewInput reviewInput)
+            throws ReviewNotFoundException, InsufficientPermissionException {
 
-        if (reviewEntityOptional.isPresent()) {
-            ReviewEntity reviewEntity = reviewEntityOptional.get();
+        // Retrieve the review with the specified ID from the repository
+        ReviewEntity reviewEntity = reviewRepository.findById(reviewId.longValue())
+                .orElseThrow(() -> new ReviewNotFoundException("Review not found with ID: " + reviewId));
 
-            if (!isAdminOrOwner(reviewEntity, ReviewEntity::getUserId)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
+        // Check if the current user is an admin or the owner of the restaurant
+        if (!isAdminOrOwner(reviewEntity, reviewUserIdProvider)) {
+            throw new InsufficientPermissionException("User does not have permission to update this review");
+        }
 
             // Manually set the updated properties from the ReviewInput object
             reviewEntity.setRating(reviewInput.getRating());
             reviewEntity.setComment(reviewInput.getComment());
             reviewEntity.setUpdatedAt(OffsetDateTime.now());
 
-            try {
-                ReviewEntity savedReview = reviewRepository.save(reviewEntity);
-                Review savedApiReview = reviewMapper.toReview(savedReview);
+            ReviewEntity savedReview = reviewRepository.save(reviewEntity);
+            Review savedApiReview = reviewMapper.toReview(savedReview);
 
-                // Update the restaurant rating
-                updateRestaurantRating(savedReview.getRestaurant().getId());
+            // Update the restaurant rating
+            updateRestaurantRating(savedReview.getRestaurant().getId());
 
-                ReviewResponse reviewResponse = new ReviewResponse();
-                reviewResponse.setReview(savedApiReview);
-                reviewResponse.setSuccess(true);
-
-                return ResponseEntity.ok(reviewResponse);
-            } catch (DataIntegrityViolationException e) {
-                // Handle database constraint violations, such as unique constraints
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-            } catch (DataAccessException e) {
-                // Handle other database-related exceptions
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            } catch (Exception e) {
-                // Handle general exceptions
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            }
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+            return savedApiReview;
     }
 
     @Transactional
