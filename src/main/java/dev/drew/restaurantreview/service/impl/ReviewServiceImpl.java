@@ -96,7 +96,7 @@ public class ReviewServiceImpl implements ReviewService {
         return savedApiReview;
     }
 
-    public ResponseEntity<List<Review>> getAllReviews(Long restaurantId, Long userId, Integer rating) {
+    public List<Review> getAllReviews(Long restaurantId, Long userId, Integer rating) {
 
         Stream<ReviewEntity> filteredEntities = reviewRepository.findAll().stream();
 
@@ -114,10 +114,7 @@ public class ReviewServiceImpl implements ReviewService {
             filteredEntities = filteredEntities.filter(r -> r.getUser().getId().equals(userId));
         }
 
-        List<Review> reviews = filteredEntities
-                .map(reviewMapper::toReview)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(reviews);
+        return filteredEntities.map(reviewMapper::toReview).collect(Collectors.toList());
     }
 
     public ResponseEntity<Review> getReviewById(Integer reviewId) {
