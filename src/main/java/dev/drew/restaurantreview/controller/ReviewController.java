@@ -3,9 +3,11 @@ package dev.drew.restaurantreview.controller;
 import dev.drew.restaurantreview.service.ReviewService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.openapitools.api.ReviewsApi;
+import org.openapitools.model.Restaurant;
 import org.openapitools.model.Review;
 import org.openapitools.model.ReviewInput;
 import org.openapitools.model.ReviewResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -36,8 +38,10 @@ public class ReviewController implements ReviewsApi {
     )
     @PostMapping("/review/add")
     @Override
-    public ResponseEntity<ReviewResponse> addNewReview(ReviewInput reviewInput) {
-        return reviewService.addNewReview(reviewInput);
+    public ResponseEntity<Review> addNewReview(
+            @RequestBody @Valid ReviewInput reviewInput) {
+        Review review = reviewService.addNewReview(reviewInput);
+        return new ResponseEntity<>(review, HttpStatus.CREATED);
     }
 
     /**
