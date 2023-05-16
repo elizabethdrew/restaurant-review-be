@@ -2,8 +2,6 @@ package dev.drew.restaurantreview.service;
 
 import org.openapitools.model.Review;
 import org.openapitools.model.ReviewInput;
-import org.openapitools.model.ReviewResponse;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -23,5 +21,5 @@ public interface ReviewService {
     Review updateReviewById(Integer reviewId, ReviewInput reviewInput);
 
     // Delete a review by its ID
-    Void deleteReviewById(Integer reviewId);
+    void deleteReviewById(Integer reviewId);
 }
