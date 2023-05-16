@@ -3,12 +3,15 @@ package dev.drew.restaurantreview.service.impl;
 import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.entity.ReviewEntity;
 import dev.drew.restaurantreview.entity.UserEntity;
+import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
+import dev.drew.restaurantreview.exception.UserNotFoundException;
 import dev.drew.restaurantreview.mapper.ReviewMapper;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
 import dev.drew.restaurantreview.repository.ReviewRepository;
 import dev.drew.restaurantreview.repository.UserRepository;
 import dev.drew.restaurantreview.service.ReviewService;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
+import lombok.extern.slf4j.Slf4j;
 import org.openapitools.model.Error;
 import org.openapitools.model.Review;
 import org.openapitools.model.ReviewInput;
@@ -29,6 +32,7 @@ import java.util.stream.Stream;
 import static dev.drew.restaurantreview.util.SecurityUtils.getCurrentUserId;
 import static dev.drew.restaurantreview.util.SecurityUtils.isAdminOrOwner;
 
+@Slf4j
 @Service
 public class ReviewServiceImpl implements ReviewService {
 
@@ -50,26 +54,16 @@ public class ReviewServiceImpl implements ReviewService {
 
     // Add a new review to the database
     @Transactional
-    public ResponseEntity<ReviewResponse> addNewReview(ReviewInput reviewInput) {
+    public Review addNewReview(ReviewInput reviewInput) {
+
+        // Fetch the restaurant entity
+        RestaurantEntity currentRestaurant = restaurantRepository.findById(reviewInput.getRestaurantId())
+                .orElseThrow(() -> new RestaurantNotFoundException("Restaurant not found"));
+
+        // Fetch the current user entity
         Long currentUserId = getCurrentUserId();
-
-        // Check if restaurant exists
-        Optional<RestaurantEntity> restaurantEntityOptional = restaurantRepository.findById(reviewInput.getRestaurantId());
-        if (!restaurantEntityOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ReviewResponse()
-                            .success(false)
-                            .error(new Error().message("Invalid Restaurant ID")));
-        }
-
-        // Get the current user
-        Optional<UserEntity> userEntityOptional = userRepository.findById(currentUserId);
-        if (!userEntityOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ReviewResponse()
-                            .success(false)
-                            .error(new Error().message("Invalid User ID")));
-        }
+        UserEntity currentUser = userRepository.findById(currentUserId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         // Check if the user has already reviewed the restaurant within the last year
         OffsetDateTime oneYearAgo = OffsetDateTime.now().minusYears(1);
@@ -80,7 +74,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         if (hasReviewWithinOneYear) {
             // Return error response if a review within the last year exists
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            throw new IllegalArgumentException("User already reviewed")
         }
 
         // Add the new review
@@ -88,37 +82,18 @@ public class ReviewServiceImpl implements ReviewService {
         review.setCreatedAt(OffsetDateTime.now());
 
         // Set the restaurant and user entities
-        review.setRestaurant(restaurantEntityOptional.get());
-        review.setUser(userEntityOptional.get());
+        review.setRestaurant(currentRestaurant);
+        review.setUser(currentUser);
 
         ReviewResponse reviewResponse = new ReviewResponse();
 
-        try {
-            ReviewEntity savedReview = reviewRepository.save(review);
-            Review savedApiReview = reviewMapper.toReview(savedReview);
+        ReviewEntity savedReview = reviewRepository.save(review);
+        Review savedApiReview = reviewMapper.toReview(savedReview);
 
-            // Update the restaurant rating
-            updateRestaurantRating(savedReview.getRestaurantId());
+        // Update the restaurant rating
+        updateRestaurantRating(savedReview.getRestaurantId());
 
-            reviewResponse.setReview(savedApiReview);
-            reviewResponse.setSuccess(true);
-            return new ResponseEntity<>(reviewResponse, HttpStatus.CREATED);
-        } catch (DataIntegrityViolationException e) {
-            // Handle database constraint violations, such as unique constraints
-            reviewResponse.setSuccess(false);
-            reviewResponse.setError(new Error().message("Invalid input: " + e.getMessage()));
-            return new ResponseEntity<>(reviewResponse, HttpStatus.BAD_REQUEST);
-        } catch (DataAccessException e) {
-            // Handle other database-related exceptions
-            reviewResponse.setSuccess(false);
-            reviewResponse.setError(new Error().message("Database error: " + e.getMessage()));
-            return new ResponseEntity<>(reviewResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (Exception e) {
-            // Handle general exceptions
-            reviewResponse.setSuccess(false);
-            reviewResponse.setError(new Error().message("An unexpected error occurred: " + e.getMessage()));
-            return new ResponseEntity<>(reviewResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return savedApiReview;
     }
 
     public ResponseEntity<List<Review>> getAllReviews(Long restaurantId, Long userId, Integer rating) {
