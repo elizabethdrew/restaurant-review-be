@@ -1,5 +1,7 @@
 package dev.drew.restaurantreview.controller;
 
+import dev.drew.restaurantreview.exception.InsufficientPermissionException;
+import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import dev.drew.restaurantreview.service.ReviewService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.openapitools.api.ReviewsApi;
@@ -106,7 +108,11 @@ public class ReviewController implements ReviewsApi {
     )
     @Override
     @PutMapping("review/{reviewId}/edit")
-    public ResponseEntity<ReviewResponse> updateReviewById(Integer reviewId, ReviewInput reviewInput) {
-        return reviewService.updateReviewById(reviewId, reviewInput);
+    public ResponseEntity<ReviewResponse> updateReviewById(
+            @PathVariable Integer reviewId,
+            @RequestBody @Valid ReviewInput reviewInput)
+            throws ReviewNotFoundException, InsufficientPermissionException {
+        Review updatedReview = reviewService.updateReviewById(reviewId, reviewInput);
+        return ResponseEntity.ok(updatedReview);
     }
 }
