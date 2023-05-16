@@ -58,8 +58,10 @@ public class ReviewController implements ReviewsApi {
     )
     @Override
     @DeleteMapping("/review/{reviewId}/delete")
-    public ResponseEntity<Void> deleteReviewById(Integer reviewId) {
-        return reviewService.deleteReviewById(reviewId);
+    public ResponseEntity<Void> deleteReviewById(
+            @PathVariable Integer reviewId) {
+        reviewService.deleteReviewById(reviewId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     /**
