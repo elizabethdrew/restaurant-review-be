@@ -11,17 +11,17 @@ import java.util.List;
 public interface ReviewService {
 
     // Add a new review
-    ResponseEntity<ReviewResponse> addNewReview(ReviewInput reviewInput);
+    Review addNewReview(ReviewInput reviewInput);
 
     // Get all reviews with optional filters (restaurantId, userId and rating)
-    ResponseEntity<List<Review>> getAllReviews(Long restaurantId, Long userId, Integer rating);
+    List<Review> getAllReviews(Long restaurantId, Long userId, Integer rating);
 
     // Get a review by its ID
-    ResponseEntity<Review> getReviewById(Integer reviewId);
+    Review getReviewById(Integer reviewId);
 
     // Update a review by its ID
-    ResponseEntity<ReviewResponse> updateReviewById(Integer reviewId, ReviewInput reviewInput);
+    Review updateReviewById(Integer reviewId, ReviewInput reviewInput);
 
     // Delete a review by its ID
-    ResponseEntity<Void> deleteReviewById(Integer reviewId);
+    Void deleteReviewById(Integer reviewId);
 }
