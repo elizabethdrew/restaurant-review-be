@@ -75,7 +75,8 @@ public class ReviewController implements ReviewsApi {
             @Valid @RequestParam(value = "user_id", required = false) Long userId,
             @Valid @RequestParam(value = "rating", required = false) Integer rating
     ){
-        return reviewService.getAllReviews(restaurantId, userId, rating);
+        List<Review> reviews = reviewService.getAllReviews(restaurantId, rating, userId);
+        return ResponseEntity.ok(reviews);
     }
 
 
