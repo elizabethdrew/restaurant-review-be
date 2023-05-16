@@ -2,6 +2,7 @@ package dev.drew.restaurantreview.controller;
 
 import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
+import dev.drew.restaurantreview.exception.ReviewNotFoundException;
 import dev.drew.restaurantreview.service.ReviewService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.openapitools.api.ReviewsApi;

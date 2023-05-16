@@ -2,6 +2,7 @@ package dev.drew.restaurantreview.controller;
 
 import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
+import dev.drew.restaurantreview.exception.ReviewNotFoundException;
 import dev.drew.restaurantreview.exception.UserNotFoundException;
 import dev.drew.restaurantreview.model.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,16 @@ public class GlobalExceptionHandler {
         error.setCode(HttpStatus.NOT_FOUND.value());
         error.setMessage("Not Found");
         log.warn("Restaurant not found error", e);
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    // Handle ReviewNotFoundException
+    @ExceptionHandler(ReviewNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleReviewNotFoundException(RestaurantNotFoundException e) {
+        ErrorResponse error = new ErrorResponse();
+        error.setCode(HttpStatus.NOT_FOUND.value());
+        error.setMessage("Not Found");
+        log.warn("Review not found error", e);
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
