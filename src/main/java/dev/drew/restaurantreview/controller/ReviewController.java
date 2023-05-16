@@ -89,8 +89,9 @@ public class ReviewController implements ReviewsApi {
     @Override
     @GetMapping("/review/{reviewId}")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<Review> getReviewById(Integer reviewId) {
-        return reviewService.getReviewById(reviewId);
+    public ResponseEntity<Review> getReviewById(@PathVariable Integer reviewId) {
+        Review review = reviewService.getReviewById(reviewId);
+        return ResponseEntity.ok(review);
     }
 
     /**
