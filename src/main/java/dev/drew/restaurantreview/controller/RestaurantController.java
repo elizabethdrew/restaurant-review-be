@@ -45,7 +45,6 @@ public class RestaurantController implements RestaurantsApi {
     public ResponseEntity<Restaurant> addNewRestaurant(
             @RequestBody @Valid RestaurantInput restaurantInput) {
         Restaurant restaurant = restaurantService.addNewRestaurant(restaurantInput);
-        //HttpStatus status = restaurantResponse.getError() == null ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
         return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
     }
 
