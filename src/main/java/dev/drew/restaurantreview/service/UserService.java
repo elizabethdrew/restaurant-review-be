@@ -16,5 +16,5 @@ public interface UserService {
     ResponseEntity<Void> deleteUserById(Integer userId);
 
     // Update a user by their ID
-    ResponseEntity<UserResponse> updateUserById(Integer userId, UserInput userInput);
+    User updateUserById(Integer userId, UserInput userInput);
 }

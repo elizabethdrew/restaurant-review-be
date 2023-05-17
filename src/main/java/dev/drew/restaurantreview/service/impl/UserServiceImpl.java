@@ -54,11 +54,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    /*
-        Get a user by ID
-        Example curl command: curl -X GET http://localhost:8080/user/{userId}
-    */
-
     public User getUserById(Integer userId) {
 
         UserEntity userEntity = userRepository.findById(userId.longValue())
@@ -93,42 +88,28 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public ResponseEntity<UserResponse> updateUserById(Integer userId, UserInput userInput) {
-        Optional<UserEntity> userEntityOptional = userRepository.findById(userId.longValue());
+    public User updateUserById(Integer userId, UserInput userInput)
+            throws UserNotFoundException, InsufficientPermissionException {
 
-        if (userEntityOptional.isPresent()) {
-            UserEntity userEntity = userEntityOptional.get();
+        // Retrieve the user with the specified ID from the repository
+        UserEntity userEntity = userRepository.findById(userId.longValue())
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
-            if (!isAdminOrOwner(userEntity, UserEntity::getId)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
 
-            UserEntity updatedEntity = userMapper.toUserEntity(userInput);
-            updatedEntity.setId(userEntity.getId());
-            updatedEntity.setCreatedAt(userEntity.getCreatedAt());
-            updatedEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
-
-            try {
-                UserEntity savedUser = userRepository.save(updatedEntity);
-                User savedApiUser = userMapper.toUser(savedUser);
-
-                UserResponse userResponse = new UserResponse();
-                userResponse.setUser(savedApiUser);
-
-                return ResponseEntity.ok(userResponse);
-            } catch (DataIntegrityViolationException e) {
-                // Handle database constraint violations, such as unique constraints
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-            } catch (DataAccessException e) {
-                // Handle other database-related exceptions
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            } catch (Exception e) {
-                // Handle general exceptions
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            }
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        if (!isAdminOrOwner(userEntity, UserEntity::getId)) {
+            throw new InsufficientPermissionException("User does not have permission to update this profile");
         }
+
+        UserEntity updatedEntity = userMapper.toUserEntity(userInput);
+        updatedEntity.setId(userEntity.getId());
+        updatedEntity.setCreatedAt(userEntity.getCreatedAt());
+        updatedEntity.setPassword(userEntity.getPassword());
+
+        UserEntity savedUser = userRepository.save(updatedEntity);
+        User savedApiUser = userMapper.toUser(savedUser);
+
+        return savedApiUser;
+
     }
 
 }

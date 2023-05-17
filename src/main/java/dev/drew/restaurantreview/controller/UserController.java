@@ -1,5 +1,8 @@
 package dev.drew.restaurantreview.controller;
 
+import dev.drew.restaurantreview.exception.InsufficientPermissionException;
+import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
+import dev.drew.restaurantreview.exception.UserNotFoundException;
 import dev.drew.restaurantreview.service.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.openapitools.api.UserApi;
@@ -83,7 +86,11 @@ public class UserController implements UserApi {
     )
     @Override
     @PutMapping("/user/{userId}/edit")
-    public ResponseEntity<UserResponse> updateUserById(Integer userId, UserInput userInput) {
-        return userService.updateUserById(userId, userInput);
+    public ResponseEntity<User> updateUserById(
+            @PathVariable Integer userId,
+            @RequestBody @Valid UserInput userInput)
+            throws UserNotFoundException, InsufficientPermissionException {
+        User updatedUser = userService.updateUserById(userId, userInput);
+        return ResponseEntity.ok(updatedUser);
     }
 }
