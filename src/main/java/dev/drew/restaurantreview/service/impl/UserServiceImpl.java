@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
             if (!isAdminOrOwner(userEntity, userEntityUserIdProvider)) {
-                throw new InsufficientPermissionException("User does not have permission to update this restaurant");
+                throw new InsufficientPermissionException("User does not have permission view this profile");
             }
 
             return userMapper.toUser(userEntity);
