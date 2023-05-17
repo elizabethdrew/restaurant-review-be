@@ -7,9 +7,12 @@ import org.openapitools.model.Restaurant;
 import org.openapitools.model.User;
 import org.openapitools.model.UserInput;
 import org.openapitools.model.UserResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -29,11 +32,12 @@ public class UserController implements UserApi {
      * @param userInput input data for the new user
      * @return response entity containing the new user data
      */
-    @Override
+
     @PostMapping("/signup")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<UserResponse> addUser(UserInput userInput) {
-        return userService.addNewUser(userInput);
+    public ResponseEntity<User> addUser( @Valid @RequestBody UserInput userInput ) {
+        User user = userService.addNewUser(userInput);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
     /**

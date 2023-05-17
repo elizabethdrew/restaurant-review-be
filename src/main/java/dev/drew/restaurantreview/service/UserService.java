@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface UserService {
     // Add a new user to the database
-    ResponseEntity<UserResponse> addNewUser(UserInput userInput);
+    User addNewUser(UserInput userInput);
 
     // Get a user by their ID
     User getUserById(Integer userId);

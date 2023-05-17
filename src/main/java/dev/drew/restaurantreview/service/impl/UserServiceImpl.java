@@ -40,37 +40,17 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    public User addNewUser(UserInput userInput) {
 
-
-    public ResponseEntity<UserResponse> addNewUser(UserInput userInput) {
         UserEntity user = userMapper.toUserEntity(userInput);
         user.setCreatedAt(OffsetDateTime.now());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        UserResponse userResponse = new UserResponse();
+        UserEntity savedUser = userRepository.save(user);
 
-        try {
-            UserEntity savedUser = userRepository.save(user);
-            User savedApiUser = userMapper.toUser(savedUser);
-            userResponse.setUser(savedApiUser);
-            userResponse.setSuccess(true);
-            return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
-        } catch (DataIntegrityViolationException e) {
-            // Handle database constraint violations, such as unique constraints
-            userResponse.setSuccess(false);
-            userResponse.setError(new Error().message("Invalid input: " + e.getMessage()));
-            return new ResponseEntity<>(userResponse, HttpStatus.BAD_REQUEST);
-        } catch (DataAccessException e) {
-            // Handle other database-related exceptions
-            userResponse.setSuccess(false);
-            userResponse.setError(new Error().message("Database error: " + e.getMessage()));
-            return new ResponseEntity<>(userResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (Exception e) {
-            // Handle general exceptions
-            userResponse.setSuccess(false);
-            userResponse.setError(new Error().message("An unexpected error occurred: " + e.getMessage()));
-            return new ResponseEntity<>(userResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        User savedApiUser = userMapper.toUser(savedUser);
+
+        return savedApiUser;
     }
 
 
