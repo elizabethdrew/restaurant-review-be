@@ -10,7 +10,7 @@ public interface UserService {
     ResponseEntity<UserResponse> addNewUser(UserInput userInput);
 
     // Get a user by their ID
-    ResponseEntity<User> getUserById(Integer userId);
+    User getUserById(Integer userId);
 
     // Delete a user by their ID
     ResponseEntity<Void> deleteUserById(Integer userId);

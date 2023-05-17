@@ -3,6 +3,7 @@ package dev.drew.restaurantreview.controller;
 import dev.drew.restaurantreview.service.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.openapitools.api.UserApi;
+import org.openapitools.model.Restaurant;
 import org.openapitools.model.User;
 import org.openapitools.model.UserInput;
 import org.openapitools.model.UserResponse;
@@ -61,8 +62,9 @@ public class UserController implements UserApi {
     )
     @Override
     @GetMapping("/user/{userId}")
-    public ResponseEntity<User> getUserById(Integer userId) {
-        return userService.getUserById(userId);
+    public ResponseEntity<User> getUserById(@PathVariable Integer userId) {
+        User user = userService.getUserById(userId);
+        return ResponseEntity.ok(user);
     }
 
     /**

@@ -1,5 +1,9 @@
 package dev.drew.restaurantreview.service.impl;
 
+import dev.drew.restaurantreview.entity.RestaurantEntity;
+import dev.drew.restaurantreview.exception.InsufficientPermissionException;
+import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
+import dev.drew.restaurantreview.exception.UserNotFoundException;
 import dev.drew.restaurantreview.service.UserService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import dev.drew.restaurantreview.entity.UserEntity;
@@ -75,21 +79,16 @@ public class UserServiceImpl implements UserService {
         Example curl command: curl -X GET http://localhost:8080/user/{userId}
     */
 
-    public ResponseEntity<User> getUserById(Integer userId) {
-        Optional<UserEntity> userEntityOptional = userRepository.findById(userId.longValue());
+    public User getUserById(Integer userId) {
 
-        if (userEntityOptional.isPresent()) {
-            UserEntity userEntity = userEntityOptional.get();
+        UserEntity userEntity = userRepository.findById(userId.longValue())
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
             if (!isAdminOrOwner(userEntity, userEntityUserIdProvider)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                throw new InsufficientPermissionException("User does not have permission to update this restaurant");
             }
 
-            User user = userMapper.toUser(userEntity);
-            return ResponseEntity.ok(user);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+            return userMapper.toUser(userEntity);
     }
 
 
