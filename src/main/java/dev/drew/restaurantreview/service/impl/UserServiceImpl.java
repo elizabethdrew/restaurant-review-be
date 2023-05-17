@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
 
-        if (!isAdminOrOwner(userEntity, UserEntity::getId)) {
+        if (!isAdminOrOwner(userEntity, userEntityUserIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to update this profile");
         }
 
@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
 
-        if (!isAdminOrOwner(userEntity, UserEntity::getId)) {
+        if (!isAdminOrOwner(userEntity, userEntityUserIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to update this profile");
         }
 
