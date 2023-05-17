@@ -1,8 +1,6 @@
 package dev.drew.restaurantreview.service.impl;
 
-import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.exception.InsufficientPermissionException;
-import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import dev.drew.restaurantreview.exception.UserNotFoundException;
 import dev.drew.restaurantreview.service.UserService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,16 +8,10 @@ import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.mapper.UserMapper;
 import dev.drew.restaurantreview.repository.UserRepository;
 import org.openapitools.model.*;
-import org.openapitools.model.Error;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 
 import java.time.OffsetDateTime;
-import java.util.Optional;
 
 import static dev.drew.restaurantreview.util.SecurityUtils.isAdminOrOwner;
 
@@ -71,21 +63,17 @@ public class UserServiceImpl implements UserService {
         Delete a user by ID
         Example curl command: curl -X DELETE http://localhost:8080/user/{userId}
         */
-    public ResponseEntity<Void> deleteUserById(Integer userId) {
-        Optional<UserEntity> userEntityOptional = userRepository.findById(userId.longValue());
+    public void deleteUserById(Integer userId) {
+        // Retrieve the user with the specified ID from the repository
+        UserEntity userEntity = userRepository.findById(userId.longValue())
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
-        if (userEntityOptional.isPresent()) {
-            UserEntity userEntity = userEntityOptional.get();
 
-            if (!isAdminOrOwner(userEntity, userEntityUserIdProvider)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
+        if (!isAdminOrOwner(userEntity, UserEntity::getId)) {
+            throw new InsufficientPermissionException("User does not have permission to update this profile");
+        }
 
             userRepository.deleteById(userId.longValue());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
     }
 
     public User updateUserById(Integer userId, UserInput userInput)

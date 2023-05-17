@@ -747,13 +747,3 @@ components:
       required:
         - code
         - message
-
-    UserResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        user:
-          $ref: '#/components/schemas/User'
-        error:
-          $ref: '#/components/schemas/Error'
