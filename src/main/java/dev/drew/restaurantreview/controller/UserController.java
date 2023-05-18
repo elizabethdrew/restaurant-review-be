@@ -1,14 +1,18 @@
 package dev.drew.restaurantreview.controller;
 
+import dev.drew.restaurantreview.exception.InsufficientPermissionException;
+import dev.drew.restaurantreview.exception.UserNotFoundException;
 import dev.drew.restaurantreview.service.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.openapitools.api.UserApi;
 import org.openapitools.model.User;
 import org.openapitools.model.UserInput;
-import org.openapitools.model.UserResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -28,11 +32,12 @@ public class UserController implements UserApi {
      * @param userInput input data for the new user
      * @return response entity containing the new user data
      */
-    @Override
+
     @PostMapping("/signup")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<UserResponse> addUser(UserInput userInput) {
-        return userService.addNewUser(userInput);
+    public ResponseEntity<User> addUser( @Valid @RequestBody UserInput userInput ) {
+        User user = userService.addNewUser(userInput);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
     /**
@@ -46,8 +51,10 @@ public class UserController implements UserApi {
     )
     @Override
     @DeleteMapping("/user/{userId}/delete")
-    public ResponseEntity<Void> deleteUserById(Integer userId) {
-        return userService.deleteUserById(userId);
+    public ResponseEntity<Void> deleteUserById(
+            @PathVariable Integer userId) {
+        userService.deleteUserById(userId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     /**
@@ -61,8 +68,9 @@ public class UserController implements UserApi {
     )
     @Override
     @GetMapping("/user/{userId}")
-    public ResponseEntity<User> getUserById(Integer userId) {
-        return userService.getUserById(userId);
+    public ResponseEntity<User> getUserById(@PathVariable Integer userId) {
+        User user = userService.getUserById(userId);
+        return ResponseEntity.ok(user);
     }
 
     /**
@@ -77,7 +85,11 @@ public class UserController implements UserApi {
     )
     @Override
     @PutMapping("/user/{userId}/edit")
-    public ResponseEntity<UserResponse> updateUserById(Integer userId, UserInput userInput) {
-        return userService.updateUserById(userId, userInput);
+    public ResponseEntity<User> updateUserById(
+            @PathVariable Integer userId,
+            @RequestBody @Valid UserInput userInput)
+            throws UserNotFoundException, InsufficientPermissionException {
+        User updatedUser = userService.updateUserById(userId, userInput);
+        return ResponseEntity.ok(updatedUser);
     }
 }
