@@ -401,7 +401,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ReviewResponse'
+                $ref: '#/components/schemas/Review'
         '400':
           description: Invalid input
           content:
@@ -481,7 +481,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ReviewResponse'
+                $ref: '#/components/schemas/Review'
         '400':
           description: Invalid input.
           content:
@@ -755,15 +755,5 @@ components:
           type: boolean
         user:
           $ref: '#/components/schemas/User'
-        error:
-          $ref: '#/components/schemas/Error'
-
-    ReviewResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        Review:
-          $ref: '#/components/schemas/Review'
         error:
           $ref: '#/components/schemas/Error'

@@ -12,11 +12,8 @@ import dev.drew.restaurantreview.repository.UserRepository;
 import dev.drew.restaurantreview.service.RestaurantService;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import lombok.extern.slf4j.Slf4j;
-import org.openapitools.model.Error;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
-import org.openapitools.model.RestaurantResponse;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;

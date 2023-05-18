@@ -1,11 +1,13 @@
 package dev.drew.restaurantreview.controller;
 
+import dev.drew.restaurantreview.exception.InsufficientPermissionException;
+import dev.drew.restaurantreview.exception.ReviewNotFoundException;
 import dev.drew.restaurantreview.service.ReviewService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.openapitools.api.ReviewsApi;
 import org.openapitools.model.Review;
 import org.openapitools.model.ReviewInput;
-import org.openapitools.model.ReviewResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -36,8 +38,10 @@ public class ReviewController implements ReviewsApi {
     )
     @PostMapping("/review/add")
     @Override
-    public ResponseEntity<ReviewResponse> addNewReview(ReviewInput reviewInput) {
-        return reviewService.addNewReview(reviewInput);
+    public ResponseEntity<Review> addNewReview(
+            @RequestBody @Valid ReviewInput reviewInput) {
+        Review review = reviewService.addNewReview(reviewInput);
+        return new ResponseEntity<>(review, HttpStatus.CREATED);
     }
 
     /**
@@ -51,8 +55,10 @@ public class ReviewController implements ReviewsApi {
     )
     @Override
     @DeleteMapping("/review/{reviewId}/delete")
-    public ResponseEntity<Void> deleteReviewById(Integer reviewId) {
-        return reviewService.deleteReviewById(reviewId);
+    public ResponseEntity<Void> deleteReviewById(
+            @PathVariable Integer reviewId) {
+        reviewService.deleteReviewById(reviewId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     /**
@@ -71,7 +77,8 @@ public class ReviewController implements ReviewsApi {
             @Valid @RequestParam(value = "user_id", required = false) Long userId,
             @Valid @RequestParam(value = "rating", required = false) Integer rating
     ){
-        return reviewService.getAllReviews(restaurantId, userId, rating);
+        List<Review> reviews = reviewService.getAllReviews(restaurantId,  userId, rating);
+        return ResponseEntity.ok(reviews);
     }
 
 
@@ -84,8 +91,9 @@ public class ReviewController implements ReviewsApi {
     @Override
     @GetMapping("/review/{reviewId}")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<Review> getReviewById(Integer reviewId) {
-        return reviewService.getReviewById(reviewId);
+    public ResponseEntity<Review> getReviewById(@PathVariable Integer reviewId) {
+        Review review = reviewService.getReviewById(reviewId);
+        return ResponseEntity.ok(review);
     }
 
     /**
@@ -100,7 +108,11 @@ public class ReviewController implements ReviewsApi {
     )
     @Override
     @PutMapping("review/{reviewId}/edit")
-    public ResponseEntity<ReviewResponse> updateReviewById(Integer reviewId, ReviewInput reviewInput) {
-        return reviewService.updateReviewById(reviewId, reviewInput);
+    public ResponseEntity<Review> updateReviewById(
+            @PathVariable Integer reviewId,
+            @RequestBody @Valid ReviewInput reviewInput)
+            throws ReviewNotFoundException, InsufficientPermissionException {
+        Review updatedReview = reviewService.updateReviewById(reviewId, reviewInput);
+        return ResponseEntity.ok(updatedReview);
     }
 }

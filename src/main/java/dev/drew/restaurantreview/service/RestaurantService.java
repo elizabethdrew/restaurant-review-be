@@ -4,7 +4,6 @@ import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
-import org.openapitools.model.RestaurantResponse;
 
 import java.util.List;
 
