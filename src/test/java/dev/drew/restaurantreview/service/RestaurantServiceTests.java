@@ -129,36 +129,33 @@ class RestaurantServiceTests {
         // Verify the response status and data
         assertEquals(2, response.size());
     }
-//
-//    @Test
-//    void testGetRestaurantById() {
-//        // Prepare expected data
-//        Long restaurantId = 1L;
-//        RestaurantEntity restaurantEntity = new RestaurantEntity();
-//        restaurantEntity.setId(restaurantId);
-//        restaurantEntity.setName("Restaurant 1");
-//
-//        Restaurant expectedRestaurant = new Restaurant();
-//        expectedRestaurant.setId(restaurantId);
-//        expectedRestaurant.setName("Restaurant 1");
-//
-//        // Mock the repository call
-//        when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(restaurantEntity));
-//
-//        // Mock the mapper call
-//        when(restaurantMapper.toRestaurant(restaurantEntity)).thenReturn(expectedRestaurant);
-//
-//        // Call the service method
-//        ResponseEntity<Restaurant> response = restaurantServiceImpl.getRestaurantById(restaurantId.intValue());
-//
-//        // Verify the response status
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//
-//        // Verify the response body
-//        assertNotNull(response.getBody());
-//        assertEquals(expectedRestaurant.getId(), response.getBody().getId());
-//        assertEquals(expectedRestaurant.getName(), response.getBody().getName());
-//    }
+
+    @Test
+    void testGetRestaurantById() {
+        // Prepare expected data
+        Long restaurantId = 1L;
+        RestaurantEntity restaurantEntity = new RestaurantEntity();
+        restaurantEntity.setId(restaurantId);
+        restaurantEntity.setName("Restaurant 1");
+
+        Restaurant expectedRestaurant = new Restaurant();
+        expectedRestaurant.setId(restaurantId);
+        expectedRestaurant.setName("Restaurant 1");
+
+        // Mock the repository call
+        when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(restaurantEntity));
+
+        // Mock the mapper call
+        when(restaurantMapper.toRestaurant(restaurantEntity)).thenReturn(expectedRestaurant);
+
+        // Call the service method
+        Restaurant response = restaurantServiceImpl.getRestaurantById(restaurantId.intValue());
+
+        // Verify the response status
+        assertNotNull(response);
+        assertEquals(expectedRestaurant.getId(), response.getId());
+        assertEquals(expectedRestaurant.getName(), response.getName());
+    }
 //
 //    @Test
 //    void testDeleteRestaurantByIdNotFound() {
