@@ -3,6 +3,7 @@ package dev.drew.restaurantreview.service;
 import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.entity.ReviewEntity;
 import dev.drew.restaurantreview.entity.UserEntity;
+import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import dev.drew.restaurantreview.exception.ReviewNotFoundException;
 import dev.drew.restaurantreview.mapper.ReviewMapper;
@@ -20,6 +21,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.openapitools.model.*;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
@@ -206,6 +209,35 @@ public class ReviewServiceTest {
 
         // Verify the response status
         assertThrows(ReviewNotFoundException.class, () -> reviewServiceImpl.deleteReviewById(reviewId.intValue()));
+
+        verify(reviewRepository, never()).deleteById(anyLong());
+    }
+
+    @Test
+    void testDeleteReviewByIdForbidden() {
+        // Prepare expected data
+        Long reviewId = 1L;
+        Long restaurantId = 2L;
+        RestaurantEntity restaurantEntity = new RestaurantEntity();
+        restaurantEntity.setId(restaurantId); // Set the ID for the restaurant entity
+        ReviewEntity reviewEntity = new ReviewEntity();
+        reviewEntity.setId(reviewId);
+        reviewEntity.setRating(5);
+        reviewEntity.setRestaurant(restaurantEntity); // Associate the restaurant entity
+        reviewEntity.setUserId(2L); // Different user ID
+
+        // Mock the repository call
+        when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(reviewEntity));
+
+        // Change the current user to a non-admin role
+        SecurityUser securityUser = createSecurityUserWithRole(User.RoleEnum.REVIEWER);
+        Authentication mockAuthentication = new UsernamePasswordAuthenticationToken(
+                securityUser, null, securityUser.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(mockAuthentication);
+
+        when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(reviewEntity));
+
+        assertThrows(InsufficientPermissionException.class, () -> reviewServiceImpl.deleteReviewById(reviewId.intValue()));
 
         verify(reviewRepository, never()).deleteById(anyLong());
     }
