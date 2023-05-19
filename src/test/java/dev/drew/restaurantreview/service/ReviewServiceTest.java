@@ -3,6 +3,8 @@ package dev.drew.restaurantreview.service;
 import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.entity.ReviewEntity;
 import dev.drew.restaurantreview.entity.UserEntity;
+import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
+import dev.drew.restaurantreview.exception.ReviewNotFoundException;
 import dev.drew.restaurantreview.mapper.ReviewMapper;
 import dev.drew.restaurantreview.model.SecurityUser;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
@@ -24,11 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ReviewServiceTest {
@@ -193,5 +194,19 @@ public class ReviewServiceTest {
         // Verify the response
         assertEquals(updatedInput.getRating(), updatedReview.getRating());
         assertEquals(updatedInput.getComment(), updatedReview.getComment());
+    }
+
+    @Test
+    void testDeleteReviewByIdNotFound() {
+        // Prepare expected data
+        Long reviewId = 1L;
+
+        // Mock the repository call
+        when(reviewRepository.findById(reviewId)).thenReturn(Optional.empty());
+
+        // Verify the response status
+        assertThrows(ReviewNotFoundException.class, () -> reviewServiceImpl.deleteReviewById(reviewId.intValue()));
+
+        verify(reviewRepository, never()).deleteById(anyLong());
     }
 }
