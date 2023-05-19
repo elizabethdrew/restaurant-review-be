@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
 
     // Handle ReviewNotFoundException
     @ExceptionHandler(ReviewNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleReviewNotFoundException(RestaurantNotFoundException e) {
+    public ResponseEntity<ErrorResponse> handleReviewNotFoundException(ReviewNotFoundException e) {
         ErrorResponse error = new ErrorResponse();
         error.setCode(HttpStatus.NOT_FOUND.value());
         error.setMessage("Not Found");
