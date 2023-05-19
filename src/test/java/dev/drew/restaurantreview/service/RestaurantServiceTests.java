@@ -18,8 +18,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.model.SecurityUser;
 import org.openapitools.model.User.RoleEnum;
@@ -49,12 +47,6 @@ class RestaurantServiceTests {
 
     @Mock
     private RestaurantMapper restaurantMapper;
-
-    @Mock
-    private ReviewRepository reviewRepository;
-
-    @Mock
-    private SecurityUtils securityUtils;
 
     @Mock
     private SecurityUser securityUser;
