@@ -104,31 +104,31 @@ class RestaurantServiceTests {
         assertEquals(input.getName(), response.getName());
         assertEquals(input.getCity(), response.getCity());
     }
-//
-//    @Test
-//    void testGetAllRestaurants() {
-//        // Prepare expected data
-//        List<RestaurantEntity> restaurantEntities = new ArrayList<>();
-//        RestaurantEntity restaurantEntity1 = new RestaurantEntity();
-//        restaurantEntity1.setId(1L);
-//        restaurantEntity1.setName("Restaurant 1");
-//        restaurantEntities.add(restaurantEntity1);
-//
-//        RestaurantEntity restaurantEntity2 = new RestaurantEntity();
-//        restaurantEntity2.setId(2L);
-//        restaurantEntity2.setName("Restaurant 2");
-//        restaurantEntities.add(restaurantEntity2);
-//
-//        // Mock the repository call
-//        when(restaurantRepository.findAll()).thenReturn(restaurantEntities);
-//
-//        // Call the service method
-//        ResponseEntity<List<Restaurant>> response = restaurantServiceImpl.getAllRestaurants(null, null, null);
-//
-//        // Verify the response status and data
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertEquals(2, response.getBody().size());
-//    }
+
+    @Test
+    void testGetAllRestaurants() {
+        // Prepare expected data
+        List<RestaurantEntity> restaurantEntities = new ArrayList<>();
+
+        RestaurantEntity restaurantEntity1 = new RestaurantEntity();
+        restaurantEntity1.setId(1L);
+        restaurantEntity1.setName("Restaurant 1");
+        restaurantEntities.add(restaurantEntity1);
+
+        RestaurantEntity restaurantEntity2 = new RestaurantEntity();
+        restaurantEntity2.setId(2L);
+        restaurantEntity2.setName("Restaurant 2");
+        restaurantEntities.add(restaurantEntity2);
+
+        // Mock the repository call
+        when(restaurantRepository.findAll()).thenReturn(restaurantEntities);
+
+        // Call the service method
+        List<Restaurant> response = restaurantServiceImpl.getAllRestaurants(null, null, null);
+
+        // Verify the response status and data
+        assertEquals(2, response.size());
+    }
 //
 //    @Test
 //    void testGetRestaurantById() {
