@@ -1,6 +1,7 @@
 package dev.drew.restaurantreview.service;
 
 import dev.drew.restaurantreview.entity.RestaurantEntity;
+import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import dev.drew.restaurantreview.mapper.RestaurantMapper;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
 import dev.drew.restaurantreview.repository.ReviewRepository;
@@ -24,6 +25,7 @@ import org.openapitools.model.User.RoleEnum;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -156,24 +159,20 @@ class RestaurantServiceTests {
         assertEquals(expectedRestaurant.getId(), response.getId());
         assertEquals(expectedRestaurant.getName(), response.getName());
     }
-//
-//    @Test
-//    void testDeleteRestaurantByIdNotFound() {
-//        // Prepare expected data
-//        Long restaurantId = 1L;
-//
-//        // Mock the repository call
-//        when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.empty());
-//
-//        // Call the service method
-//        ResponseEntity<Void> response = restaurantServiceImpl.deleteRestaurantById(restaurantId.intValue());
-//
-//        // Verify the response status
-//        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-//
-//        // Verify the delete method was not called on the repository
-//        verify(restaurantRepository, never()).deleteById(anyLong());
-//    }
+
+    @Test
+    void testDeleteRestaurantByIdNotFound() {
+        // Prepare expected data
+        Long restaurantId = 1L;
+
+        // Mock the repository call
+        when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.empty());
+
+        // Verify the response status
+        assertThrows(RestaurantNotFoundException.class, () -> restaurantServiceImpl.deleteRestaurantById(restaurantId.intValue()));
+
+        verify(restaurantRepository, never()).deleteById(anyLong());
+    }
 //
 //    @Test
 //    void testDeleteRestaurantByIdForbidden() {
