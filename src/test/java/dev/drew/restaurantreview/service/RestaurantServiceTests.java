@@ -5,7 +5,6 @@ import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import dev.drew.restaurantreview.mapper.RestaurantMapper;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
-import dev.drew.restaurantreview.repository.ReviewRepository;
 import dev.drew.restaurantreview.repository.UserRepository;
 import dev.drew.restaurantreview.service.impl.RestaurantServiceImpl;
 import dev.drew.restaurantreview.util.SecurityUtils;
@@ -210,15 +209,13 @@ class RestaurantServiceTests {
         restaurantEntity.setName("Restaurant 1");
         restaurantEntity.setUserId(2L); // Different user ID
 
-        // Mock the repository call
-        when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(restaurantEntity));
-
         // Change the current user to a non-admin role
         SecurityUser securityUser = createSecurityUserWithRole(RoleEnum.REVIEWER);
         Authentication mockAuthentication = new UsernamePasswordAuthenticationToken(
                 securityUser, null, securityUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(mockAuthentication);
 
+        // Mock the repository call
         when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(restaurantEntity));
 
         assertThrows(InsufficientPermissionException.class, () -> restaurantServiceImpl.deleteRestaurantById(restaurantId.intValue()));
