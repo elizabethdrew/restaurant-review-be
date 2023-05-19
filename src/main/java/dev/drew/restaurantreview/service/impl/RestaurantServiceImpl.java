@@ -59,10 +59,9 @@ public class RestaurantServiceImpl implements RestaurantService {
         RestaurantEntity savedRestaurant = restaurantRepository.save(restaurant);
 
         // Convert the saved RestaurantEntity object to a Restaurant object
-        Restaurant savedApiRestaurant = restaurantMapper.toRestaurant(savedRestaurant);
 
         // Return the response
-        return savedApiRestaurant;
+        return restaurantMapper.toRestaurant(savedRestaurant);
     }
 
     public List<Restaurant> getAllRestaurants(String city, Integer rating, Long userId) {

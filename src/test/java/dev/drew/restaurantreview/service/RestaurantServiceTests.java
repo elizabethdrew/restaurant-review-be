@@ -1,97 +1,109 @@
-//package dev.drew.restaurantreview.service;
-//
-//import dev.drew.restaurantreview.entity.RestaurantEntity;
-//import dev.drew.restaurantreview.mapper.RestaurantMapper;
-//import dev.drew.restaurantreview.repository.RestaurantRepository;
-//import dev.drew.restaurantreview.repository.ReviewRepository;
-//import dev.drew.restaurantreview.util.SecurityUtils;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.junit.jupiter.MockitoExtension;
-//import org.openapitools.model.Restaurant;
-//import org.openapitools.model.RestaurantInput;
-//import org.openapitools.model.RestaurantResponse;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//import dev.drew.restaurantreview.entity.UserEntity;
-//import dev.drew.restaurantreview.model.SecurityUser;
-//import org.openapitools.model.User.RoleEnum;
-//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-//import org.springframework.security.core.Authentication;
-//import org.springframework.security.core.context.SecurityContextHolder;
-//import static org.junit.jupiter.api.Assertions.assertNotNull;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//import java.util.Optional;
-//
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.mockito.ArgumentMatchers.any;
-//import static org.mockito.Mockito.*;
-//
-//@ExtendWith(MockitoExtension.class)
-//class RestaurantServiceTests {
-//
-//    @InjectMocks
-//    private RestaurantServiceImpl restaurantServiceImpl;
-//
-//    @Mock
-//    private RestaurantRepository restaurantRepository;
-//
-//    @Mock
-//    private RestaurantMapper restaurantMapper;
-//
-//    @Mock
-//    private ReviewRepository reviewRepository;
-//
-//    @Mock
-//    private SecurityUtils securityUtils;
-//
-//    @BeforeEach
-//    void setUp() {
-//        SecurityUser securityUser = createSecurityUserWithRole(RoleEnum.ADMIN);
-//
-//        Authentication mockAuthentication = new UsernamePasswordAuthenticationToken(
-//                securityUser, null, securityUser.getAuthorities());
-//
-//        SecurityContextHolder.getContext().setAuthentication(mockAuthentication);
-//    }
-//
-//    private SecurityUser createSecurityUserWithRole(RoleEnum role) {
-//        UserEntity userEntity = new UserEntity();
-//        userEntity.setId(1L);
-//        userEntity.setUsername("testUser");
-//        userEntity.setPassword("password");
-//        userEntity.setRole(role);
-//
-//        return new SecurityUser(userEntity);
-//    }
-//
-//    @Test
-//    void testAddNewRestaurant() {
-//
-//        // Prepare input data and expected response
-//        RestaurantInput input = new RestaurantInput().name("New Restaurant").city("New City");
-//        RestaurantEntity restaurant = new RestaurantEntity();
-//        restaurant.setName(input.getName());
-//        restaurant.setCity(input.getCity());
-//
-//        RestaurantResponse restaurantResponse = new RestaurantResponse();
-//        ResponseEntity<RestaurantResponse> responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(restaurantResponse);
-//
-//        // Mock the repository and mapper calls
-//        when(restaurantMapper.toRestaurantEntity(any(RestaurantInput.class))).thenReturn(restaurant);
-//        when(restaurantRepository.save(any(RestaurantEntity.class))).thenReturn(restaurant);
-//
-//        // Call the service method
-//        ResponseEntity<RestaurantResponse> response = restaurantServiceImpl.addNewRestaurant(input);
-//
-//        // Verify the response status
-//        assertEquals(responseEntity.getStatusCode(), response.getStatusCode());
-//    }
+package dev.drew.restaurantreview.service;
+
+import dev.drew.restaurantreview.entity.RestaurantEntity;
+import dev.drew.restaurantreview.mapper.RestaurantMapper;
+import dev.drew.restaurantreview.repository.RestaurantRepository;
+import dev.drew.restaurantreview.repository.ReviewRepository;
+import dev.drew.restaurantreview.repository.UserRepository;
+import dev.drew.restaurantreview.service.impl.RestaurantServiceImpl;
+import dev.drew.restaurantreview.util.SecurityUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.openapitools.model.Restaurant;
+import org.openapitools.model.RestaurantInput;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import dev.drew.restaurantreview.entity.UserEntity;
+import dev.drew.restaurantreview.model.SecurityUser;
+import org.openapitools.model.User.RoleEnum;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class RestaurantServiceTests {
+
+    @InjectMocks
+    private RestaurantServiceImpl restaurantServiceImpl;
+
+    @Mock
+    private RestaurantRepository restaurantRepository;
+
+    @Mock
+    private RestaurantMapper restaurantMapper;
+
+    @Mock
+    private ReviewRepository reviewRepository;
+
+    @Mock
+    private SecurityUtils securityUtils;
+
+    @Mock
+    private SecurityUser securityUser;
+
+    @Mock
+    private UserRepository userRepository;
+
+    @BeforeEach
+    void setUp() {
+        securityUser = createSecurityUserWithRole(RoleEnum.ADMIN);
+        SecurityUtils.setCurrentUser(securityUser);
+    }
+
+    @AfterEach
+    void tearDown() {
+        SecurityContextHolder.clearContext();
+    }
+
+    private SecurityUser createSecurityUserWithRole(RoleEnum role) {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(1L);
+        userEntity.setUsername("testUser");
+        userEntity.setPassword("password");
+        userEntity.setRole(role);
+
+        return new SecurityUser(userEntity);
+    }
+
+    @Test
+    void testAddNewRestaurant() {
+
+        // Prepare input data and expected response
+        RestaurantInput input = new RestaurantInput().name("New Restaurant").city("New City");
+        RestaurantEntity restaurant = new RestaurantEntity();
+        restaurant.setName(input.getName());
+        restaurant.setCity(input.getCity());
+        restaurant.setUser(securityUser.getUserEntity());
+
+        Restaurant restaurantResponse = new Restaurant().name(input.getName()).city(input.getCity());
+
+        // Mock the repository and mapper calls
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(securityUser.getUserEntity()));
+        when(restaurantMapper.toRestaurantEntity(any(RestaurantInput.class))).thenReturn(restaurant);
+        when(restaurantRepository.save(any(RestaurantEntity.class))).thenReturn(restaurant);
+        when(restaurantMapper.toRestaurant(any(RestaurantEntity.class))).thenReturn(restaurantResponse);
+
+        // Call the service method
+        Restaurant response = restaurantServiceImpl.addNewRestaurant(input);
+
+        // Verify the response status
+        assertEquals(input.getName(), response.getName());
+        assertEquals(input.getCity(), response.getCity());
+    }
 //
 //    @Test
 //    void testGetAllRestaurants() {
@@ -193,4 +205,4 @@
 //        // Verify the delete method was not called on the repository
 //        verify(restaurantRepository, never()).deleteById(anyLong());
 //    }
-//}
+}
