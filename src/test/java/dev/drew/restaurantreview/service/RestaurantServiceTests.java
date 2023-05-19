@@ -162,6 +162,40 @@ class RestaurantServiceTests {
     }
 
     @Test
+    void testUpdateRestaurantById() {
+        // Prepare input data
+        Long restaurantId = 1L;
+        RestaurantInput updatedInput = new RestaurantInput().name("Updated Restaurant").city("Updated City");
+
+        // Prepare expected data
+        RestaurantEntity restaurantEntity = new RestaurantEntity();
+        restaurantEntity.setId(restaurantId);
+        restaurantEntity.setName("Restaurant 1");
+        restaurantEntity.setUser(securityUser.getUserEntity());
+
+        RestaurantEntity updatedEntity = new RestaurantEntity();
+        updatedEntity.setId(restaurantId);
+        updatedEntity.setName(updatedInput.getName());
+        updatedEntity.setCity(updatedInput.getCity());
+        updatedEntity.setUser(securityUser.getUserEntity());
+
+        // Mock the repository and mapper calls
+        when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(restaurantEntity));
+        when(restaurantMapper.toRestaurantEntity(any(RestaurantInput.class))).thenReturn(updatedEntity);
+        when(restaurantRepository.save(any(RestaurantEntity.class))).thenReturn(updatedEntity);
+
+        Restaurant updatedRestaurantResponse = new Restaurant().id(restaurantId).name(updatedInput.getName()).city(updatedInput.getCity());
+        when(restaurantMapper.toRestaurant(any(RestaurantEntity.class))).thenReturn(updatedRestaurantResponse);
+
+        // Call the service method
+        Restaurant updatedRestaurant = restaurantServiceImpl.updateRestaurantById(restaurantId.intValue(), updatedInput);
+
+        // Verify the response
+        assertEquals(updatedInput.getName(), updatedRestaurant.getName());
+        assertEquals(updatedInput.getCity(), updatedRestaurant.getCity());
+    }
+
+    @Test
     void testDeleteRestaurantByIdNotFound() {
         // Prepare expected data
         Long restaurantId = 1L;
