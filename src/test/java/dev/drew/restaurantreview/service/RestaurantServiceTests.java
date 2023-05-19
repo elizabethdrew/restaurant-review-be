@@ -1,6 +1,7 @@
 package dev.drew.restaurantreview.service;
 
 import dev.drew.restaurantreview.entity.RestaurantEntity;
+import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import dev.drew.restaurantreview.mapper.RestaurantMapper;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
@@ -173,32 +174,29 @@ class RestaurantServiceTests {
 
         verify(restaurantRepository, never()).deleteById(anyLong());
     }
-//
-//    @Test
-//    void testDeleteRestaurantByIdForbidden() {
-//        // Prepare expected data
-//        Long restaurantId = 1L;
-//        RestaurantEntity restaurantEntity = new RestaurantEntity();
-//        restaurantEntity.setId(restaurantId);
-//        restaurantEntity.setName("Restaurant 1");
-//        restaurantEntity.setUserId(2L); // Different user ID
-//
-//        // Mock the repository call
-//        when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(restaurantEntity));
-//
-//        // Change the current user to a non-admin role
-//        SecurityUser securityUser = createSecurityUserWithRole(RoleEnum.REVIEWER);
-//        Authentication mockAuthentication = new UsernamePasswordAuthenticationToken(
-//                securityUser, null, securityUser.getAuthorities());
-//        SecurityContextHolder.getContext().setAuthentication(mockAuthentication);
-//
-//        // Call the service method
-//        ResponseEntity<Void> response = restaurantServiceImpl.deleteRestaurantById(restaurantId.intValue());
-//
-//        // Verify the response status
-//        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-//
-//        // Verify the delete method was not called on the repository
-//        verify(restaurantRepository, never()).deleteById(anyLong());
-//    }
+
+    @Test
+    void testDeleteRestaurantByIdForbidden() {
+        // Prepare expected data
+        Long restaurantId = 1L;
+        RestaurantEntity restaurantEntity = new RestaurantEntity();
+        restaurantEntity.setId(restaurantId);
+        restaurantEntity.setName("Restaurant 1");
+        restaurantEntity.setUserId(2L); // Different user ID
+
+        // Mock the repository call
+        when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(restaurantEntity));
+
+        // Change the current user to a non-admin role
+        SecurityUser securityUser = createSecurityUserWithRole(RoleEnum.REVIEWER);
+        Authentication mockAuthentication = new UsernamePasswordAuthenticationToken(
+                securityUser, null, securityUser.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(mockAuthentication);
+
+        when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(restaurantEntity));
+
+        assertThrows(InsufficientPermissionException.class, () -> restaurantServiceImpl.deleteRestaurantById(restaurantId.intValue()));
+
+        verify(restaurantRepository, never()).deleteById(anyLong());
+    }
 }
