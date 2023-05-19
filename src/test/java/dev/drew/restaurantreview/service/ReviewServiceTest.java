@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -125,5 +126,33 @@ public class ReviewServiceTest {
 
         // Verify the response status and data
         assertEquals(2, response.size());
+    }
+
+    @Test
+    public void testGetReviewById() {
+        // Prepare expected data
+        Long reviewId = 1L;
+        ReviewEntity reviewEntity = new ReviewEntity();
+        reviewEntity.setId(reviewId);
+        reviewEntity.setRating(5);
+
+        Review expectedReview = new Review();
+        expectedReview.setId(reviewId);
+        expectedReview.setRating(5);
+
+        // Mock the repository call
+        when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(reviewEntity));
+
+        // Mock the mapper call
+        when(reviewMapper.toReview(reviewEntity)).thenReturn(expectedReview);
+
+        // Call the service method
+        Review response = reviewServiceImpl.getReviewById(reviewId.intValue());
+
+        // Verify the response status
+        assertNotNull(response);
+        assertEquals(expectedReview.getId(), response.getId());
+        assertEquals(expectedReview.getComment(), response.getComment());
+        assertEquals(expectedReview.getRating(), response.getRating());
     }
 }
