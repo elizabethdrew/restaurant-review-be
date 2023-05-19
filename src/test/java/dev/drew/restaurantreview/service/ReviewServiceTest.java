@@ -155,4 +155,43 @@ public class ReviewServiceTest {
         assertEquals(expectedReview.getComment(), response.getComment());
         assertEquals(expectedReview.getRating(), response.getRating());
     }
+
+    @Test
+    void testUpdateReviewById() {
+        // Prepare input data
+        Long reviewId = 1L;
+        Long restaurantId = 2L;
+        RestaurantEntity restaurantEntity = new RestaurantEntity();
+        restaurantEntity.setId(restaurantId); // Set the ID for the restaurant entity
+
+        ReviewInput updatedInput = new ReviewInput().rating(3).comment("Updated Comment");
+
+        // Prepare expected data
+        ReviewEntity reviewEntity = new ReviewEntity();
+        reviewEntity.setId(reviewId);
+        reviewEntity.setRating(5);
+        reviewEntity.setUser(securityUser.getUserEntity());
+        reviewEntity.setRestaurant(restaurantEntity); // Associate the restaurant entity
+
+        ReviewEntity updatedEntity = new ReviewEntity();
+        updatedEntity.setId(reviewId);
+        updatedEntity.setRating(updatedInput.getRating());
+        updatedEntity.setComment(updatedInput.getComment());
+        updatedEntity.setUser(securityUser.getUserEntity());
+        updatedEntity.setRestaurant(restaurantEntity); // Associate the restaurant entity
+
+        // Mock the repository and mapper calls
+        when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(reviewEntity));
+        when(reviewRepository.save(any(ReviewEntity.class))).thenReturn(updatedEntity);
+
+        Review updatedReviewResponse = new Review().id(reviewId).rating(updatedInput.getRating()).comment(updatedInput.getComment());
+        when(reviewMapper.toReview(any(ReviewEntity.class))).thenReturn(updatedReviewResponse);
+
+        // Call the service method
+        Review updatedReview = reviewServiceImpl.updateReviewById(reviewId.intValue(), updatedInput);
+
+        // Verify the response
+        assertEquals(updatedInput.getRating(), updatedReview.getRating());
+        assertEquals(updatedInput.getComment(), updatedReview.getComment());
+    }
 }
