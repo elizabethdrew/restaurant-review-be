@@ -83,7 +83,6 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findById(userId.longValue())
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
-
         if (!isAdminOrOwner(userEntity, userEntityUserIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to update this profile");
         }
@@ -91,13 +90,19 @@ public class UserServiceImpl implements UserService {
         UserEntity updatedEntity = userMapper.toUserEntity(userInput);
         updatedEntity.setId(userEntity.getId());
         updatedEntity.setCreatedAt(userEntity.getCreatedAt());
-        updatedEntity.setPassword(userEntity.getPassword());
+
+        // Check if new password is provided
+        if(userInput.getPassword() != null) {
+            // Encrypt new password
+            String encryptedPassword = passwordEncoder.encode(userInput.getPassword());
+            updatedEntity.setPassword(encryptedPassword);
+        } else {
+            updatedEntity.setPassword(userEntity.getPassword());
+        }
 
         UserEntity savedUser = userRepository.save(updatedEntity);
         User savedApiUser = userMapper.toUser(savedUser);
 
         return savedApiUser;
-
     }
-
 }
