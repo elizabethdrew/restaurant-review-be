@@ -91,6 +91,7 @@ The application should now be up and running on [http://localhost:8080](http://l
 The database is seeded with an Admin user. Use the following credentials to authenticate:
 
 Username: admin
+
 Password: password
 
 To authenticate, make a POST request to **http://localhost:8080/login** with the username and password. This will return a JWT token, which you will need to include in the Authorization header of your requests to interact with the rest of the API.
