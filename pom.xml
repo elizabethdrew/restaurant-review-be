@@ -239,6 +239,7 @@
 							<configOptions>
 								<interfaceOnly>true</interfaceOnly>
 								<skipDefaultInterface>true</skipDefaultInterface>
+								<useJakartaEe>true</useJakartaEe>
 								<useTags>true</useTags>
 							</configOptions>
 						</configuration>
