@@ -1,0 +1,54 @@
+databaseChangeLog:
+  - changeSet:
+      id: 5
+      author: elizabeth_drew
+      context: seed
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: name
+                  value: "Admin User"
+              - column:
+                  name: email
+                  value: "admin@example.com"
+              - column:
+                  name: username
+                  value: "admin"
+              - column:
+                  name: password
+                  value: "$2a$10$RuOksquHOD.4ZRXky4Gvd.v4.y8VrRwkIQ6P.23Riqrbn9N1C.Gs."
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
+              - column:
+                  name: role
+                  value: 0
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: name
+                  value: "Review User"
+              - column:
+                  name: email
+                  value: "reviewer@example.com"
+              - column:
+                  name: username
+                  value: "reviewer"
+              - column:
+                  name: password
+                  value: "$2a$10$YMk5W3rayg24k6oRg1qJN.FHA.XSAsDfX/rW0vvpr/Fp3xrIOT25u"
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
+              - column:
+                  name: role
+                  value: 1
