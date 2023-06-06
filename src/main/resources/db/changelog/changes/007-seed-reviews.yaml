@@ -22,6 +22,9 @@ databaseChangeLog:
               - column:
                   name: comment
                   value: "Good ambience and service"
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: review
             columns:
@@ -40,6 +43,9 @@ databaseChangeLog:
               - column:
                   name: comment
                   value: "Stunning - the potatoes are out of this world!"
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: review
             columns:
@@ -58,6 +64,9 @@ databaseChangeLog:
               - column:
                   name: comment
                   value: "Couldn't be worse."
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: review
             columns:
@@ -76,6 +85,9 @@ databaseChangeLog:
               - column:
                   name: comment
                   value: "Okay but the waitress had an attitude."
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: review
             columns:
@@ -94,6 +106,9 @@ databaseChangeLog:
               - column:
                   name: comment
                   value: "OMG I'll never eat anywhere else again."
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: review
             columns:
@@ -112,6 +127,9 @@ databaseChangeLog:
               - column:
                   name: comment
                   value: "Basic and friendly but the sandwich was soggy."
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: review
             columns:
@@ -130,6 +148,9 @@ databaseChangeLog:
               - column:
                   name: comment
                   value: "I like the pasta and sauce. Could be cheesier though."
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: review
             columns:
@@ -148,6 +169,9 @@ databaseChangeLog:
               - column:
                   name: comment
                   value: "Expensive but worth it."
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: review
             columns:
@@ -166,6 +190,9 @@ databaseChangeLog:
               - column:
                   name: comment
                   value: "The best place I've ever eaten."
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: review
             columns:
@@ -184,6 +211,9 @@ databaseChangeLog:
               - column:
                   name: comment
                   value: "You have to try the soup - it's yummy."
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: review
             columns:
@@ -202,6 +232,9 @@ databaseChangeLog:
               - column:
                   name: comment
                   value: "Very meh."
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: review
             columns:
@@ -220,6 +253,9 @@ databaseChangeLog:
               - column:
                   name: comment
                   value: "A lovely neighbourhood spot for lunch."
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: review
             columns:
@@ -238,6 +274,9 @@ databaseChangeLog:
               - column:
                   name: comment
                   value: "Cake Cake Cake as Rihanna once said."
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: review
             columns:
@@ -256,6 +295,9 @@ databaseChangeLog:
               - column:
                   name: comment
                   value: "Yummy in my tummy."
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: review
             columns:
@@ -274,3 +316,6 @@ databaseChangeLog:
               - column:
                   name: comment
                   value: "Love this place - why can't I give them six stars?"
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"

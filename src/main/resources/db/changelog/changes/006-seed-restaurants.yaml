@@ -22,6 +22,9 @@ databaseChangeLog:
               - column:
                   name: rating
                   value: 3
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: restaurant
             columns:
@@ -40,6 +43,9 @@ databaseChangeLog:
               - column:
                   name: rating
                   value: 4
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: restaurant
             columns:
@@ -58,6 +64,9 @@ databaseChangeLog:
               - column:
                   name: rating
                   value: 1
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: restaurant
             columns:
@@ -76,6 +85,9 @@ databaseChangeLog:
               - column:
                   name: rating
                   value: 3
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: restaurant
             columns:
@@ -94,6 +106,9 @@ databaseChangeLog:
               - column:
                   name: rating
                   value: 5
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: restaurant
             columns:
@@ -112,6 +127,9 @@ databaseChangeLog:
               - column:
                   name: rating
                   value: 2
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: restaurant
             columns:
@@ -130,6 +148,9 @@ databaseChangeLog:
               - column:
                   name: rating
                   value: 3
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: restaurant
             columns:
@@ -148,6 +169,9 @@ databaseChangeLog:
               - column:
                   name: rating
                   value: 5
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: restaurant
             columns:
@@ -166,6 +190,9 @@ databaseChangeLog:
               - column:
                   name: rating
                   value: 5
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: restaurant
             columns:
@@ -184,6 +211,9 @@ databaseChangeLog:
               - column:
                   name: rating
                   value: 4
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: restaurant
             columns:
@@ -202,6 +232,9 @@ databaseChangeLog:
               - column:
                   name: rating
                   value: 2
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: restaurant
             columns:
@@ -220,6 +253,9 @@ databaseChangeLog:
               - column:
                   name: rating
                   value: 4
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: restaurant
             columns:
@@ -237,6 +273,9 @@ databaseChangeLog:
               - column:
                   name: rating
                   value: 5
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: restaurant
             columns:
@@ -255,6 +294,9 @@ databaseChangeLog:
               - column:
                   name: rating
                   value: 4
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
         - insert:
             tableName: restaurant
             columns:
@@ -273,3 +315,6 @@ databaseChangeLog:
               - column:
                   name: rating
                   value: 5
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
