@@ -1,3 +1,4 @@
+#file: noinspection YAMLSchemaValidation
 databaseChangeLog:
   - changeSet:
       id: 7
