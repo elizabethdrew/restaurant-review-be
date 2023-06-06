@@ -1,0 +1,275 @@
+databaseChangeLog:
+  - changeSet:
+      id: 6
+      author: elizabeth_drew
+      context: seed
+      changes:
+        - insert:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: name
+                  value: "Gastronomic Guildhall"
+              - column:
+                  name: city
+                  value: "London"
+              - column:
+                  name: user_id
+                  value: 1
+              - column:
+                  name: rating
+                  value: 3
+        - insert:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: name
+                  value: "The Sizzling Skillet"
+              - column:
+                  name: city
+                  value: "Cardiff"
+              - column:
+                  name: user_id
+                  value: 1
+              - column:
+                  name: rating
+                  value: 4
+        - insert:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: id
+                  value: 3
+              - column:
+                  name: name
+                  value: "Epicurean Empire"
+              - column:
+                  name: city
+                  value: "Bristol"
+              - column:
+                  name: user_id
+                  value: 2
+              - column:
+                  name: rating
+                  value: 1
+        - insert:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: id
+                  value: 4
+              - column:
+                  name: name
+                  value: "Cardinal Cravings"
+              - column:
+                  name: city
+                  value: "London"
+              - column:
+                  name: user_id
+                  value: 2
+              - column:
+                  name: rating
+                  value: 3
+        - insert:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: id
+                  value: 5
+              - column:
+                  name: name
+                  value: "Gourmet Grotto"
+              - column:
+                  name: city
+                  value: "Bristol"
+              - column:
+                  name: user_id
+                  value: 1
+              - column:
+                  name: rating
+                  value: 5
+        - insert:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: id
+                  value: 6
+              - column:
+                  name: name
+                  value: "Flavour Fiesta"
+              - column:
+                  name: city
+                  value: "Bath"
+              - column:
+                  name: user_id
+                  value: 1
+              - column:
+                  name: rating
+                  value: 2
+        - insert:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: id
+                  value: 7
+              - column:
+                  name: name
+                  value: "Savoury Sanctuary"
+              - column:
+                  name: city
+                  value: "Cardiff"
+              - column:
+                  name: user_id
+                  value: 2
+              - column:
+                  name: rating
+                  value: 3
+        - insert:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: id
+                  value: 8
+              - column:
+                  name: name
+                  value: "The Velvet Vineyard"
+              - column:
+                  name: city
+                  value: "London"
+              - column:
+                  name: user_id
+                  value: 2
+              - column:
+                  name: rating
+                  value: 5
+        - insert:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: id
+                  value: 9
+              - column:
+                  name: name
+                  value: "The Hungry Haven"
+              - column:
+                  name: city
+                  value: "Bristol"
+              - column:
+                  name: user_id
+                  value: 2
+              - column:
+                  name: rating
+                  value: 5
+        - insert:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: id
+                  value: 10
+              - column:
+                  name: name
+                  value: "Bistro Bliss"
+              - column:
+                  name: city
+                  value: "Bath"
+              - column:
+                  name: user_id
+                  value: 1
+              - column:
+                  name: rating
+                  value: 4
+        - insert:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: id
+                  value: 11
+              - column:
+                  name: name
+                  value: "Crimson Cuisine"
+              - column:
+                  name: city
+                  value: "London"
+              - column:
+                  name: user_id
+                  value: 1
+              - column:
+                  name: rating
+                  value: 2
+        - insert:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: id
+                  value: 12
+              - column:
+                  name: name
+                  value: "Pristine Palate"
+              - column:
+                  name: city
+                  value: "Bristol"
+              - column:
+                  name: user_id
+                  value: 2
+              - column:
+                  name: rating
+                  value: 4
+        - insert:
+            tableName: restaurant
+            columns:
+              - name: id
+                value: 13
+              - column:
+                  name: name
+                  value: "Aroma Abbey"
+              - column:
+                  name: city
+                  value: "Bath"
+              - column:
+                  name: user_id
+                  value: 2
+              - column:
+                  name: rating
+                  value: 5
+        - insert:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: id
+                  value: 14
+              - column:
+                  name: name
+                  value: "Flavour Fortress"
+              - column:
+                  name: city
+                  value: "Cardiff"
+              - column:
+                  name: user_id
+                  value: 1
+              - column:
+                  name: rating
+                  value: 4
+        - insert:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: id
+                  value: 15
+              - column:
+                  name: name
+                  value: "Dainty Delights"
+              - column:
+                  name: city
+                  value: "Bristol"
+              - column:
+                  name: user_id
+                  value: 1
+              - column:
+                  name: rating
+                  value: 5
