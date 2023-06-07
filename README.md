@@ -96,10 +96,10 @@ git clone <https://gitlab.nwg-wealth.com/cfg/elizabeth/restaurant-review-api/>
 
 ```
 
-Navigate to the project root directory and build the project, skipping the tests:
+Navigate to the project root directory and build the project with seed data:
 
 ```
-mvn spring-boot:build-image -Dmaven.test.skip=true
+mvn spring-boot:build-image -Dspring-boot.run.profiles=local
 
 ```
 
