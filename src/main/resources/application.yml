@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: default
   datasource:
     generate-unique-name: false
     name: reviewSystem
@@ -9,10 +11,17 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: none
-liquibase:
-  change-log: classpath:/db/changelog/db.changelog-master.yml
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.yml
+    contexts: standard
 logging:
   level:
     root: INFO
-    org:springframework.web: DEBUG
+    org.springframework.web: DEBUG
     dev.drew.restaurantreview: DEBUG
+
+---
+spring:
+  profiles: local
+  liquibase:
+    contexts: standard, seed
