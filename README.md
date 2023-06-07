@@ -30,6 +30,32 @@ You should have Java, Maven, and Docker installed on your machine. Follow the st
 - [Docker](https://www.docker.com/products/docker-desktop)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
+### **Installing Java and Maven**
+
+### Using SDKMAN!
+
+SDKMAN! is a tool for managing parallel versions of multiple Software Development Kits on Unix based systems. It provides a convenient Command Line Interface (CLI) and API for installing, switching, removing and listing Candidates.
+
+To install SDKMAN!, open a new terminal and enter:
+
+```
+curl -s "https://get.sdkman.io" | bash
+```
+
+Then, open a new terminal or enter:
+
+```
+source "$HOME/.sdkman/bin/sdkman-init.sh"
+```
+
+Now, you can install Java and Maven using SDKMAN!:
+
+```
+sdk install java 17.0.0
+sdk install maven
+```
+
+### **Manually**
 ### Installing Java
 
 Download and install Java 17 from the [official website](https://www.oracle.com/java/technologies/downloads/).
