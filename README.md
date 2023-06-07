@@ -92,7 +92,7 @@ Follow the instructions on the [official website](https://docs.docker.com/get-do
 First, clone the project repository:
 
 ```
-git clone <https://gitlab.nwg-wealth.com/cfg/elizabeth/restaurant-review-api/>
+git clone <https://gitlab.nwgwealth.com/cfg/elizabeth/restaurant-review-api/>
 
 ```
 
