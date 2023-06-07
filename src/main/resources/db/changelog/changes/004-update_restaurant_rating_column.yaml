@@ -2,6 +2,7 @@ databaseChangeLog:
   - changeSet:
       id: 4
       author: elizabeth_drew
+      context: standard
       changes:
         - modifyDataType:
             tableName: restaurant
