@@ -70,14 +70,20 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         if (city != null) {
             filteredEntities = filteredEntities.filter(r -> r.getCity().equalsIgnoreCase(city));
+            if(filteredEntities.count() <= 0)
+            throw new RestaurantNotFoundException("Unable to match any records matching city name.");
         }
 
         if (rating != null) {
             filteredEntities = filteredEntities.filter(r -> rating.equals(r.getRating()));
+            if(filteredEntities.count() <= 0)
+            throw new RestaurantNotFoundException("Unable to match any records matching ratings.");
         }
 
         if (userId != null) {
             filteredEntities = filteredEntities.filter(r -> r.getUser().getId().equals(userId));
+            if(filteredEntities.count() <= 0)
+            throw new RestaurantNotFoundException("Unable to match any records matching userId.");
         }
 
         // Convert the filtered RestaurantEntity objects to Restaurant objects and return them as a list
