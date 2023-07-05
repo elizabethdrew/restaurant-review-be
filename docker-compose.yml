@@ -25,5 +25,16 @@ services:
     volumes:
       - db_data:/var/lib/mysql
 
+  docs:
+    image: volbrene/redoc
+    environment:
+#      SPEC_URL: file:///specs/api.yaml
+      URLS: "[{url: '/static/swagger-files/api.yaml', name: 'Restaurent API'}]"
+    ports:
+      - 88:80
+    volumes:
+#      - ./src/main/resources/api.yaml:/specs/api.yaml
+      - ./src/main/resources:/var/www/html/static/swagger-files
+
 volumes:
   db_data:
