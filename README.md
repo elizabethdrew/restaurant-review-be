@@ -136,6 +136,12 @@ Once you have the application up and running locally, you can navigate to:
 
 `http://localhost:8080/swagger-ui/index.html`
 
+If this url is showing a 500 error, you can alternatively use the Swagger editor at
+
+https://editor.swagger.io/
+
+Just copy and paste the entire contents of [api.yaml](/Users/dreweb/IdeaProjects/restaurant-review-project/restaurant-review-api/src/main/resources/api.yaml) into the editor to view the endpoints available within the api.
+
 Here, you can explore the API's endpoints, understand the structure of request payloads, responses, and even interact with the API by sending requests directly from the interface.
 
 Remember, the application must be running to access the Swagger UI and interact with the API.
