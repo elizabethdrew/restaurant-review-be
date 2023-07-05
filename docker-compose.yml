@@ -9,6 +9,7 @@ services:
     depends_on:
       - db
     environment:
+      - SPRING_PROFILES_ACTIVE=local
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/reviewdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=password
@@ -28,13 +29,22 @@ services:
   docs:
     image: volbrene/redoc
     environment:
-#      SPEC_URL: file:///specs/api.yaml
-      URLS: "[{url: '/static/swagger-files/api.yaml', name: 'Restaurent API'}]"
+      URLS: "[{url: '/static/swagger-files/api.yaml', name: 'Restaurant API'}]"
     ports:
-      - 88:80
+      - 88:8080
     volumes:
-#      - ./src/main/resources/api.yaml:/specs/api.yaml
       - ./src/main/resources:/var/www/html/static/swagger-files
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: "swagger-ui"
+    ports:
+      - 89:8080
+    volumes:
+      - ./src/main/resources/api.yaml:/openapi.json
+    environment:
+      SWAGGER_JSON: /openapi.json
+
 
 volumes:
   db_data:
