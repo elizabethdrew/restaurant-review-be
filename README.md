@@ -93,7 +93,6 @@ Follow the instructions on the [official website](https://docs.docker.com/get-do
 
 ```
 git clone https://gitlab.nwgwealth.com/cfg/elizabeth/restaurant-review-api/
-
 ```
 
 2. Navigate to the project root directory.
@@ -102,14 +101,12 @@ git clone https://gitlab.nwgwealth.com/cfg/elizabeth/restaurant-review-api/
 
 ```
 mvn spring-boot:build-image -Dspring-boot.run.profiles=local -Dmaven.test.skip=true 
-
 ```
 
 4. You can then run the Docker compose configuration:
 
 ```
 docker-compose up --build -d
-
 ```
 
 The application should now be up and running on [http://localhost:8080](http://localhost:8080/).
@@ -146,7 +143,7 @@ If that url is showing a 500 error, you can alternatively use the Swagger editor
 
 https://editor.swagger.io/
 
-Just copy and paste the entire contents of [api.yaml](/Users/dreweb/IdeaProjects/restaurant-review-project/restaurant-review-api/src/main/resources/api.yaml) into the editor to view the endpoints available within the api.
+Just copy and paste the entire contents of api.yaml into the editor to view the endpoints available within the api.
 
 
 ---
