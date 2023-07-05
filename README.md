@@ -51,7 +51,7 @@ source "$HOME/.sdkman/bin/sdkman-init.sh"
 Now, you can install Java and Maven using SDKMAN!:
 
 ```
-sdk install java 17.0.0
+sdk install java
 sdk install maven
 ```
 
@@ -89,21 +89,23 @@ Follow the instructions on the [official website](https://docs.docker.com/get-do
 
 ## Running the Application
 
-First, clone the project repository:
+1. First, clone the project repository:
 
 ```
-git clone <https://gitlab.nwgwealth.com/cfg/elizabeth/restaurant-review-api/>
-
-```
-
-Navigate to the project root directory and build the project with seed data:
-
-```
-mvn spring-boot:build-image -Dspring-boot.run.profiles=local
+git clone https://gitlab.nwgwealth.com/cfg/elizabeth/restaurant-review-api/
 
 ```
 
-You can then run the Docker compose configuration:
+2. Navigate to the project root directory.
+
+3. Build the project with seed data:
+
+```
+mvn spring-boot:build-image -Dspring-boot.run.profiles=local -Dmaven.test.skip=true 
+
+```
+
+4. You can then run the Docker compose configuration:
 
 ```
 docker-compose up --build -d
