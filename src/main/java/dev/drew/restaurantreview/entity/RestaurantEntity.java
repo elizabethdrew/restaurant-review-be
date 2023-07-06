@@ -37,16 +37,20 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime createdAt;
 
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
+
     public RestaurantEntity() {
     }
 
-    public RestaurantEntity(Long id, String name, String city, UserEntity user, Integer rating, OffsetDateTime createdAt) {
+    public RestaurantEntity(Long id, String name, String city, UserEntity user, Integer rating, OffsetDateTime createdAt, boolean isDeleted) {
         this.id = id;
         this.name = name;
         this.city = city;
         this.user = user;
         this.rating = rating;
         this.createdAt = createdAt;
+        this.isDeleted = isDeleted;
     }
 
     public Long getId() {
@@ -97,6 +101,14 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
         this.createdAt = createdAt;
     }
 
+    public boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -107,11 +119,12 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
                 Objects.equals(city, that.city) &&
                 Objects.equals(user, that.user) &&
                 Objects.equals(rating, that.rating) &&
-                Objects.equals(createdAt, that.createdAt);
+                Objects.equals(createdAt, that.createdAt) &&
+                isDeleted == that.isDeleted;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, city, user, rating, createdAt);
+        return Objects.hash(id, name, city, user, rating, createdAt, isDeleted);
     }
 }
