@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 // The RestaurantRepository interface is responsible for interacting with the database to manage RestaurantEntity objects.
 @Repository
 public interface RestaurantRepository extends JpaRepository<RestaurantEntity, Long> {
-    // No additional custom methods are needed in this repository
+
 }

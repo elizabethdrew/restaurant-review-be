@@ -47,6 +47,11 @@ public class RestaurantServiceImpl implements RestaurantService {
         RestaurantEntity restaurant = restaurantMapper.toRestaurantEntity(restaurantInput);
         restaurant.setCreatedAt(OffsetDateTime.now());
 
+        // Check if the restaurant has been deleted
+        if(restaurant.getIsDeleted()) {
+            throw new RestaurantNotFoundException("Restaurant with ID" + restaurant.getId() + " is deleted.");
+        }
+
         // Fetch the current user entity
         Long currentUserId = getCurrentUserId();
         UserEntity currentUser = userRepository.findById(currentUserId)
@@ -66,7 +71,8 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     public List<Restaurant> getAllRestaurants(String city, Integer rating, Long userId) {
         // Get a stream of all restaurants and apply filters if provided
-        Stream<RestaurantEntity> filteredEntities = restaurantRepository.findAll().stream();
+        Stream<RestaurantEntity> filteredEntities = restaurantRepository.findAll().stream()
+                .filter(r -> !r.getIsDeleted());
 
         if (city != null) {
             filteredEntities = filteredEntities.filter(r -> r.getCity().equalsIgnoreCase(city));
@@ -87,10 +93,14 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     // Get a restaurant by ID
     public Restaurant getRestaurantById(Integer restaurantId) throws RestaurantNotFoundException {
-        // Retrieve the restaurant with the specified ID from the repository
-        return restaurantRepository.findById(restaurantId.longValue())
-                .map(restaurantMapper::toRestaurant)
+        RestaurantEntity restaurantEntity = restaurantRepository.findById(restaurantId.longValue())
                 .orElseThrow(() -> new RestaurantNotFoundException("Restaurant not found with ID: " + restaurantId));
+
+        if (restaurantEntity.getIsDeleted()) {
+            throw new RestaurantNotFoundException("Restaurant with ID: " + restaurantId + " has been deleted");
+        }
+
+        return restaurantMapper.toRestaurant(restaurantEntity);
     }
 
     public Restaurant updateRestaurantById(Integer restaurantId, RestaurantInput restaurantInput)
@@ -98,6 +108,11 @@ public class RestaurantServiceImpl implements RestaurantService {
         // Retrieve the restaurant with the specified ID from the repository
         RestaurantEntity restaurantEntity = restaurantRepository.findById(restaurantId.longValue())
                 .orElseThrow(() -> new RestaurantNotFoundException("Restaurant not found with ID: " + restaurantId));
+
+        // Check if the restaurant has been deleted
+        if(restaurantEntity.getIsDeleted()) {
+            throw new RestaurantNotFoundException("Restaurant with ID" + restaurantId + " is deleted.");
+        }
 
         // Check if the current user is an admin or the owner of the restaurant
         if (!isAdminOrOwner(restaurantEntity, restaurantUserIdProvider)) {
@@ -120,17 +135,21 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     // Delete a restaurant by ID
     public void deleteRestaurantById(Integer restaurantId) {
-        // Retrieve the restaurant with the specified ID from the repository
         RestaurantEntity restaurantEntity = restaurantRepository.findById(restaurantId.longValue())
                 .orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
 
-        // Check if the current user is an admin or the owner of the restaurant
+        // Check if the restaurant has been deleted
+        if(restaurantEntity.getIsDeleted()) {
+            throw new RestaurantNotFoundException("Restaurant with ID" + restaurantId + " is deleted.");
+        }
+
         if (!isAdminOrOwner(restaurantEntity, restaurantUserIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to delete this restaurant");
         }
 
-        // Delete the restaurant by ID
-        restaurantRepository.deleteById(restaurantId.longValue());
+        // Instead of deleting, we mark the restaurant as deleted
+        restaurantEntity.setIsDeleted(true);
+        restaurantRepository.save(restaurantEntity);
     }
 
 }
