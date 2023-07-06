@@ -51,6 +51,10 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findById(userId.longValue())
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
+        if(userEntity.getIsDeleted()) {
+            throw new UserNotFoundException("User with ID: " + userId + " has been deleted.")
+        }
+
             if (!isAdminOrOwner(userEntity, userEntityUserIdProvider)) {
                 throw new InsufficientPermissionException("User does not have permission view this profile");
             }
@@ -65,6 +69,9 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findById(userId.longValue())
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
+        if(userEntity.getIsDeleted()) {
+            throw new UserNotFoundException("User with ID: " + userId + " has been deleted.")
+        }
 
         if (!isAdminOrOwner(userEntity, userEntityUserIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to update this profile");
@@ -83,6 +90,10 @@ public class UserServiceImpl implements UserService {
         // Retrieve the user with the specified ID from the repository
         UserEntity userEntity = userRepository.findById(userId.longValue())
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
+
+        if(userEntity.getIsDeleted()) {
+            throw new UserNotFoundException("User with ID: " + userId + " has been deleted.")
+        }
 
         if (!isAdminOrOwner(userEntity, userEntityUserIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to update this profile");
