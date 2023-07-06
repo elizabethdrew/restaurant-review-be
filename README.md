@@ -100,7 +100,7 @@ git clone https://gitlab.nwgwealth.com/cfg/elizabeth/restaurant-review-api/
 3. Build the project with seed data:
 
 ```
-mvn spring-boot:build-image -Dspring-boot.run.profiles=local -Dmaven.test.skip=true 
+mvn spring-boot:build-image -Dmaven.test.skip=true 
 ```
 
 4. You can then run the Docker compose configuration:
