@@ -28,6 +28,9 @@ databaseChangeLog:
               - column:
                   name: role
                   value: 0
+              - column:
+                  name: is_deleted
+                  value: false
         - insert:
             tableName: users
             columns:
@@ -52,3 +55,6 @@ databaseChangeLog:
               - column:
                   name: role
                   value: 1
+              - column:
+                  name: is_deleted
+                  value: false

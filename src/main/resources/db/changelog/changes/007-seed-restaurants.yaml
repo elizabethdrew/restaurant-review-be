@@ -1,250 +1,237 @@
-#file: noinspection YAMLSchemaValidation
 databaseChangeLog:
   - changeSet:
-      id: 7
+      id: 6
       author: elizabeth_drew
       context: seed
       changes:
         - insert:
-            tableName: review
+            tableName: restaurant
             columns:
               - column:
                   name: id
                   value: 1
               - column:
-                  name: restaurant_id
-                  value: 1
+                  name: name
+                  value: "Gastronomic Guildhall"
+              - column:
+                  name: city
+                  value: "London"
               - column:
                   name: user_id
-                  value: 2
+                  value: 1
               - column:
                   name: rating
                   value: 3
               - column:
-                  name: comment
-                  value: "Good ambience and service"
-              - column:
                   name: created_at
                   value: "2023-06-06 12:00:00"
+              - column:
+                  name: is_deleted
+                  value: false
         - insert:
-            tableName: review
+            tableName: restaurant
             columns:
               - column:
                   name: id
                   value: 2
               - column:
-                  name: restaurant_id
-                  value: 2
+                  name: name
+                  value: "The Sizzling Skillet"
+              - column:
+                  name: city
+                  value: "Cardiff"
               - column:
                   name: user_id
-                  value: 2
+                  value: 1
               - column:
                   name: rating
                   value: 4
               - column:
-                  name: comment
-                  value: "Stunning - the potatoes are out of this world!"
-              - column:
                   name: created_at
                   value: "2023-06-06 12:00:00"
+              - column:
+                  name: is_deleted
+                  value: false
         - insert:
-            tableName: review
+            tableName: restaurant
             columns:
               - column:
                   name: id
                   value: 3
               - column:
-                  name: restaurant_id
-                  value: 3
+                  name: name
+                  value: "Epicurean Empire"
+              - column:
+                  name: city
+                  value: "Bristol"
               - column:
                   name: user_id
-                  value: 1
+                  value: 2
               - column:
                   name: rating
                   value: 1
               - column:
-                  name: comment
-                  value: "Couldn't be worse."
-              - column:
                   name: created_at
                   value: "2023-06-06 12:00:00"
+              - column:
+                  name: is_deleted
+                  value: false
         - insert:
-            tableName: review
+            tableName: restaurant
             columns:
               - column:
                   name: id
                   value: 4
               - column:
-                  name: restaurant_id
-                  value: 4
+                  name: name
+                  value: "Cardinal Cravings"
+              - column:
+                  name: city
+                  value: "London"
               - column:
                   name: user_id
-                  value: 1
+                  value: 2
               - column:
                   name: rating
                   value: 3
               - column:
-                  name: comment
-                  value: "Okay but the waitress had an attitude."
-              - column:
                   name: created_at
                   value: "2023-06-06 12:00:00"
+              - column:
+                  name: is_deleted
+                  value: false
         - insert:
-            tableName: review
+            tableName: restaurant
             columns:
               - column:
                   name: id
                   value: 5
               - column:
-                  name: restaurant_id
-                  value: 5
+                  name: name
+                  value: "Gourmet Grotto"
+              - column:
+                  name: city
+                  value: "Bristol"
               - column:
                   name: user_id
-                  value: 2
+                  value: 1
               - column:
                   name: rating
                   value: 5
               - column:
-                  name: comment
-                  value: "OMG I'll never eat anywhere else again."
-              - column:
                   name: created_at
                   value: "2023-06-06 12:00:00"
+              - column:
+                  name: is_deleted
+                  value: false
         - insert:
-            tableName: review
+            tableName: restaurant
             columns:
               - column:
                   name: id
                   value: 6
               - column:
-                  name: restaurant_id
-                  value: 6
+                  name: name
+                  value: "Flavour Fiesta"
+              - column:
+                  name: city
+                  value: "Bath"
               - column:
                   name: user_id
-                  value: 2
+                  value: 1
               - column:
                   name: rating
                   value: 2
               - column:
-                  name: comment
-                  value: "Basic and friendly but the sandwich was soggy."
-              - column:
                   name: created_at
                   value: "2023-06-06 12:00:00"
+              - column:
+                  name: is_deleted
+                  value: false
         - insert:
-            tableName: review
+            tableName: restaurant
             columns:
               - column:
                   name: id
                   value: 7
               - column:
-                  name: restaurant_id
-                  value: 7
+                  name: name
+                  value: "Savoury Sanctuary"
+              - column:
+                  name: city
+                  value: "Cardiff"
               - column:
                   name: user_id
-                  value: 1
+                  value: 2
               - column:
                   name: rating
                   value: 3
               - column:
-                  name: comment
-                  value: "I like the pasta and sauce. Could be cheesier though."
-              - column:
                   name: created_at
                   value: "2023-06-06 12:00:00"
+              - column:
+                  name: is_deleted
+                  value: false
         - insert:
-            tableName: review
+            tableName: restaurant
             columns:
               - column:
                   name: id
                   value: 8
               - column:
-                  name: restaurant_id
-                  value: 8
+                  name: name
+                  value: "The Velvet Vineyard"
+              - column:
+                  name: city
+                  value: "London"
               - column:
                   name: user_id
-                  value: 1
+                  value: 2
               - column:
                   name: rating
                   value: 5
               - column:
-                  name: comment
-                  value: "Expensive but worth it."
-              - column:
                   name: created_at
                   value: "2023-06-06 12:00:00"
+              - column:
+                  name: is_deleted
+                  value: false
         - insert:
-            tableName: review
+            tableName: restaurant
             columns:
               - column:
                   name: id
                   value: 9
               - column:
-                  name: restaurant_id
-                  value: 9
+                  name: name
+                  value: "The Hungry Haven"
+              - column:
+                  name: city
+                  value: "Bristol"
               - column:
                   name: user_id
-                  value: 1
+                  value: 2
               - column:
                   name: rating
                   value: 5
               - column:
-                  name: comment
-                  value: "The best place I've ever eaten."
-              - column:
                   name: created_at
                   value: "2023-06-06 12:00:00"
+              - column:
+                  name: is_deleted
+                  value: false
         - insert:
-            tableName: review
+            tableName: restaurant
             columns:
               - column:
                   name: id
                   value: 10
               - column:
-                  name: restaurant_id
-                  value: 10
+                  name: name
+                  value: "Bistro Bliss"
               - column:
-                  name: user_id
-                  value: 2
-              - column:
-                  name: rating
-                  value: 4
-              - column:
-                  name: comment
-                  value: "You have to try the soup - it's yummy."
-              - column:
-                  name: created_at
-                  value: "2023-06-06 12:00:00"
-        - insert:
-            tableName: review
-            columns:
-              - column:
-                  name: id
-                  value: 11
-              - column:
-                  name: restaurant_id
-                  value: 11
-              - column:
-                  name: user_id
-                  value: 2
-              - column:
-                  name: rating
-                  value: 2
-              - column:
-                  name: comment
-                  value: "Very meh."
-              - column:
-                  name: created_at
-                  value: "2023-06-06 12:00:00"
-        - insert:
-            tableName: review
-            columns:
-              - column:
-                  name: id
-                  value: 12
-              - column:
-                  name: restaurant_id
-                  value: 12
+                  name: city
+                  value: "Bath"
               - column:
                   name: user_id
                   value: 1
@@ -252,41 +239,47 @@ databaseChangeLog:
                   name: rating
                   value: 4
               - column:
-                  name: comment
-                  value: "A lovely neighbourhood spot for lunch."
-              - column:
                   name: created_at
                   value: "2023-06-06 12:00:00"
+              - column:
+                  name: is_deleted
+                  value: false
         - insert:
-            tableName: review
+            tableName: restaurant
             columns:
               - column:
                   name: id
-                  value: 13
+                  value: 11
               - column:
-                  name: restaurant_id
-                  value: 13
+                  name: name
+                  value: "Crimson Cuisine"
+              - column:
+                  name: city
+                  value: "London"
               - column:
                   name: user_id
                   value: 1
               - column:
                   name: rating
-                  value: 5
-              - column:
-                  name: comment
-                  value: "Cake Cake Cake as Rihanna once said."
+                  value: 2
               - column:
                   name: created_at
                   value: "2023-06-06 12:00:00"
+              - column:
+                  name: is_deleted
+                  value: false
         - insert:
-            tableName: review
+            tableName: restaurant
             columns:
               - column:
                   name: id
-                  value: 14
+                  value: 12
               - column:
-                  name: restaurant_id
-                  value: 14
+                  name: name
+                  value: "Pristine Palate"
+              - column:
+                  name: city
+                  value: "Bristol"
               - column:
                   name: user_id
                   value: 2
@@ -294,20 +287,22 @@ databaseChangeLog:
                   name: rating
                   value: 4
               - column:
-                  name: comment
-                  value: "Yummy in my tummy."
-              - column:
                   name: created_at
                   value: "2023-06-06 12:00:00"
+              - column:
+                  name: is_deleted
+                  value: false
         - insert:
-            tableName: review
+            tableName: restaurant
             columns:
+              - name: id
+                value: 13
               - column:
-                  name: id
-                  value: 15
+                  name: name
+                  value: "Aroma Abbey"
               - column:
-                  name: restaurant_id
-                  value: 15
+                  name: city
+                  value: "Bath"
               - column:
                   name: user_id
                   value: 2
@@ -315,8 +310,56 @@ databaseChangeLog:
                   name: rating
                   value: 5
               - column:
-                  name: comment
-                  value: "Love this place - why can't I give them six stars?"
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
+              - column:
+                  name: is_deleted
+                  value: false
+        - insert:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: id
+                  value: 14
+              - column:
+                  name: name
+                  value: "Flavour Fortress"
+              - column:
+                  name: city
+                  value: "Cardiff"
+              - column:
+                  name: user_id
+                  value: 1
+              - column:
+                  name: rating
+                  value: 4
               - column:
                   name: created_at
                   value: "2023-06-06 12:00:00"
+              - column:
+                  name: is_deleted
+                  value: false
+        - insert:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: id
+                  value: 15
+              - column:
+                  name: name
+                  value: "Dainty Delights"
+              - column:
+                  name: city
+                  value: "Bristol"
+              - column:
+                  name: user_id
+                  value: 1
+              - column:
+                  name: rating
+                  value: 5
+              - column:
+                  name: created_at
+                  value: "2023-06-06 12:00:00"
+              - column:
+                  name: is_deleted
+                  value: false
