@@ -111,6 +111,8 @@ docker-compose up --build -d
 
 The application should now be up and running on [http://localhost:8080](http://localhost:8080/).
 
+If it isn't running, check that all three parts of the docker restaurant-review-api are running. If they aren't, press the start button and try accessing it again.
+
 ## Authenticating
 
 The database is seeded with an Admin user and Review User. Use the following credentials to authenticate:
@@ -129,34 +131,12 @@ To authenticate, make a POST request to **http://localhost:8080/login** with the
 
 ## API Documentation
 
-The API documentation is provided using OpenAPI and can be explored using Redocly UI.
-
-Once you have the application up and running locally, you can navigate to:
-
-http://localhost:88/restaurent-api
-
-Here, you can explore the API's endpoints, understand the structure of request payloads and responses.
-
-Remember, the application must be running to access the Swagger UI and interact with the API.
-
-If that url is showing a 500 error, you can alternatively use the Swagger editor at
-
-https://editor.swagger.io/
-
-Just copy and paste the entire contents of api.yaml into the editor to view the endpoints available within the api.
-
-
----
-**This is outdated information but here for future reference:**
-
 The API documentation is provided using OpenAPI and can be explored using Swagger UI.
 
 Once you have the application up and running locally, you can navigate to:
 
-`http://localhost:8080/swagger-ui/index.html`
+http://localhost:89
 
 Here, you can explore the API's endpoints, understand the structure of request payloads, responses, and even interact with the API by sending requests directly from the interface.
 
 Remember, the application must be running to access the Swagger UI and interact with the API.
-
----
