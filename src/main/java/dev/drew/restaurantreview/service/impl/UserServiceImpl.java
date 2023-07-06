@@ -59,10 +59,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    /*
-        Delete a user by ID
-        Example curl command: curl -X DELETE http://localhost:8080/user/{userId}
-        */
+
     public void deleteUserById(Integer userId) {
         // Retrieve the user with the specified ID from the repository
         UserEntity userEntity = userRepository.findById(userId.longValue())
@@ -73,7 +70,11 @@ public class UserServiceImpl implements UserService {
             throw new InsufficientPermissionException("User does not have permission to update this profile");
         }
 
-            userRepository.deleteById(userId.longValue());
+        // Mark the user as deleted
+        userEntity.setIsDeleted(true);
+
+        // Save the updated user entity
+        userRepository.save(userEntity);
     }
 
     public User updateUserById(Integer userId, UserInput userInput)
