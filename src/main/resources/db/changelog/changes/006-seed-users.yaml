@@ -30,7 +30,7 @@ databaseChangeLog:
                   value: 0
               - column:
                   name: is_deleted
-                  value: false
+                  value: 0
         - insert:
             tableName: users
             columns:
@@ -57,4 +57,4 @@ databaseChangeLog:
                   value: 1
               - column:
                   name: is_deleted
-                  value: false
+                  value: 0

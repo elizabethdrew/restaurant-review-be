@@ -27,7 +27,7 @@ databaseChangeLog:
                   value: "2023-06-06 12:00:00"
               - column:
                   name: is_deleted
-                  value: false
+                  value: 0
         - insert:
             tableName: restaurant
             columns:
@@ -51,7 +51,7 @@ databaseChangeLog:
                   value: "2023-06-06 12:00:00"
               - column:
                   name: is_deleted
-                  value: false
+                  value: 0
         - insert:
             tableName: restaurant
             columns:
@@ -75,7 +75,7 @@ databaseChangeLog:
                   value: "2023-06-06 12:00:00"
               - column:
                   name: is_deleted
-                  value: false
+                  value: 0
         - insert:
             tableName: restaurant
             columns:
@@ -99,7 +99,7 @@ databaseChangeLog:
                   value: "2023-06-06 12:00:00"
               - column:
                   name: is_deleted
-                  value: false
+                  value: 0
         - insert:
             tableName: restaurant
             columns:
@@ -123,7 +123,7 @@ databaseChangeLog:
                   value: "2023-06-06 12:00:00"
               - column:
                   name: is_deleted
-                  value: false
+                  value: 0
         - insert:
             tableName: restaurant
             columns:
@@ -147,7 +147,7 @@ databaseChangeLog:
                   value: "2023-06-06 12:00:00"
               - column:
                   name: is_deleted
-                  value: false
+                  value: 0
         - insert:
             tableName: restaurant
             columns:
@@ -171,7 +171,7 @@ databaseChangeLog:
                   value: "2023-06-06 12:00:00"
               - column:
                   name: is_deleted
-                  value: false
+                  value: 0
         - insert:
             tableName: restaurant
             columns:
@@ -195,7 +195,7 @@ databaseChangeLog:
                   value: "2023-06-06 12:00:00"
               - column:
                   name: is_deleted
-                  value: false
+                  value: 0
         - insert:
             tableName: restaurant
             columns:
@@ -219,7 +219,7 @@ databaseChangeLog:
                   value: "2023-06-06 12:00:00"
               - column:
                   name: is_deleted
-                  value: false
+                  value: 0
         - insert:
             tableName: restaurant
             columns:
@@ -243,7 +243,7 @@ databaseChangeLog:
                   value: "2023-06-06 12:00:00"
               - column:
                   name: is_deleted
-                  value: false
+                  value: 0
         - insert:
             tableName: restaurant
             columns:
@@ -267,7 +267,7 @@ databaseChangeLog:
                   value: "2023-06-06 12:00:00"
               - column:
                   name: is_deleted
-                  value: false
+                  value: 0
         - insert:
             tableName: restaurant
             columns:
@@ -291,7 +291,7 @@ databaseChangeLog:
                   value: "2023-06-06 12:00:00"
               - column:
                   name: is_deleted
-                  value: false
+                  value: 0
         - insert:
             tableName: restaurant
             columns:
@@ -314,7 +314,7 @@ databaseChangeLog:
                   value: "2023-06-06 12:00:00"
               - column:
                   name: is_deleted
-                  value: false
+                  value: 0
         - insert:
             tableName: restaurant
             columns:
@@ -338,7 +338,7 @@ databaseChangeLog:
                   value: "2023-06-06 12:00:00"
               - column:
                   name: is_deleted
-                  value: false
+                  value: 0
         - insert:
             tableName: restaurant
             columns:
@@ -362,4 +362,4 @@ databaseChangeLog:
                   value: "2023-06-06 12:00:00"
               - column:
                   name: is_deleted
-                  value: false
+                  value: 0
