@@ -58,3 +58,12 @@ Not to be tested?
 - Impl Service files should be placed in Service.Impl package to keep tidy
 - Pagination and Sorting could have been added for Get All Restaurants and Reviews endpoints
 - It would be good to get reviews by rating and city.
+
+
+### UPDATES TO DO
+- Restaurant ratings aren't being recalculated correctly when review is deleted
+- What happens to reviews when restaurants deleted?
+- What happens to restaurants and reviews when user deleted?
+- Update CORS config
+- Search (by name) and OrderBy (name, rating) functionality
+- Tests need updating
