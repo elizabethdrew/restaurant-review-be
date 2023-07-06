@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 5
+      id: 6
       author: elizabeth_drew
       context: seed
       changes:
@@ -30,7 +30,7 @@ databaseChangeLog:
                   value: 0
               - column:
                   name: is_deleted
-                  value: 0
+                  valueBoolean: false
         - insert:
             tableName: users
             columns:
@@ -57,4 +57,4 @@ databaseChangeLog:
                   value: 1
               - column:
                   name: is_deleted
-                  value: 0
+                  valueBoolean: false
