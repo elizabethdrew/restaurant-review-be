@@ -48,10 +48,13 @@ public class ReviewEntity extends org.openapitools.model.Review {
     @Transient
     private String restaurant_city;
 
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
+
     public ReviewEntity() {
     }
 
-    public ReviewEntity(Long id, RestaurantEntity restaurant, UserEntity user, Integer rating, String comment, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
+    public ReviewEntity(Long id, RestaurantEntity restaurant, UserEntity user, Integer rating, String comment, OffsetDateTime createdAt, OffsetDateTime updatedAt, boolean isDeleted) {
         this.id = id;
         this.restaurant = restaurant;
         this.user = user;
@@ -63,6 +66,7 @@ public class ReviewEntity extends org.openapitools.model.Review {
             this.restaurant_name = restaurant.getName();
             this.restaurant_city = restaurant.getCity();
         }
+        this.isDeleted = isDeleted;
     }
 
     public Long getId() {
@@ -137,6 +141,14 @@ public class ReviewEntity extends org.openapitools.model.Review {
         this.restaurant_city = restaurant_city;
     }
 
+    public boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -148,11 +160,12 @@ public class ReviewEntity extends org.openapitools.model.Review {
                 Objects.equals(rating, that.rating) &&
                 Objects.equals(comment, that.comment) &&
                 Objects.equals(createdAt, that.createdAt) &&
-                Objects.equals(updatedAt, that.updatedAt);
+                Objects.equals(updatedAt, that.updatedAt) &&
+                isDeleted == that.isDeleted;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, restaurant, user, rating, comment, createdAt, updatedAt);
+        return Objects.hash(id, restaurant, user, rating, comment, createdAt, updatedAt, isDeleted);
     }
 }
