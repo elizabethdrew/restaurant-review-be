@@ -44,10 +44,13 @@ public class UserEntity {
     @Column(name = "role")
     private User.RoleEnum role;
 
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
+
     public UserEntity() {
     }
 
-    public UserEntity(Long id, String name, String email, String username, String password, OffsetDateTime createdAt, User.RoleEnum role) {
+    public UserEntity(Long id, String name, String email, String username, String password, OffsetDateTime createdAt, User.RoleEnum role, boolean isDeleted) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -55,6 +58,7 @@ public class UserEntity {
         this.password = password;
         this.createdAt = createdAt;
         this.role = role;
+        this.isDeleted = isDeleted;
     }
 
     public Long getId() {
@@ -113,6 +117,14 @@ public class UserEntity {
         this.role = role;
     }
 
+    public boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -124,11 +136,12 @@ public class UserEntity {
                 Objects.equals(username, that.username) &&
                 Objects.equals(password, that.password) &&
                 Objects.equals(createdAt, that.createdAt) &&
-                role == that.role;
+                role == that.role &&
+                isDeleted == that.isDeleted;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email, username, password, createdAt, role);
+        return Objects.hash(id, name, email, username, password, createdAt, role, isDeleted);
     }
 }
