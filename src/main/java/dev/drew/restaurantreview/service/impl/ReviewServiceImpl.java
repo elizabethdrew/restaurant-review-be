@@ -55,6 +55,11 @@ public class ReviewServiceImpl implements ReviewService {
         RestaurantEntity currentRestaurant = restaurantRepository.findById(reviewInput.getRestaurantId())
                 .orElseThrow(() -> new RestaurantNotFoundException("Restaurant not found"));
 
+        // Check if the restaurant has been deleted
+        if(currentRestaurant.getIsDeleted()) {
+            throw new RestaurantNotFoundException("Restaurant with ID" + reviewInput.getRestaurantId() + " is deleted.");
+        }
+
         // Fetch the current user entity
         Long currentUserId = getCurrentUserId();
         UserEntity currentUser = userRepository.findById(currentUserId)
@@ -91,7 +96,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     public List<Review> getAllReviews(Long restaurantId, Long userId, Integer rating) {
 
-        Stream<ReviewEntity> filteredEntities = reviewRepository.findAll().stream();
+        Stream<ReviewEntity> filteredEntities = reviewRepository.findAll().stream()
+                .filter(r -> !r.getIsDeleted());
 
         if (restaurantId != null) {
             filteredEntities = filteredEntities
@@ -111,9 +117,14 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     public Review getReviewById(Integer reviewId) throws ReviewNotFoundException {
-        return reviewRepository.findById(reviewId.longValue())
-            .map(reviewMapper::toReview)
+        ReviewEntity reviewEntity = reviewRepository.findById(reviewId.longValue())
                 .orElseThrow(() -> new ReviewNotFoundException("Review not found with ID: " + reviewId));
+
+        if (reviewEntity.getIsDeleted()) {
+            throw new ReviewNotFoundException("Review with ID: " + reviewId + " has been deleted");
+        }
+
+        return reviewMapper.toReview(reviewEntity);
     }
 
     @Transactional
@@ -123,6 +134,11 @@ public class ReviewServiceImpl implements ReviewService {
         // Retrieve the review with the specified ID from the repository
         ReviewEntity reviewEntity = reviewRepository.findById(reviewId.longValue())
                 .orElseThrow(() -> new ReviewNotFoundException("Review not found with ID: " + reviewId));
+
+        // Check if the restaurant has been deleted
+        if(reviewEntity.getIsDeleted()) {
+            throw new ReviewNotFoundException("Review with ID" + reviewId + " is deleted.");
+        }
 
         // Check if the current user is an admin or the owner of the restaurant
         if (!isAdminOrOwner(reviewEntity, reviewUserIdProvider)) {
@@ -158,15 +174,16 @@ public class ReviewServiceImpl implements ReviewService {
         // Save restaurant ID before deleting review
         Long restaurantId = reviewEntity.getRestaurantId();
 
-        // Delete review
-        reviewRepository.deleteById(reviewId.longValue());
+        // Mark Review as deleted
+        reviewEntity.setIsDeleted(true);
+        reviewRepository.save(reviewEntity);
 
         // Update restaurant rating
         updateRestaurantRating(restaurantId);
     }
 
     public void updateRestaurantRating(Long restaurantId) {
-        List<ReviewEntity> reviews = reviewRepository.findByRestaurant_Id(restaurantId);
+        List<ReviewEntity> reviews = reviewRepository.findAllByRestaurant_IdAndIsDeletedFalse(restaurantId);
 
         if (!reviews.isEmpty()) {
             double averageRating = reviews.stream()
