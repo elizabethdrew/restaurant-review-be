@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
         if(userEntity.getIsDeleted()) {
-            throw new UserNotFoundException("User with ID: " + userId + " has been deleted.")
+            throw new UserNotFoundException("User with ID: " + userId + " has been deleted.");
         }
 
             if (!isAdminOrOwner(userEntity, userEntityUserIdProvider)) {
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
         if(userEntity.getIsDeleted()) {
-            throw new UserNotFoundException("User with ID: " + userId + " has been deleted.")
+            throw new UserNotFoundException("User with ID: " + userId + " has been deleted.");
         }
 
         if (!isAdminOrOwner(userEntity, userEntityUserIdProvider)) {
@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
         if(userEntity.getIsDeleted()) {
-            throw new UserNotFoundException("User with ID: " + userId + " has been deleted.")
+            throw new UserNotFoundException("User with ID: " + userId + " has been deleted.");
         }
 
         if (!isAdminOrOwner(userEntity, userEntityUserIdProvider)) {
