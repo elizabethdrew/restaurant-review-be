@@ -67,7 +67,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         // Check if the user has already reviewed the restaurant within the last year
         OffsetDateTime oneYearAgo = OffsetDateTime.now().minusYears(1);
-        List<ReviewEntity> existingReviews = reviewRepository.findByUser_IdAndRestaurant_Id(currentUserId, reviewInput.getRestaurantId());
+        List<ReviewEntity> existingReviews = reviewRepository.findByUser_IdAndRestaurant_IdAndIsDeletedFalse(currentUserId, reviewInput.getRestaurantId());
 
         boolean hasReviewWithinOneYear = existingReviews.stream()
                 .anyMatch(review -> review.getCreatedAt().isAfter(oneYearAgo));
