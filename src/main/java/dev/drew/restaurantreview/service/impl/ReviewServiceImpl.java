@@ -187,6 +187,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         if (!reviews.isEmpty()) {
             double averageRating = reviews.stream()
+                    .filter(review -> !review.getIsDeleted())
                     .mapToDouble(ReviewEntity::getRating)
                     .average()
                     .orElse(0);
