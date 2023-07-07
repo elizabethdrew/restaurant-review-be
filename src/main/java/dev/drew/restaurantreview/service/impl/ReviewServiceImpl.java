@@ -67,7 +67,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         // Check if the user has already reviewed the restaurant within the last year
         OffsetDateTime oneYearAgo = OffsetDateTime.now().minusYears(1);
-        List<ReviewEntity> existingReviews = reviewRepository.findByUser_IdAndRestaurant_IdAndIsDeletedFalse(currentUserId, reviewInput.getRestaurantId());
+        List<ReviewEntity> existingReviews = reviewRepository.findValidReviewsByUserIdAndRestaurantId(currentUserId, reviewInput.getRestaurantId());
 
         boolean hasReviewWithinOneYear = existingReviews.stream()
                 .anyMatch(review -> review.getCreatedAt().isAfter(oneYearAgo));
@@ -96,25 +96,11 @@ public class ReviewServiceImpl implements ReviewService {
 
     public List<Review> getAllReviews(Long restaurantId, Long userId, Integer rating) {
 
-        Stream<ReviewEntity> filteredEntities = reviewRepository.findAll().stream()
-                .filter(r -> !r.getIsDeleted());
+        List<ReviewEntity> filteredEntities = reviewRepository.findAllByRestaurantIdAndUserIdAndRating(restaurantId, userId, rating);
 
-        if (restaurantId != null) {
-            filteredEntities = filteredEntities
-                    .filter(r -> r.getRestaurant().getId().equals(restaurantId));
-        }
-
-        if (rating != null) {
-            filteredEntities = filteredEntities
-                    .filter(r -> r.getRating().equals(rating));
-        }
-
-        if (userId != null) {
-            filteredEntities = filteredEntities.filter(r -> r.getUser().getId().equals(userId));
-        }
-
-        return filteredEntities.map(reviewMapper::toReview).collect(Collectors.toList());
+        return filteredEntities.stream().map(reviewMapper::toReview).collect(Collectors.toList());
     }
+
 
     public Review getReviewById(Integer reviewId) throws ReviewNotFoundException {
         ReviewEntity reviewEntity = reviewRepository.findById(reviewId.longValue())
@@ -185,7 +171,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     public void updateRestaurantRating(Long restaurantId) {
-        List<ReviewEntity> reviews = reviewRepository.findAllByRestaurant_IdAndIsDeletedFalse(restaurantId);
+        List<ReviewEntity> reviews = reviewRepository.findValidReviewsByRestaurantId(restaurantId);
 
         if (!reviews.isEmpty()) {
             double averageRating = reviews.stream()
