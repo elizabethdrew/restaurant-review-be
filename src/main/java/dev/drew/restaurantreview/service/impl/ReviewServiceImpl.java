@@ -89,7 +89,7 @@ public class ReviewServiceImpl implements ReviewService {
         Review savedApiReview = reviewMapper.toReview(savedReview);
 
         // Update the restaurant rating
-        updateRestaurantRating(savedReview.getRestaurantId());
+        updateRestaurantRating(savedReview.getRestaurant().getId());
 
         return savedApiReview;
     }
@@ -172,7 +172,9 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         // Save restaurant ID before deleting review
-        Long restaurantId = reviewEntity.getRestaurantId();
+        Long restaurantId = reviewEntity.getRestaurant().getId();
+
+        System.out.println(restaurantId);
 
         // Mark Review as deleted
         reviewEntity.setIsDeleted(true);
@@ -194,7 +196,6 @@ public class ReviewServiceImpl implements ReviewService {
 
             // Round the average rating to the nearest integer
             int roundedAverageRating = (int) Math.round(averageRating);
-
 
             RestaurantEntity restaurantEntity = restaurantRepository.findById(restaurantId).orElse(null);
             if (restaurantEntity != null) {
