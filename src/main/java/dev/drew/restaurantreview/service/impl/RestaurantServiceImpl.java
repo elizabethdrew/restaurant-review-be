@@ -2,6 +2,7 @@ package dev.drew.restaurantreview.service.impl;
 
 import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.entity.UserEntity;
+import dev.drew.restaurantreview.exception.DuplicateRestaurantException;
 import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import dev.drew.restaurantreview.exception.UserNotFoundException;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -43,14 +45,21 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     public Restaurant addNewRestaurant(RestaurantInput restaurantInput) {
+
+        // Check if the restaurant already exists (including soft-deleted ones)
+        Optional<RestaurantEntity> existingRestaurant = restaurantRepository.findByNameAndCity(
+                restaurantInput.getName(),
+                restaurantInput.getCity()
+        );
+
+        if (existingRestaurant.isPresent()) {
+            // Even if it's been soft-deleted, we don't want to create a new one with the same name and city
+            throw new DuplicateRestaurantException("A restaurant with the same name and city already exists");
+        }
+
         // Convert the input data to a RestaurantEntity object and set the created timestamp
         RestaurantEntity restaurant = restaurantMapper.toRestaurantEntity(restaurantInput);
         restaurant.setCreatedAt(OffsetDateTime.now());
-
-        // Check if the restaurant has been deleted
-        if(restaurant.getIsDeleted()) {
-            throw new RestaurantNotFoundException("Restaurant with ID" + restaurant.getId() + " is deleted.");
-        }
 
         // Fetch the current user entity
         Long currentUserId = getCurrentUserId();
@@ -62,8 +71,6 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         // Save the new restaurant to the database
         RestaurantEntity savedRestaurant = restaurantRepository.save(restaurant);
-
-        // Convert the saved RestaurantEntity object to a Restaurant object
 
         // Return the response
         return restaurantMapper.toRestaurant(savedRestaurant);
