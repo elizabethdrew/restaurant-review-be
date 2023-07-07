@@ -96,7 +96,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         RestaurantEntity restaurantEntity = restaurantRepository.findOne(
                 Specification.where(RestaurantSpecification.hasId(restaurantId.longValue()))
                         .and(RestaurantSpecification.isNotDeleted())
-        ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant not found with ID: " + restaurantId));
+        ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
 
         return restaurantMapper.toRestaurant(restaurantEntity);
     }
@@ -108,7 +108,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         RestaurantEntity restaurantEntity = restaurantRepository.findOne(
                 Specification.where(RestaurantSpecification.hasId(restaurantId.longValue()))
                         .and(RestaurantSpecification.isNotDeleted())
-        ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant not found with ID: " + restaurantId));
+        ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
 
 
         // Check if the current user is an admin or the owner of the restaurant
