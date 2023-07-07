@@ -48,30 +48,22 @@ public class UserServiceImpl implements UserService {
 
     public User getUserById(Integer userId) {
 
-        UserEntity userEntity = userRepository.findById(userId.longValue())
+        UserEntity userEntity = userRepository.findByIdAndIsDeletedFalse(userId.longValue())
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
-        if(userEntity.getIsDeleted()) {
-            throw new UserNotFoundException("User with ID: " + userId + " has been deleted.");
+        if (!isAdminOrOwner(userEntity, userEntityUserIdProvider)) {
+            throw new InsufficientPermissionException("User does not have permission view this profile");
         }
 
-            if (!isAdminOrOwner(userEntity, userEntityUserIdProvider)) {
-                throw new InsufficientPermissionException("User does not have permission view this profile");
-            }
-
-            return userMapper.toUser(userEntity);
+        return userMapper.toUser(userEntity);
     }
 
 
 
     public void deleteUserById(Integer userId) {
         // Retrieve the user with the specified ID from the repository
-        UserEntity userEntity = userRepository.findById(userId.longValue())
+        UserEntity userEntity = userRepository.findByIdAndIsDeletedFalse(userId.longValue())
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
-
-        if(userEntity.getIsDeleted()) {
-            throw new UserNotFoundException("User with ID: " + userId + " has been deleted.");
-        }
 
         if (!isAdminOrOwner(userEntity, userEntityUserIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to update this profile");
@@ -88,12 +80,8 @@ public class UserServiceImpl implements UserService {
             throws UserNotFoundException, InsufficientPermissionException {
 
         // Retrieve the user with the specified ID from the repository
-        UserEntity userEntity = userRepository.findById(userId.longValue())
+        UserEntity userEntity = userRepository.findByIdAndIsDeletedFalse(userId.longValue())
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
-
-        if(userEntity.getIsDeleted()) {
-            throw new UserNotFoundException("User with ID: " + userId + " has been deleted.");
-        }
 
         if (!isAdminOrOwner(userEntity, userEntityUserIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to update this profile");
