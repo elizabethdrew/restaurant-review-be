@@ -13,7 +13,10 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     // Find a user by their username
     Optional<UserEntity> findByUsername(String username);
 
-    // Delete a user by their username
-    void deleteByUsername(String username);
+    Optional<UserEntity> findByIdAndIsDeletedFalse(Long id);
 
 }
+
+/*
+This code uses derived queries: https://www.baeldung.com/spring-data-derived-queries
+ */
