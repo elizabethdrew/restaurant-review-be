@@ -123,7 +123,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         // Check if the restaurant has been deleted
         if(reviewEntity.getIsDeleted()) {
-            throw new ReviewNotFoundException("Review with ID" + reviewId + " is deleted.");
+            throw new ReviewNotFoundException("Review with ID: " + reviewId + " has been deleted");
         }
 
         // Check if the current user is an admin or the owner of the restaurant
@@ -150,7 +150,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         // Retrieve the review with the specified ID from the repository
         ReviewEntity reviewEntity = reviewRepository.findById(reviewId.longValue())
-                .orElseThrow(() -> new ReviewNotFoundException("Review with id " + reviewId + " not found"));
+                .orElseThrow(() -> new ReviewNotFoundException("Review not found with ID: " + reviewId));
 
         // Check if the current user is an admin or the owner of the restaurant
         if (!isAdminOrOwner(reviewEntity, reviewUserIdProvider)) {
