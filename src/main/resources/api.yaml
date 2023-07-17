@@ -541,7 +541,8 @@ components:
   securitySchemes:
     basicAuth:
       type: http
-      scheme: basic
+      scheme: bearer
+      bearerFormat: JWT
 
   parameters:
     idParam:
