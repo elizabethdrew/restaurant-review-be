@@ -21,6 +21,9 @@ logging:
     org.springframework.web: DEBUG
     dev.drew.restaurantreview: DEBUG
 
+server:
+  forward-headers-strategy: framework
+
 ---
 spring:
   config:
