@@ -140,3 +140,7 @@ http://localhost:89
 Here, you can explore the API's endpoints, understand the structure of request payloads, responses, and even interact with the API by sending requests directly from the interface.
 
 Remember, the application must be running to access the Swagger UI and interact with the API.
+
+## Postman
+
+I have included a Postman Collection (Restaurant Review.postman_collection.json) - upload this to your own Postman application to easily interact with the api. You will need to get a JWT bearer token via the Get Authentication method to be able to use secured endpoints.
