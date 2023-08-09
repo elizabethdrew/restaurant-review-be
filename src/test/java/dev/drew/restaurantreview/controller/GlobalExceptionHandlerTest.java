@@ -3,7 +3,6 @@ package dev.drew.restaurantreview.controller;
 import dev.drew.restaurantreview.exception.*;
 import dev.drew.restaurantreview.model.ErrorResponse;
 import org.junit.jupiter.api.Test;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
