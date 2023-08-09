@@ -3,10 +3,7 @@ package dev.drew.restaurantreview.service.impl;
 import dev.drew.restaurantreview.entity.CuisineEntity;
 import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.entity.UserEntity;
-import dev.drew.restaurantreview.exception.DuplicateRestaurantException;
-import dev.drew.restaurantreview.exception.InsufficientPermissionException;
-import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
-import dev.drew.restaurantreview.exception.UserNotFoundException;
+import dev.drew.restaurantreview.exception.*;
 import dev.drew.restaurantreview.mapper.RestaurantMapper;
 import dev.drew.restaurantreview.repository.CuisineRepository;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
@@ -22,7 +19,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,7 +35,6 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final RestaurantMapper restaurantMapper;
     private final EntityUserIdProvider<RestaurantEntity> restaurantUserIdProvider = RestaurantEntity::getUserId;
     private UserRepository userRepository;
-
     private CuisineRepository cuisineRepository;
 
     // Constructor with required dependencies
@@ -70,7 +65,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         // Convert the input data to a RestaurantEntity object and set the created timestamp
         RestaurantEntity restaurant = restaurantMapper.toRestaurantEntity(restaurantInput);
         restaurant.setCreatedAt(OffsetDateTime.now());
-        restaurant.setRestaurantsCuisines(cuisines);
+        restaurant.setRestaurantCuisines(cuisines);
 
         // Fetch the current user entity
         Long currentUserId = getCurrentUserId();
@@ -88,20 +83,18 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     private List<CuisineEntity> getCuisines(List<String> cuisineNames) {
-        List<CuisineEntity> cuisines = new ArrayList<>();
-
-        for (String name : cuisineNames) {
-            CuisineEntity cuisine = cuisineRepository.findByName(name)
-                    .orElseGet(() -> {
-                        CuisineEntity newCuisine = new CuisineEntity();
-                        newCuisine.setName(name);
-                        return cuisineRepository.save(newCuisine);
-                    });
-            cuisines.add(cuisine);
-        }
-
-        return cuisines;
+        return cuisineNames.stream()
+                .map(name -> cuisineRepository.findByName(name)
+                        .orElseThrow(() -> new CuisineNotFoundException(name)))
+                .collect(Collectors.toList());
     }
+
+    private List<String> getCuisineNames(List<CuisineEntity> cuisines) {
+        return cuisines.stream()
+                .map(CuisineEntity::getName)
+                .collect(Collectors.toList());
+    }
+
 
     public List<Restaurant> getAllRestaurants(String city, Integer rating, Long userId) {
         List<RestaurantEntity> filteredEntities = restaurantRepository.findAll(
@@ -135,11 +128,15 @@ public class RestaurantServiceImpl implements RestaurantService {
                         .and(RestaurantSpecification.isNotDeleted())
         ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
 
+        System.out.println(restaurantEntity);
 
         // Check if the current user is an admin or the owner of the restaurant
         if (!isAdminOrOwner(restaurantEntity, restaurantUserIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to update this restaurant");
         }
+
+        // Handle cuisines
+        List<CuisineEntity> cuisines = getCuisines(restaurantInput.getCuisines());
 
         // Convert the input data to a RestaurantEntity object and set its ID, created timestamp, and user ID
         RestaurantEntity updatedEntity = restaurantMapper.toRestaurantEntity(restaurantInput);
@@ -147,9 +144,11 @@ public class RestaurantServiceImpl implements RestaurantService {
         updatedEntity.setCreatedAt(restaurantEntity.getCreatedAt());
         updatedEntity.setUser(restaurantEntity.getUser());
         updatedEntity.setRating(restaurantEntity.getRating());
+        updatedEntity.setRestaurantCuisines(restaurantEntity.getRestaurantCuisines()); // why isn't this saving???
 
         // Save the updated restaurant to the database
         RestaurantEntity savedRestaurant = restaurantRepository.save(updatedEntity);
+
 
         // Convert the saved RestaurantEntity object to a Restaurant object
         return restaurantMapper.toRestaurant(savedRestaurant);
