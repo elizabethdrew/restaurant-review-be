@@ -1,4 +1,4 @@
-package dev.drew.restaurantreview.controller;
+package dev.drew.restaurantreview.exception;
 
 import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
@@ -43,6 +43,16 @@ public class GlobalExceptionHandler {
         error.setCode(HttpStatus.NOT_FOUND.value());
         error.setMessage("Not Found");
         log.warn("Review not found error", e);
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    // Handle CuisineNotFoundException
+    @ExceptionHandler(CuisineNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCuisineNotFoundException(CuisineNotFoundException e) {
+        ErrorResponse error = new ErrorResponse();
+        error.setCode(HttpStatus.NOT_FOUND.value());
+        error.setMessage("No cuisine found with name " + e.getCuisineName());
+        log.warn("Cuisine not found error", e);
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
