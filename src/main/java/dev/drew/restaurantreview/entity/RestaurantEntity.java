@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Objects;
 import javax.validation.constraints.*;
 import jakarta.persistence.*;
-import org.openapitools.model.Restaurant;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
@@ -40,6 +39,12 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
     @Column(name = "longitude")
     private Double longitude;
 
+    @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
+    @JoinTable(name = "restaurant_cuisine",
+            joinColumns = @JoinColumn(name = "restaurant_id"),
+            inverseJoinColumns = @JoinColumn(name = "cuisine_id"))
+    private List<CuisineEntity> cuisines = new ArrayList<>();
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
@@ -60,7 +65,7 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
     public RestaurantEntity() {
     }
 
-    public RestaurantEntity(Long id, String name, String city, UserEntity user, Integer priceRange, Double latitude, Double longitude, Integer rating, OffsetDateTime createdAt, boolean isDeleted) {
+    public RestaurantEntity(Long id, String name, String city, UserEntity user, Integer priceRange, Double latitude, Double longitude, List<CuisineEntity> cuisines, Integer rating, OffsetDateTime createdAt, boolean isDeleted) {
         this.id = id;
         this.name = name;
         this.city = city;
@@ -68,6 +73,7 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
         this.priceRange = priceRange;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.cuisines = cuisines;
         this.rating = rating;
         this.createdAt = createdAt;
         this.isDeleted = isDeleted;
@@ -103,6 +109,14 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
 
     public void setUser(UserEntity user) {
         this.user = user;
+    }
+
+    public List<CuisineEntity> getRestaurantsCuisines() {
+        return cuisines;
+    }
+
+    public void setRestaurantsCuisines(List<CuisineEntity> cuisines) {
+        this.cuisines = cuisines;
     }
 
     public Integer getRating() {

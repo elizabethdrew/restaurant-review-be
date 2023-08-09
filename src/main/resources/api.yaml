@@ -727,6 +727,11 @@ components:
           type: number
           format: double
           description: The longitude coordinates of the restaurant.
+        cuisines:
+          type: array
+          items:
+            type: string
+            description: List of cuisine names the restaurant offers
         created_at:
           type: string
           format: date-time
@@ -739,7 +744,7 @@ components:
         - city
         - rating
         - price_range
-        - cuisine
+        - cuisines
         - latitude
         - longitude
 
@@ -765,11 +770,16 @@ components:
           type: number
           format: double
           description: The longitude coordinates of the restaurant.
+        cuisines:
+          type: array
+          items:
+            type: string
+            description: List of cuisine names the restaurant offers
       required:
         - name
         - city
         - price_range
-        - cuisine
+        - cuisines
         - latitude
         - longitude
 

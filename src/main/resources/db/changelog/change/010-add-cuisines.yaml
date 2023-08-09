@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: 10
+      author: elizabeth_drew
+      context: standard
+      changes:
+        - createTable:
+            tableName: cuisine
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+        - createTable:
+            tableName: restaurant_cuisine
+            columns:
+              - column:
+                  name: restaurant_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_restaurant_cuisine_to_restaurant
+                    references: restaurant(id)
+              - column:
+                  name: cuisine_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_restaurant_cuisine_to_cuisine
+                    references: cuisine(id)
