@@ -51,9 +51,29 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleCuisineNotFoundException(CuisineNotFoundException e) {
         ErrorResponse error = new ErrorResponse();
         error.setCode(HttpStatus.NOT_FOUND.value());
-        error.setMessage("No cuisine found with name " + e.getCuisineName());
+        error.setMessage("No cuisine found with name " + e.getMessage());
         log.warn("Cuisine not found error", e);
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    // Handle DuplicateCuisineException
+    @ExceptionHandler(DuplicateCuisineException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateCuisineException(DuplicateCuisineException e) {
+        ErrorResponse error = new ErrorResponse();
+        error.setCode(HttpStatus.CONFLICT.value());
+        error.setMessage("Cuisine with the name " + e.getMessage() + " already exists." );
+        log.warn("Cuisine already exists", e);
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    // Handle CuisineReferencedByRestaurantException
+    @ExceptionHandler(CuisineReferencedByRestaurantException.class)
+    public ResponseEntity<ErrorResponse> handleCuisineReferencedByRestaurantException(CuisineReferencedByRestaurantException e) {
+        ErrorResponse error = new ErrorResponse();
+        error.setCode(HttpStatus.CONFLICT.value());
+        error.setMessage("Cuisine with the name " + e.getMessage() + " is referenced by restaurants." );
+        log.warn("Cuisine is referenced by restaurants", e);
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
     // Handle InsufficientPermissionException
