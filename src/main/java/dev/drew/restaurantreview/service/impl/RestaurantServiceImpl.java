@@ -1,5 +1,6 @@
 package dev.drew.restaurantreview.service.impl;
 
+import dev.drew.restaurantreview.entity.CuisineEntity;
 import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.exception.DuplicateRestaurantException;
@@ -7,6 +8,7 @@ import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import dev.drew.restaurantreview.exception.UserNotFoundException;
 import dev.drew.restaurantreview.mapper.RestaurantMapper;
+import dev.drew.restaurantreview.repository.CuisineRepository;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
 import dev.drew.restaurantreview.repository.ReviewRepository;
 import dev.drew.restaurantreview.repository.UserRepository;
@@ -20,6 +22,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,12 +40,15 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final EntityUserIdProvider<RestaurantEntity> restaurantUserIdProvider = RestaurantEntity::getUserId;
     private UserRepository userRepository;
 
+    private CuisineRepository cuisineRepository;
+
     // Constructor with required dependencies
-    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper, ReviewRepository reviewRepository, UserRepository userRepository) {
+    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper, ReviewRepository reviewRepository, UserRepository userRepository, CuisineRepository cuisineRepository) {
         this.restaurantRepository = restaurantRepository;
         this.restaurantMapper = restaurantMapper;
         this.reviewRepository = reviewRepository;
         this.userRepository = userRepository;
+        this.cuisineRepository = cuisineRepository;
     }
 
     public Restaurant addNewRestaurant(RestaurantInput restaurantInput) {
@@ -58,9 +64,13 @@ public class RestaurantServiceImpl implements RestaurantService {
             throw new DuplicateRestaurantException("A restaurant with the same name and city already exists");
         }
 
+        // Handle cuisines
+        List<CuisineEntity> cuisines = getCuisines(restaurantInput.getCuisines());
+
         // Convert the input data to a RestaurantEntity object and set the created timestamp
         RestaurantEntity restaurant = restaurantMapper.toRestaurantEntity(restaurantInput);
         restaurant.setCreatedAt(OffsetDateTime.now());
+        restaurant.setRestaurantsCuisines(cuisines);
 
         // Fetch the current user entity
         Long currentUserId = getCurrentUserId();
@@ -75,6 +85,22 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         // Return the response
         return restaurantMapper.toRestaurant(savedRestaurant);
+    }
+
+    private List<CuisineEntity> getCuisines(List<String> cuisineNames) {
+        List<CuisineEntity> cuisines = new ArrayList<>();
+
+        for (String name : cuisineNames) {
+            CuisineEntity cuisine = cuisineRepository.findByName(name)
+                    .orElseGet(() -> {
+                        CuisineEntity newCuisine = new CuisineEntity();
+                        newCuisine.setName(name);
+                        return cuisineRepository.save(newCuisine);
+                    });
+            cuisines.add(cuisine);
+        }
+
+        return cuisines;
     }
 
     public List<Restaurant> getAllRestaurants(String city, Integer rating, Long userId) {
