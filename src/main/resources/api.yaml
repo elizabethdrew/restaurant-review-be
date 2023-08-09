@@ -714,6 +714,19 @@ components:
           minimum: 1
           maximum: 5
           description: The rating of the restaurant.
+        price_range:
+          type: integer
+          minimum: 1
+          maximum: 3
+          description: The price range of the restaurant.
+        latitude:
+          type: number
+          format: double
+          description: The latitude coordinates of the restaurant.
+        longitude:
+          type: number
+          format: double
+          description: The longitude coordinates of the restaurant.
         created_at:
           type: string
           format: date-time
@@ -725,6 +738,10 @@ components:
         - name
         - city
         - rating
+        - price_range
+        - cuisine
+        - latitude
+        - longitude
 
     RestaurantInput:
       type: object
@@ -735,9 +752,26 @@ components:
         city:
           type: string
           description: The city where the restaurant is located.
+        price_range:
+          type: integer
+          minimum: 1
+          maximum: 3
+          description: The price range of the restaurant.
+        latitude:
+          type: number
+          format: double
+          description: The latitude coordinates of the restaurant.
+        longitude:
+          type: number
+          format: double
+          description: The longitude coordinates of the restaurant.
       required:
         - name
         - city
+        - price_range
+        - cuisine
+        - latitude
+        - longitude
 
     Error:
       type: object
