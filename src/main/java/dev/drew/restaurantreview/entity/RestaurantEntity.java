@@ -39,7 +39,7 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
     @Column(name = "longitude")
     private Double longitude;
 
-    @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE, CascadeType.PERSIST })
     @JoinTable(name = "restaurant_cuisine",
             joinColumns = @JoinColumn(name = "restaurant_id"),
             inverseJoinColumns = @JoinColumn(name = "cuisine_id"))
@@ -111,11 +111,11 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
         this.user = user;
     }
 
-    public List<CuisineEntity> getRestaurantsCuisines() {
+    public List<CuisineEntity> getRestaurantCuisines() {
         return cuisines;
     }
 
-    public void setRestaurantsCuisines(List<CuisineEntity> cuisines) {
+    public void setRestaurantCuisines(List<CuisineEntity> cuisines) {
         this.cuisines = cuisines;
     }
 

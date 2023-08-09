@@ -30,11 +30,13 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     foreignKeyName: fk_restaurant_cuisine_to_restaurant
-                    references: restaurant(id)
+                    referencedTableName: restaurant
+                    referencedColumnName: id
               - column:
                   name: cuisine_id
                   type: bigint
                   constraints:
                     nullable: false
                     foreignKeyName: fk_restaurant_cuisine_to_cuisine
-                    references: cuisine(id)
+                    referencedTableName: cuisine
+                    referencedColumnName: id
