@@ -53,6 +53,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET,"/api/v1/reviews").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/review/**" ).permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/signup" ).permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/v1/cuisines").permitAll()
                 // Require authentication for all other requests
                 .anyRequest().authenticated()
                 // Set session management
