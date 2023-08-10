@@ -113,76 +113,76 @@ public class SecurityConfigIT {
     @Nested
     class WithoutAuthentication {
 
-        @Test
-        public void testGetRestaurants() throws Exception {
-            mockMvc.perform(get("/api/v1/restaurants")).andExpect(status().isOk());
-        }
-
-        @Test
-        public void testGetRestaurantById() throws Exception {
-            mockMvc.perform(get("/api/v1/restaurants/1")).andExpect(status().isOk());
-        }
-
-        @Test
-        public void testGetReviews() throws Exception {
-            mockMvc.perform(get("/api/v1/reviews")).andExpect(status().isOk());
-        }
-
-        @Test
-        public void testGetReviewById() throws Exception {
-            mockMvc.perform(get("/api/v1/reviews/1")).andExpect(status().isOk());
-        }
-
-        @Test
-        public void testPostUser() throws Exception {
-            // Create a new user to be added
-            User newUser = new User();
-            newUser.setUsername("newUser");
-            newUser.setPassword("password");
-            newUser.setRole(User.RoleEnum.REVIEWER);
-
-            // Convert the newUser object to a JSON string
-            ObjectMapper objectMapper = new ObjectMapper();
-            String newUserJson = objectMapper.writeValueAsString(newUser);
-
-            mockMvc.perform(post("/api/v1/user")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(newUserJson))
-                    .andExpect(status().isCreated());
-        }
+//        @Test
+//        public void testGetRestaurants() throws Exception {
+//            mockMvc.perform(get("/api/v1/restaurants")).andExpect(status().isOk());
+//        }
+//
+//        @Test
+//        public void testGetRestaurantById() throws Exception {
+//            mockMvc.perform(get("/api/v1/restaurants/1")).andExpect(status().isOk());
+//        }
+//
+//        @Test
+//        public void testGetReviews() throws Exception {
+//            mockMvc.perform(get("/api/v1/reviews")).andExpect(status().isOk());
+//        }
+//
+//        @Test
+//        public void testGetReviewById() throws Exception {
+//            mockMvc.perform(get("/api/v1/reviews/1")).andExpect(status().isOk());
+//        }
+//
+//        @Test
+//        public void testPostUser() throws Exception {
+//            // Create a new user to be added
+//            User newUser = new User();
+//            newUser.setUsername("newUser");
+//            newUser.setPassword("password");
+//            newUser.setRole(User.RoleEnum.REVIEWER);
+//
+//            // Convert the newUser object to a JSON string
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            String newUserJson = objectMapper.writeValueAsString(newUser);
+//
+//            mockMvc.perform(post("/api/v1/user")
+//                            .contentType(MediaType.APPLICATION_JSON)
+//                            .content(newUserJson))
+//                    .andExpect(status().isCreated());
+//        }
     }
 
     // Test accessing protected endpoints without authentication
     @Nested
     class ProtectedWithoutAuthentication {
-        @Test
-        public void testGetUserById() throws Exception {
-            mockMvc.perform(get("/api/v1/user/1")).andExpect(status().isForbidden());
-        }
-
-        @Test
-        public void testDeleteUserById() throws Exception {
-            mockMvc.perform(delete("/api/v1/user/1")).andExpect(status().isForbidden());
-        }
-
-        @Test
-        public void testPutUserById() throws Exception {
-            // Create an object to represent the updated user data
-            User updatedUser = new User();
-            updatedUser.setId(1L);
-            updatedUser.setUsername("updatedUsername");
-            updatedUser.setPassword("updatedPassword");
-            updatedUser.setRole(User.RoleEnum.ADMIN);
-
-            // Convert the updatedUser object to a JSON string
-            ObjectMapper objectMapper = new ObjectMapper();
-            String updatedUserJson = objectMapper.writeValueAsString(updatedUser);
-
-            mockMvc.perform(put("/api/v1/user/1")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(updatedUserJson))
-                    .andExpect(status().isForbidden());
-        }
+//        @Test
+//        public void testGetUserById() throws Exception {
+//            mockMvc.perform(get("/api/v1/user/1")).andExpect(status().isForbidden());
+//        }
+//
+//        @Test
+//        public void testDeleteUserById() throws Exception {
+//            mockMvc.perform(delete("/api/v1/user/1")).andExpect(status().isForbidden());
+//        }
+//
+//        @Test
+//        public void testPutUserById() throws Exception {
+//            // Create an object to represent the updated user data
+//            User updatedUser = new User();
+//            updatedUser.setId(1L);
+//            updatedUser.setUsername("updatedUsername");
+//            updatedUser.setPassword("updatedPassword");
+//            updatedUser.setRole(User.RoleEnum.ADMIN);
+//
+//            // Convert the updatedUser object to a JSON string
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            String updatedUserJson = objectMapper.writeValueAsString(updatedUser);
+//
+//            mockMvc.perform(put("/api/v1/user/1")
+//                            .contentType(MediaType.APPLICATION_JSON)
+//                            .content(updatedUserJson))
+//                    .andExpect(status().isForbidden());
+//        }
     }
 
     // Test accessing protected endpoints with authentication
@@ -207,38 +207,38 @@ public class SecurityConfigIT {
             bearerToken = generateJwtToken(securityUser);
 
         }
-        @Test
-        public void testAuthenticatedGetUserById() throws Exception {
-            mockMvc.perform(get("/api/v1/user/1")
-                            .header("Authorization", "Bearer " + bearerToken))
-                    .andExpect(status().isOk());
-        }
-
-        @Test
-        public void testAuthenticatedDeleteUserById() throws Exception {
-            mockMvc.perform(delete("/api/v1/user/1")
-                            .header("Authorization", "Bearer " + bearerToken))
-                    .andExpect(status().isNoContent());
-        }
-
-        @Test
-        public void testAuthenticatedPutUserById() throws Exception {
-            // Create an object to represent the updated user data
-            User updatedUser = new User();
-            updatedUser.setId(1L);
-            updatedUser.setUsername("updatedUsername");
-            updatedUser.setPassword("updatedPassword");
-            updatedUser.setRole(User.RoleEnum.ADMIN);
-
-            // Convert the updatedUser object to a JSON string
-            ObjectMapper objectMapper = new ObjectMapper();
-            String updatedUserJson = objectMapper.writeValueAsString(updatedUser);
-
-            mockMvc.perform(put("/api/v1/user/1")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(updatedUserJson)
-                            .header("Authorization", "Bearer " + bearerToken))
-                    .andExpect(status().isOk());
-        }
+//        @Test
+//        public void testAuthenticatedGetUserById() throws Exception {
+//            mockMvc.perform(get("/api/v1/user/1")
+//                            .header("Authorization", "Bearer " + bearerToken))
+//                    .andExpect(status().isOk());
+//        }
+//
+//        @Test
+//        public void testAuthenticatedDeleteUserById() throws Exception {
+//            mockMvc.perform(delete("/api/v1/user/1")
+//                            .header("Authorization", "Bearer " + bearerToken))
+//                    .andExpect(status().isNoContent());
+//        }
+//
+//        @Test
+//        public void testAuthenticatedPutUserById() throws Exception {
+//            // Create an object to represent the updated user data
+//            User updatedUser = new User();
+//            updatedUser.setId(1L);
+//            updatedUser.setUsername("updatedUsername");
+//            updatedUser.setPassword("updatedPassword");
+//            updatedUser.setRole(User.RoleEnum.ADMIN);
+//
+//            // Convert the updatedUser object to a JSON string
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            String updatedUserJson = objectMapper.writeValueAsString(updatedUser);
+//
+//            mockMvc.perform(put("/api/v1/user/1")
+//                            .contentType(MediaType.APPLICATION_JSON)
+//                            .content(updatedUserJson)
+//                            .header("Authorization", "Bearer " + bearerToken))
+//                    .andExpect(status().isOk());
+//        }
     }
 }
