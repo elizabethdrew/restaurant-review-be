@@ -52,6 +52,7 @@ public class GlobalExceptionHandlerTest {
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getBody().getCode());
+        assertEquals("Bad request", response.getBody().getMessage());
     }
 
     @Test
@@ -60,6 +61,7 @@ public class GlobalExceptionHandlerTest {
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getBody().getCode());
+        assertEquals("Internal Server Error", response.getBody().getMessage());
     }
 
     @Test
@@ -68,5 +70,35 @@ public class GlobalExceptionHandlerTest {
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getBody().getCode());
+    }
+
+    @Test
+    void shouldHandleCuisineNotFoundException() {
+        String cuisineName = "Italian";
+        ResponseEntity<ErrorResponse> response = handler.handleCuisineNotFoundException(new CuisineNotFoundException(cuisineName));
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getBody().getCode());
+        assertEquals("No cuisine found with name " + cuisineName, response.getBody().getMessage());
+    }
+
+    @Test
+    void shouldHandleDuplicateCuisineException() {
+        String cuisineName = "Italian";
+        ResponseEntity<ErrorResponse> response = handler.handleDuplicateCuisineException(new DuplicateCuisineException(cuisineName));
+
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+        assertEquals(HttpStatus.CONFLICT.value(), response.getBody().getCode());
+        assertEquals("Cuisine with the name " + cuisineName + " already exists.", response.getBody().getMessage());
+    }
+
+    @Test
+    void shouldHandleCuisineReferencedByRestaurantException() {
+        String cuisineName = "Italian";
+        ResponseEntity<ErrorResponse> response = handler.handleCuisineReferencedByRestaurantException(new CuisineReferencedByRestaurantException(cuisineName));
+
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+        assertEquals(HttpStatus.CONFLICT.value(), response.getBody().getCode());
+        assertEquals("Cuisine with the name " + cuisineName + " is referenced by restaurants.", response.getBody().getMessage());
     }
 }
