@@ -1,0 +1,156 @@
+databaseChangeLog:
+  - changeSet:
+      id: 11
+      author: elizabeth_drew
+      context: seed
+      changes:
+        - insert:
+            tableName: cuisine
+            columns:
+              - column:
+                  name: name
+                  value: 'African'
+        - insert:
+            tableName: cuisine
+            columns:
+              - column:
+                  name: name
+                  value: 'American'
+        - insert:
+            tableName: cuisine
+            columns:
+              - column:
+                  name: name
+                  value: 'Asian'
+        - insert:
+            tableName: cuisine
+            columns:
+              - column:
+                  name: name
+                  value: 'Bakery'
+        - insert:
+            tableName: cuisine
+            columns:
+              - column:
+                  name: name
+                  value: 'Breakfast'
+        - insert:
+            tableName: cuisine
+            columns:
+              - column:
+                  name: name
+                  value: 'British'
+        - insert:
+            tableName: cuisine
+            columns:
+              - column:
+                  name: name
+                  value: 'Brunch'
+        - insert:
+            tableName: cuisine
+            columns:
+              - column:
+                  name: name
+                  value: 'Burgers'
+        - insert:
+            tableName: cuisine
+            columns:
+              - column:
+                  name: name
+                  value: 'Cafe'
+        - insert:
+             tableName: cuisine
+             columns:
+               - column:
+                   name: name
+                   value: 'Caribbean'
+        - insert:
+            tableName: cuisine
+            columns:
+              - column:
+                  name: name
+                  value: 'Chinese'
+        - insert:
+            tableName: cuisine
+            columns:
+              - column:
+                  name: name
+                  value: 'Dessert'
+        - insert:
+            tableName: cuisine
+            columns:
+              - column:
+                  name: name
+                  value: 'European'
+        - insert:
+            tableName: cuisine
+            columns:
+              - column:
+                  name: name
+                  value: 'Greek'
+        - insert:
+            tableName: cuisine
+            columns:
+              - column:
+                  name: name
+                  value: 'Indian'
+        - insert:
+            tableName: cuisine
+            columns:
+              - column:
+                  name: name
+                  value: 'Italian'
+        - insert:
+            tableName: cuisine
+            columns:
+              - column:
+                  name: name
+                  value: 'Japanese'
+        - insert:
+            tableName: cuisine
+            columns:
+              - column:
+                  name: name
+                  value: 'Mediterranean'
+        - insert:
+            tableName: cuisine
+            columns:
+              - column:
+                  name: name
+                  value: 'Mexican'
+        - insert:
+            tableName: cuisine
+            columns:
+              - column:
+                  name: name
+                  value: 'Middle Eastern'
+        - insert:
+            tableName: cuisine
+            columns:
+              - column:
+                  name: name
+                  value: 'Salads'
+        - insert:
+            tableName: cuisine
+            columns:
+              - column:
+                  name: name
+                  value: 'Seafood'
+        - insert:
+            tableName: cuisine
+            columns:
+              - column:
+                  name: name
+                  value: 'Spanish'
+        - insert:
+            tableName: cuisine
+            columns:
+              - column:
+                  name: name
+                  value: 'Steak'
+        - insert:
+            tableName: cuisine
+            columns:
+              - column:
+                  name: name
+                  value: 'Thai'

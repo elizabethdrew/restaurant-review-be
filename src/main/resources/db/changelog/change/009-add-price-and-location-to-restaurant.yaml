@@ -11,14 +11,14 @@ databaseChangeLog:
                   name: price_range
                   type: int
                   constraints:
-                    nullable: false
+                    nullable: true
               - column:
                   name: latitude
                   type: double
                   constraints:
-                    nullable: false
+                    nullable: true
               - column:
                   name: longitude
                   type: double
                   constraints:
-                    nullable: false
+                    nullable: true

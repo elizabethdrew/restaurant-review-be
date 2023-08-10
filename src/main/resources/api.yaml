@@ -830,11 +830,6 @@ components:
       required:
         - name
         - city
-        - rating
-        - price_range
-        - cuisines
-        - latitude
-        - longitude
 
     RestaurantInput:
       type: object
@@ -866,10 +861,6 @@ components:
       required:
         - name
         - city
-        - price_range
-        - cuisines
-        - latitude
-        - longitude
 
     Cuisine:
       type: object
