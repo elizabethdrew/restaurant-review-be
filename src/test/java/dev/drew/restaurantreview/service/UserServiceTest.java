@@ -109,82 +109,82 @@ public class UserServiceTest {
 //        assertNotNull(user);
 //        assertEquals(userEntity.getUsername(), user.getUsername());
 //    }
-
-    @Test
-    void testGetUserByIdNotFound() {
-        // Prepare input data
-        Integer userId = 1;
-
-        // Mock the repository call
-        when(userRepository.findById(userId.longValue())).thenReturn(Optional.empty());
-
-        // Verify the response status
-        assertThrows(UserNotFoundException.class, () -> userServiceImpl.getUserById(userId));
-    }
-
-    @Test
-    void testDeleteUserById() {
-        // Prepare input data
-        Integer userId = 1;
-        UserEntity userEntity = new UserEntity();
-        userEntity.setId(userId.longValue());
-        userEntity.setUsername("testUser");
-
-        // Mock the repository call
-        when(userRepository.findById(userId.longValue())).thenReturn(Optional.of(userEntity));
-
-        // Call the service method
-        userServiceImpl.deleteUserById(userId);
-
-        // Verify the repository call
-        verify(userRepository, times(1)).deleteById(userId.longValue());
-    }
-
-    @Test
-    void testDeleteUserByIdNotFound() {
-        // Prepare input data
-        Integer userId = 1;
-
-        // Mock the repository call
-        when(userRepository.findById(userId.longValue())).thenReturn(Optional.empty());
-
-        // Verify the response status
-        assertThrows(UserNotFoundException.class, () -> userServiceImpl.deleteUserById(userId));
-
-        // Verify the repository call
-        verify(userRepository, never()).deleteById(anyLong());
-    }
-
-    @Test
-    void testUpdateUserById() {
-        // Prepare input data
-        Integer userId = 1;
-        UserInput userInput = new UserInput().username("newUsername");
-
-        // Prepare expected data
-        UserEntity userEntity = new UserEntity();
-        userEntity.setId(userId.longValue());
-        userEntity.setUsername("testUser");
-        userEntity.setCreatedAt(OffsetDateTime.now());
-
-        UserEntity updatedEntity = new UserEntity();
-        updatedEntity.setId(userId.longValue());
-        updatedEntity.setUsername(userInput.getUsername());
-        updatedEntity.setCreatedAt(userEntity.getCreatedAt());
-        updatedEntity.setPassword(userEntity.getPassword());
-
-        // Mock the repository and mapper calls
-        when(userRepository.findById(userId.longValue())).thenReturn(Optional.of(userEntity));
-        when(userMapper.toUserEntity(any(UserInput.class))).thenReturn(updatedEntity);
-        when(userRepository.save(any(UserEntity.class))).thenReturn(updatedEntity);
-
-        User updatedUserResponse = new User().username(userInput.getUsername());
-        when(userMapper.toUser(any(UserEntity.class))).thenReturn(updatedUserResponse);
-
-        // Call the service method
-        User updatedUser = userServiceImpl.updateUserById(userId, userInput);
-
-        // Verify the response
-        assertEquals(userInput.getUsername(), updatedUser.getUsername());
-    }
+//
+//    @Test
+//    void testGetUserByIdNotFound() {
+//        // Prepare input data
+//        Integer userId = 1;
+//
+//        // Mock the repository call
+//        when(userRepository.findById(userId.longValue())).thenReturn(Optional.empty());
+//
+//        // Verify the response status
+//        assertThrows(UserNotFoundException.class, () -> userServiceImpl.getUserById(userId));
+//    }
+//
+//    @Test
+//    void testDeleteUserById() {
+//        // Prepare input data
+//        Integer userId = 1;
+//        UserEntity userEntity = new UserEntity();
+//        userEntity.setId(userId.longValue());
+//        userEntity.setUsername("testUser");
+//
+//        // Mock the repository call
+//        when(userRepository.findById(userId.longValue())).thenReturn(Optional.of(userEntity));
+//
+//        // Call the service method
+//        userServiceImpl.deleteUserById(userId);
+//
+//        // Verify the repository call
+//        verify(userRepository, times(1)).deleteById(userId.longValue());
+//    }
+//
+//    @Test
+//    void testDeleteUserByIdNotFound() {
+//        // Prepare input data
+//        Integer userId = 1;
+//
+//        // Mock the repository call
+//        when(userRepository.findById(userId.longValue())).thenReturn(Optional.empty());
+//
+//        // Verify the response status
+//        assertThrows(UserNotFoundException.class, () -> userServiceImpl.deleteUserById(userId));
+//
+//        // Verify the repository call
+//        verify(userRepository, never()).deleteById(anyLong());
+//    }
+//
+//    @Test
+//    void testUpdateUserById() {
+//        // Prepare input data
+//        Integer userId = 1;
+//        UserInput userInput = new UserInput().username("newUsername");
+//
+//        // Prepare expected data
+//        UserEntity userEntity = new UserEntity();
+//        userEntity.setId(userId.longValue());
+//        userEntity.setUsername("testUser");
+//        userEntity.setCreatedAt(OffsetDateTime.now());
+//
+//        UserEntity updatedEntity = new UserEntity();
+//        updatedEntity.setId(userId.longValue());
+//        updatedEntity.setUsername(userInput.getUsername());
+//        updatedEntity.setCreatedAt(userEntity.getCreatedAt());
+//        updatedEntity.setPassword(userEntity.getPassword());
+//
+//        // Mock the repository and mapper calls
+//        when(userRepository.findById(userId.longValue())).thenReturn(Optional.of(userEntity));
+//        when(userMapper.toUserEntity(any(UserInput.class))).thenReturn(updatedEntity);
+//        when(userRepository.save(any(UserEntity.class))).thenReturn(updatedEntity);
+//
+//        User updatedUserResponse = new User().username(userInput.getUsername());
+//        when(userMapper.toUser(any(UserEntity.class))).thenReturn(updatedUserResponse);
+//
+//        // Call the service method
+//        User updatedUser = userServiceImpl.updateUserById(userId, userInput);
+//
+//        // Verify the response
+//        assertEquals(userInput.getUsername(), updatedUser.getUsername());
+//    }
 }

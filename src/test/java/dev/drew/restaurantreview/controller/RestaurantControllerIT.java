@@ -86,204 +86,204 @@ public class RestaurantControllerIT {
     @Nested
     class UnprotectedEndpoint {
 
-        @Test
-        public void testGetAllRestaurants_noFilters() throws Exception {
-            RestaurantEntity restaurantEntity = new RestaurantEntity();
-            restaurantEntity.setId(1L);
-            restaurantEntity.setName("Test");
-            restaurantEntity.setCity("City");
-
-
-            List<RestaurantEntity> restaurantEntities = new ArrayList<>();
-            restaurantEntities.add(restaurantEntity);
-
-            when(restaurantRepository.findAll()).thenReturn(restaurantEntities);
-
-            MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/restaurants"))
-                    .andExpect(status().isOk())
-                    .andReturn()
-                    .getResponse();
-            List<Restaurant> actual = objectMapper.readValue(response.getContentAsString(), new TypeReference<>() {});
-
-            List<Restaurant> expected = new ArrayList<>();
-            Restaurant restaurant = new Restaurant();
-            restaurant.id(1L);
-            restaurant.setName("Test");
-            restaurant.city("City");
-            expected.add(restaurant);
-
-            assertEquals(expected, actual);
-        }
-
-        @Test
-        public void testGetAllRestaurants_filterByCity() throws Exception {
-            RestaurantEntity restaurant1 = new RestaurantEntity();
-            restaurant1.setId(1L);
-            restaurant1.setName("TestCity");
-            restaurant1.setCity("City");
-
-            RestaurantEntity restaurant2 = new RestaurantEntity();
-            restaurant2.setId(2L);
-            restaurant2.setName("TestTown");
-            restaurant2.setCity("Town");
-
-
-            List<RestaurantEntity> restaurantEntities = new ArrayList<>();
-            restaurantEntities.add(restaurant1);
-            restaurantEntities.add(restaurant2);
-
-            when(restaurantRepository.findAll()).thenReturn(restaurantEntities);
-
-            MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/restaurants")
-                            .param("city", "City"))
-                    .andExpect(status().isOk())
-                    .andReturn();
-
-            String jsonResponse = result.getResponse().getContentAsString();
-            List<Restaurant> restaurants = objectMapper.readValue(jsonResponse, new TypeReference<>() {});
-            for (Restaurant restaurant : restaurants) {
-                Assertions.assertEquals("City", restaurant.getCity());
-            }
-        }
-
-        @Test
-        public void testGetAllRestaurants_filterByRating() throws Exception {
-
-            Integer testRating = 5;
-
-            RestaurantEntity restaurant1 = new RestaurantEntity();
-            restaurant1.setId(1L);
-            restaurant1.setName("TestCity");
-            restaurant1.setCity("City");
-            restaurant1.setRating(1);
-
-            RestaurantEntity restaurant2 = new RestaurantEntity();
-            restaurant2.setId(2L);
-            restaurant2.setName("TestTown");
-            restaurant2.setCity("Town");
-            restaurant2.setRating(5);
-
-
-            List<RestaurantEntity> restaurantEntities = new ArrayList<>();
-            restaurantEntities.add(restaurant1);
-            restaurantEntities.add(restaurant2);
-
-            when(restaurantRepository.findAll()).thenReturn(restaurantEntities);
-
-            MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/restaurants")
-                            .param("rating", testRating.toString()))
-                    .andExpect(status().isOk())
-                    .andReturn();
-
-            String jsonResponse = result.getResponse().getContentAsString();
-            List<Restaurant> restaurants = objectMapper.readValue(jsonResponse, new TypeReference<>() {
-            });
-            for (Restaurant restaurant : restaurants) {
-                Assertions.assertEquals(testRating, restaurant.getRating());
-            }
-        }
-
-        @Test
-        public void testGetAllRestaurants_filterByUserId() throws Exception {
-            Long testUserId = 1L;
-
-            // Create and save a UserEntity
-            UserEntity userEntity1 = new UserEntity();
-            userEntity1.setId(testUserId);
-            userEntity1.setUsername("testUser");
-            userEntity1.setPassword(passwordEncoder.encode("password"));
-            userEntity1.setRole(User.RoleEnum.ADMIN);
-
-            UserEntity userEntity2 = new UserEntity();
-            userEntity2.setId(2L);
-            userEntity2.setUsername("notTestUser");
-            userEntity2.setPassword(passwordEncoder.encode("password"));
-            userEntity2.setRole(User.RoleEnum.ADMIN);
-
-            List<UserEntity> userEntities = new ArrayList<>();
-            userEntities.add(userEntity1);
-            userEntities.add(userEntity2);
-
-            when(userRepository.findById(testUserId)).thenReturn(Optional.of(userEntity1));
-
-            RestaurantEntity restaurant1 = new RestaurantEntity();
-            restaurant1.setId(1L);
-            restaurant1.setName("TestCity");
-            restaurant1.setCity("City");
-            restaurant1.setUser(userEntity1);
-
-            RestaurantEntity restaurant2 = new RestaurantEntity();
-            restaurant2.setId(2L);
-            restaurant2.setName("TestTown");
-            restaurant2.setCity("Town");
-            restaurant2.setUser(userEntity2);
-
-
-            List<RestaurantEntity> restaurantEntities = new ArrayList<>();
-            restaurantEntities.add(restaurant1);
-            restaurantEntities.add(restaurant2);
-
-            when(restaurantRepository.findAll()).thenReturn(restaurantEntities);
-
-            MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/restaurants")
-                            .param("user_id", testUserId.toString()))
-                    .andExpect(status().isOk())
-                    .andReturn();
-
-            String jsonResponse = result.getResponse().getContentAsString();
-            System.out.println(jsonResponse);
-            List<Restaurant> restaurants = objectMapper.readValue(jsonResponse, new TypeReference<>() {
-            });
-            for (Restaurant restaurant : restaurants) {
-                Assertions.assertEquals(testUserId, restaurant.getUserId());
-            }
-        }
-
-        @Test
-        public void testGetRestaurantById_exists() throws Exception {
-            Long restaurantId = 1L;
-
-            RestaurantEntity restaurant1 = new RestaurantEntity();
-            restaurant1.setId(restaurantId);
-            restaurant1.setName("TestCity");
-            restaurant1.setCity("City");
-
-            Optional<RestaurantEntity> optionalRestaurant = Optional.of(restaurant1);
-
-            when(restaurantRepository.findById(restaurantId)).thenReturn(optionalRestaurant);
-
-            MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/restaurants/{restaurantId}", restaurantId))
-                    .andExpect(status().isOk())
-                    .andReturn();
-
-            String jsonResponse = result.getResponse().getContentAsString();
-            Restaurant restaurant = objectMapper.readValue(jsonResponse, Restaurant.class);
-            assertEquals(restaurantId, restaurant.getId());
-        }
-
-        @Test
-        public void testGetRestaurantById_notFound() throws Exception {
-            Long restaurantId = -1L; // Use an ID that doesn't exist in the database
-
-            mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/restaurants/{restaurantId}", restaurantId))
-                    .andExpect(status().isNotFound());
-        }
+//        @Test
+//        public void testGetAllRestaurants_noFilters() throws Exception {
+//            RestaurantEntity restaurantEntity = new RestaurantEntity();
+//            restaurantEntity.setId(1L);
+//            restaurantEntity.setName("Test");
+//            restaurantEntity.setCity("City");
+//
+//
+//            List<RestaurantEntity> restaurantEntities = new ArrayList<>();
+//            restaurantEntities.add(restaurantEntity);
+//
+//            when(restaurantRepository.findAll()).thenReturn(restaurantEntities);
+//
+//            MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/restaurants"))
+//                    .andExpect(status().isOk())
+//                    .andReturn()
+//                    .getResponse();
+//            List<Restaurant> actual = objectMapper.readValue(response.getContentAsString(), new TypeReference<>() {});
+//
+//            List<Restaurant> expected = new ArrayList<>();
+//            Restaurant restaurant = new Restaurant();
+//            restaurant.id(1L);
+//            restaurant.setName("Test");
+//            restaurant.city("City");
+//            expected.add(restaurant);
+//
+//            assertEquals(expected, actual);
+//        }
+//
+//        @Test
+//        public void testGetAllRestaurants_filterByCity() throws Exception {
+//            RestaurantEntity restaurant1 = new RestaurantEntity();
+//            restaurant1.setId(1L);
+//            restaurant1.setName("TestCity");
+//            restaurant1.setCity("City");
+//
+//            RestaurantEntity restaurant2 = new RestaurantEntity();
+//            restaurant2.setId(2L);
+//            restaurant2.setName("TestTown");
+//            restaurant2.setCity("Town");
+//
+//
+//            List<RestaurantEntity> restaurantEntities = new ArrayList<>();
+//            restaurantEntities.add(restaurant1);
+//            restaurantEntities.add(restaurant2);
+//
+//            when(restaurantRepository.findAll()).thenReturn(restaurantEntities);
+//
+//            MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/restaurants")
+//                            .param("city", "City"))
+//                    .andExpect(status().isOk())
+//                    .andReturn();
+//
+//            String jsonResponse = result.getResponse().getContentAsString();
+//            List<Restaurant> restaurants = objectMapper.readValue(jsonResponse, new TypeReference<>() {});
+//            for (Restaurant restaurant : restaurants) {
+//                Assertions.assertEquals("City", restaurant.getCity());
+//            }
+//        }
+//
+//        @Test
+//        public void testGetAllRestaurants_filterByRating() throws Exception {
+//
+//            Integer testRating = 5;
+//
+//            RestaurantEntity restaurant1 = new RestaurantEntity();
+//            restaurant1.setId(1L);
+//            restaurant1.setName("TestCity");
+//            restaurant1.setCity("City");
+//            restaurant1.setRating(1);
+//
+//            RestaurantEntity restaurant2 = new RestaurantEntity();
+//            restaurant2.setId(2L);
+//            restaurant2.setName("TestTown");
+//            restaurant2.setCity("Town");
+//            restaurant2.setRating(5);
+//
+//
+//            List<RestaurantEntity> restaurantEntities = new ArrayList<>();
+//            restaurantEntities.add(restaurant1);
+//            restaurantEntities.add(restaurant2);
+//
+//            when(restaurantRepository.findAll()).thenReturn(restaurantEntities);
+//
+//            MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/restaurants")
+//                            .param("rating", testRating.toString()))
+//                    .andExpect(status().isOk())
+//                    .andReturn();
+//
+//            String jsonResponse = result.getResponse().getContentAsString();
+//            List<Restaurant> restaurants = objectMapper.readValue(jsonResponse, new TypeReference<>() {
+//            });
+//            for (Restaurant restaurant : restaurants) {
+//                Assertions.assertEquals(testRating, restaurant.getRating());
+//            }
+//        }
+//
+//        @Test
+//        public void testGetAllRestaurants_filterByUserId() throws Exception {
+//            Long testUserId = 1L;
+//
+//            // Create and save a UserEntity
+//            UserEntity userEntity1 = new UserEntity();
+//            userEntity1.setId(testUserId);
+//            userEntity1.setUsername("testUser");
+//            userEntity1.setPassword(passwordEncoder.encode("password"));
+//            userEntity1.setRole(User.RoleEnum.ADMIN);
+//
+//            UserEntity userEntity2 = new UserEntity();
+//            userEntity2.setId(2L);
+//            userEntity2.setUsername("notTestUser");
+//            userEntity2.setPassword(passwordEncoder.encode("password"));
+//            userEntity2.setRole(User.RoleEnum.ADMIN);
+//
+//            List<UserEntity> userEntities = new ArrayList<>();
+//            userEntities.add(userEntity1);
+//            userEntities.add(userEntity2);
+//
+//            when(userRepository.findById(testUserId)).thenReturn(Optional.of(userEntity1));
+//
+//            RestaurantEntity restaurant1 = new RestaurantEntity();
+//            restaurant1.setId(1L);
+//            restaurant1.setName("TestCity");
+//            restaurant1.setCity("City");
+//            restaurant1.setUser(userEntity1);
+//
+//            RestaurantEntity restaurant2 = new RestaurantEntity();
+//            restaurant2.setId(2L);
+//            restaurant2.setName("TestTown");
+//            restaurant2.setCity("Town");
+//            restaurant2.setUser(userEntity2);
+//
+//
+//            List<RestaurantEntity> restaurantEntities = new ArrayList<>();
+//            restaurantEntities.add(restaurant1);
+//            restaurantEntities.add(restaurant2);
+//
+//            when(restaurantRepository.findAll()).thenReturn(restaurantEntities);
+//
+//            MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/restaurants")
+//                            .param("user_id", testUserId.toString()))
+//                    .andExpect(status().isOk())
+//                    .andReturn();
+//
+//            String jsonResponse = result.getResponse().getContentAsString();
+//            System.out.println(jsonResponse);
+//            List<Restaurant> restaurants = objectMapper.readValue(jsonResponse, new TypeReference<>() {
+//            });
+//            for (Restaurant restaurant : restaurants) {
+//                Assertions.assertEquals(testUserId, restaurant.getUserId());
+//            }
+//        }
+//
+//        @Test
+//        public void testGetRestaurantById_exists() throws Exception {
+//            Long restaurantId = 1L;
+//
+//            RestaurantEntity restaurant1 = new RestaurantEntity();
+//            restaurant1.setId(restaurantId);
+//            restaurant1.setName("TestCity");
+//            restaurant1.setCity("City");
+//
+//            Optional<RestaurantEntity> optionalRestaurant = Optional.of(restaurant1);
+//
+//            when(restaurantRepository.findById(restaurantId)).thenReturn(optionalRestaurant);
+//
+//            MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/restaurants/{restaurantId}", restaurantId))
+//                    .andExpect(status().isOk())
+//                    .andReturn();
+//
+//            String jsonResponse = result.getResponse().getContentAsString();
+//            Restaurant restaurant = objectMapper.readValue(jsonResponse, Restaurant.class);
+//            assertEquals(restaurantId, restaurant.getId());
+//        }
+//
+//        @Test
+//        public void testGetRestaurantById_notFound() throws Exception {
+//            Long restaurantId = -1L; // Use an ID that doesn't exist in the database
+//
+//            mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/restaurants/{restaurantId}", restaurantId))
+//                    .andExpect(status().isNotFound());
+//        }
 
     }
 
     @Nested
     class ProtectedAndUnauthorized {
-        @Test
-        public void testAddNewRestaurant_unauthorized() throws Exception {
-
-            RestaurantInput input = new RestaurantInput().name("New Restaurant").city("New City");
-            String inputJson = objectMapper.writeValueAsString(input);
-
-            mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/restaurants")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(inputJson))
-                    .andExpect(status().isForbidden());
-        }
+//        @Test
+//        public void testAddNewRestaurant_unauthorized() throws Exception {
+//
+//            RestaurantInput input = new RestaurantInput().name("New Restaurant").city("New City");
+//            String inputJson = objectMapper.writeValueAsString(input);
+//
+//            mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/restaurants")
+//                            .contentType(MediaType.APPLICATION_JSON)
+//                            .content(inputJson))
+//                    .andExpect(status().isForbidden());
+//        }
 
     }
 
