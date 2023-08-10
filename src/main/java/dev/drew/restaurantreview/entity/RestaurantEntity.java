@@ -25,17 +25,14 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
     @Column(name = "city")
     private String city;
 
-    @NotNull
     @Min(1)
     @Max(3)
     @Column(name = "price_range")
     private Integer priceRange;
 
-    @NotNull
     @Column(name = "latitude")
     private Double latitude;
 
-    @NotNull
     @Column(name = "longitude")
     private Double longitude;
 
