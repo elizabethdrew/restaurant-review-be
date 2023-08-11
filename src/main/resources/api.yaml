@@ -83,6 +83,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '409':
+          description: Restaurant with the same name and city already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
         '500':
           description: Internal server error
           content:
@@ -540,6 +549,8 @@ paths:
     get:
       summary: Get all cuisines
       operationId: getCuisines
+      description: Lists all the available cuisines
+      security: []
       responses:
         '200':
           description: Successful operation
@@ -564,6 +575,9 @@ paths:
     post:
       summary: Add a new cuisine
       operationId: addNewCuisine
+      description: Add a new cuisine if it doesn't already exist
+      security:
+        - basicAuth: [ ]
       requestBody:
         required: true
         content:
@@ -595,6 +609,9 @@ paths:
     delete:
       summary: Delete a cuisine by name
       operationId: deleteCuisine
+      description: Delete an unused cuisine
+      security:
+        - basicAuth: [ ]
       parameters:
         - name: name
           in: path
