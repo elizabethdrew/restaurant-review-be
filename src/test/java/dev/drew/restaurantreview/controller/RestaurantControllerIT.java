@@ -3,10 +3,7 @@ package dev.drew.restaurantreview.controller;
 
 import dev.drew.restaurantreview.GlobalTestContainer;
 import io.restassured.http.ContentType;
-import org.json.JSONObject;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Nested;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
