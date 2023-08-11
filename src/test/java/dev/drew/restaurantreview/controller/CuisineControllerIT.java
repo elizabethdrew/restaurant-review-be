@@ -1,23 +1,14 @@
 package dev.drew.restaurantreview.controller;
 
 import dev.drew.restaurantreview.GlobalTestContainer;
-import dev.drew.restaurantreview.repository.CuisineRepository;
-import dev.drew.restaurantreview.service.CuisineService;
-
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
 import static org.hamcrest.Matchers.*;
 
 public class CuisineControllerIT extends GlobalTestContainer {
-
-    @Autowired
-    private CuisineService cuisineService;
-
-    private static CuisineRepository cuisineRepository;
 
     @Test
     void testGetAllCuisines() throws Exception {
