@@ -1,53 +1,20 @@
 package dev.drew.restaurantreview.controller;
 
+import dev.drew.restaurantreview.GlobalTestContainer;
 import dev.drew.restaurantreview.service.CuisineService;
 
-import jakarta.persistence.EntityManagerFactory;
-import liquibase.integration.spring.SpringLiquibase;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.support.TestPropertySourceUtils;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
+import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
-import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.*;
 
-
-@Testcontainers
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@ContextConfiguration(initializers = CuisineControllerIT.DockerMysqlDataSourceInitializer.class)
-public class CuisineControllerIT {
+public class CuisineControllerIT extends GlobalTestContainer {
 
     @Autowired
     private CuisineService cuisineService;
-
-    @Autowired
-    SpringLiquibase liquibase;
-
-    @Autowired
-    EntityManagerFactory emf;
-
-    @Container
-    public static MySQLContainer container = new MySQLContainer("mysql:latest")
-            .withDatabaseName("example_db")
-            .withUsername("Test")
-            .withPassword("Test");
-
-    @BeforeAll
-    public static void setUp(){
-        container.withReuse(true);
-        container.start();
-    }
 
     @Test
     void testGetAllCuisines() throws Exception {
@@ -62,23 +29,18 @@ public class CuisineControllerIT {
 
     }
 
-    @AfterAll
-    public static void tearDown(){
-        container.stop();
+    @Test
+    void testAddNewCuisine() throws Exception {
+
+        String cuisineName = "Cat Food";
+        String newCuisine = "{\"name\":\""+ cuisineName + "\"}";
+
+        // Check status code
+        given().contentType(ContentType.JSON)
+                .body(newCuisine)
+                .when().request("POST", "/api/v1/cuisines")
+                .then().statusCode(201)
+                .body("name", is(cuisineName), "id", notNullValue());
     }
 
-    public static class DockerMysqlDataSourceInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-        @Override
-        public void initialize(ConfigurableApplicationContext applicationContext) {
-            String jdbcUrl = container.getJdbcUrl();
-            TestPropertySourceUtils.addInlinedPropertiesToEnvironment(
-                    applicationContext,
-                    "spring.datasource.url=" + jdbcUrl,
-                    "spring.datasource.username=" + container.getUsername(),
-                    "spring.datasource.password=" + container.getPassword(),
-                    "spring.liquibase.change-log=classpath:/db/changelog/db.changelog-master.yaml",
-                    "spring.liquibase.contexts=standard,seed"
-            );
-        }
-    }
 }
