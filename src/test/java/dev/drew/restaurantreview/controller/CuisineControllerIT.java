@@ -1,6 +1,7 @@
 package dev.drew.restaurantreview.controller;
 
 import dev.drew.restaurantreview.GlobalTestContainer;
+import dev.drew.restaurantreview.repository.CuisineRepository;
 import dev.drew.restaurantreview.service.CuisineService;
 
 import io.restassured.http.ContentType;
@@ -15,6 +16,8 @@ public class CuisineControllerIT extends GlobalTestContainer {
 
     @Autowired
     private CuisineService cuisineService;
+
+    private static CuisineRepository cuisineRepository;
 
     @Test
     void testGetAllCuisines() throws Exception {
@@ -32,12 +35,16 @@ public class CuisineControllerIT extends GlobalTestContainer {
     @Test
     void testAddNewCuisine() throws Exception {
 
-        String cuisineName = "Cat Food";
-        String newCuisine = "{\"name\":\""+ cuisineName + "\"}";
+        String token = authorisation();
+
+        System.out.println("I love this token: " +token);
+
+        String cuisineName = "Dogs";
 
         // Check status code
-        given().contentType(ContentType.JSON)
-                .body(newCuisine)
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .body("{\"name\": \""+ cuisineName + "\"}")
                 .when().request("POST", "/api/v1/cuisines")
                 .then().statusCode(201)
                 .body("name", is(cuisineName), "id", notNullValue());
