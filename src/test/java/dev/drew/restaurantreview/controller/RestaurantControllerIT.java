@@ -235,4 +235,14 @@ public class RestaurantControllerIT extends GlobalTestContainer {
                 .statusCode(403);
     }
 
+    @Test
+    void testDeleteRestaurantById() throws Exception {
+        String token = authorisation();
+        Integer resId = 5;
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .when().request("DELETE", "/api/v1/restaurant/" +resId+"/delete")
+                .then().statusCode(204);
+    }
+
 }
