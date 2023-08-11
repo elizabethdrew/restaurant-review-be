@@ -22,32 +22,70 @@ public class CuisineControllerIT extends GlobalTestContainer {
     @Test
     void testGetAllCuisines() throws Exception {
 
-        // Check status code
         when().request("GET", "/api/v1/cuisines")
-                .then().statusCode(200);
-
-        // Check that expected first and last cuisines included in response
-        when().request("GET", "/api/v1/cuisines")
-                .then().assertThat().body("", hasItems("American", "Thai"));
-
+                .then()
+                .statusCode(200)
+                .body("", hasItems("American", "Thai"));
     }
 
     @Test
     void testAddNewCuisine() throws Exception {
 
         String token = authorisation();
-
-        System.out.println("I love this token: " +token);
-
-        String cuisineName = "Dogs";
-
-        // Check status code
+        String cuisineName = "Cornish";
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
                 .body("{\"name\": \""+ cuisineName + "\"}")
                 .when().request("POST", "/api/v1/cuisines")
-                .then().statusCode(201)
-                .body("name", is(cuisineName), "id", notNullValue());
+                .then()
+                .statusCode(201)
+                .body(
+                        "name", is(cuisineName),
+                        "id", notNullValue()
+                );
+    }
+
+    @Test
+    void testAddNewCuisine_alreadyExists() throws Exception {
+
+        String token = authorisation();
+        String cuisineName = "American";
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .body("{\"name\": \""+ cuisineName + "\"}")
+                .when().request("POST", "/api/v1/cuisines")
+                .then()
+                .statusCode(409);
+    }
+
+    @Test
+    void testDeleteCuisine() throws Exception {
+        String token = authorisation();
+        String cuisineName = "Indian";
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .when().request("DELETE", "/api/v1/cuisines/" +cuisineName)
+                .then().statusCode(204);
+    }
+
+    @Test
+    void testDeleteCuisine_referencedByRestaurant() throws Exception {
+        String token = authorisation();
+        String cuisineName = "British";
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .when().request("DELETE", "/api/v1/cuisines/" +cuisineName)
+                .then().statusCode(409);
+    }
+
+    @Test
+    void testDeleteCuisine_cuisineNotFound() throws Exception {
+        String token = authorisation();
+        String cuisineName = "Kebab";
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .when().request("DELETE", "/api/v1/cuisines/" +cuisineName)
+                .then().statusCode(404);
     }
 
 }

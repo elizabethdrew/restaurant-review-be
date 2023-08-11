@@ -46,8 +46,6 @@ public class GlobalTestContainer {
 
     public String authorisation() {
 
-        System.out.println("Starting authorisation");
-
         String token =
         given()
                 .basePath("/api/v1/login")
@@ -61,7 +59,6 @@ public class GlobalTestContainer {
                 .path("token")
                 .toString();
 
-        System.out.println("here's your token: " +token);
         return token;
 
     }
