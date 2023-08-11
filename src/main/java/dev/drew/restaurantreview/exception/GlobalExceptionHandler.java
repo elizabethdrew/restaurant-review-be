@@ -36,6 +36,26 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
+    // Handle DuplicateRestaurantException
+    @ExceptionHandler(DuplicateRestaurantException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateRestaurantException(DuplicateRestaurantException e) {
+        ErrorResponse error = new ErrorResponse();
+        error.setCode(HttpStatus.CONFLICT.value());
+        error.setMessage("Restaurant with the name " + e.getMessage() + " already exists." );
+        log.warn("Restaurant already exists", e);
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    // Handle InvalidInputException
+    @ExceptionHandler(InvalidInputException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidInputException(InvalidInputException e) {
+        ErrorResponse error = new ErrorResponse();
+        error.setCode(HttpStatus.BAD_REQUEST.value());
+        error.setMessage(e.getMessage());
+        log.warn("Invalid Input", e);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
     // Handle ReviewNotFoundException
     @ExceptionHandler(ReviewNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleReviewNotFoundException(ReviewNotFoundException e) {
