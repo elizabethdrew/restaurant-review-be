@@ -53,7 +53,7 @@ public class RestaurantControllerIT extends GlobalTestContainer {
 
     @Test
     void testAddNewRestaurant_authorised() throws Exception {
-        String token = authorisation();
+        String token = authorisationAdmin();
         String body = "{\n" +
                 "    \"name\": \"New Restaurant 1\", \n" +
                 "    \"city\": \"New City\",\n" +
@@ -100,7 +100,7 @@ public class RestaurantControllerIT extends GlobalTestContainer {
 
     @Test
     void testAddNewRestaurant_alreadyExists() throws Exception {
-        String token = authorisation();
+        String token = authorisationAdmin();
         String body = "{\n" +
                 "    \"name\": \"Gastronomic Guildhall\", \n" +
                 "    \"city\": \"London\",\n" +
@@ -122,7 +122,7 @@ public class RestaurantControllerIT extends GlobalTestContainer {
 
     @Test
     void testAddNewRestaurant_missingCity() throws Exception {
-        String token = authorisation();
+        String token = authorisationAdmin();
         String body = "{\n" +
                 "    \"name\": \"New Restaurant 3\", \n" +
                 "    \"price_range\": 2,\n" +
@@ -143,7 +143,7 @@ public class RestaurantControllerIT extends GlobalTestContainer {
 
     @Test
     void testAddNewRestaurant_invalidPrice() throws Exception {
-        String token = authorisation();
+        String token = authorisationAdmin();
         String body = "{\n" +
                 "    \"name\": \"New Restaurant 4\", \n" +
                 "    \"city\": \"New City\",\n" +
@@ -184,7 +184,7 @@ public class RestaurantControllerIT extends GlobalTestContainer {
 
     @Test
     void testUpdateRestaurantById_authorised() throws Exception {
-        String token = authorisation();
+        String token = authorisationAdmin();
         Integer resId = 5;
         String body = "{\n" +
                 "    \"name\": \"Updated Restaurant 1\", \n" +
@@ -233,7 +233,7 @@ public class RestaurantControllerIT extends GlobalTestContainer {
 
     @Test
     void testDeleteRestaurantById() throws Exception {
-        String token = authorisation();
+        String token = authorisationAdmin();
         Integer resId = 5;
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)

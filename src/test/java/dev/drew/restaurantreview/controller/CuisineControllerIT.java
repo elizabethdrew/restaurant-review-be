@@ -22,7 +22,7 @@ public class CuisineControllerIT extends GlobalTestContainer {
     @Test
     void testAddNewCuisine() throws Exception {
 
-        String token = authorisation();
+        String token = authorisationAdmin();
         String cuisineName = "Cornish";
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
@@ -39,7 +39,7 @@ public class CuisineControllerIT extends GlobalTestContainer {
     @Test
     void testAddNewCuisine_alreadyExists() throws Exception {
 
-        String token = authorisation();
+        String token = authorisationAdmin();
         String cuisineName = "American";
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
@@ -51,7 +51,7 @@ public class CuisineControllerIT extends GlobalTestContainer {
 
     @Test
     void testDeleteCuisine() throws Exception {
-        String token = authorisation();
+        String token = authorisationAdmin();
         String cuisineName = "Indian";
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
@@ -61,7 +61,7 @@ public class CuisineControllerIT extends GlobalTestContainer {
 
     @Test
     void testDeleteCuisine_referencedByRestaurant() throws Exception {
-        String token = authorisation();
+        String token = authorisationAdmin();
         String cuisineName = "British";
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
@@ -71,7 +71,7 @@ public class CuisineControllerIT extends GlobalTestContainer {
 
     @Test
     void testDeleteCuisine_cuisineNotFound() throws Exception {
-        String token = authorisation();
+        String token = authorisationAdmin();
         String cuisineName = "Kebab";
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
