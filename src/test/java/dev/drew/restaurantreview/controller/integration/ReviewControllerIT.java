@@ -1,7 +1,8 @@
-package dev.drew.restaurantreview.controller;
+package dev.drew.restaurantreview.controller.integration;
 
 import dev.drew.restaurantreview.GlobalTestContainer;
 import io.restassured.http.ContentType;
+import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;

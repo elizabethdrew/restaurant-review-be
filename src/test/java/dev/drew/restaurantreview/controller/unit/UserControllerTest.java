@@ -1,5 +1,6 @@
-package dev.drew.restaurantreview.controller;
+package dev.drew.restaurantreview.controller.unit;
 
+import dev.drew.restaurantreview.controller.UserController;
 import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.UserNotFoundException;
 import dev.drew.restaurantreview.service.UserService;
