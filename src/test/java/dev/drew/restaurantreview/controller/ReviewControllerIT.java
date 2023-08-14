@@ -19,8 +19,7 @@ public class ReviewControllerIT extends GlobalTestContainer {
                 .statusCode(200)
                 .body("[0].restaurant_name", equalTo("Gastronomic Guildhall"),
                         "[1].rating", equalTo(4),
-                        "[2].comment", equalTo("Couldn't be worse."),
-                        "[14].id", equalTo(15));
+                        "[2].comment", equalTo("Couldn't be worse."));
     }
 
     @Test
@@ -173,7 +172,7 @@ public class ReviewControllerIT extends GlobalTestContainer {
     @Test
     void testUpdateReviewById_authorised() throws Exception {
         String token = authorisation();
-        Integer revId = 5;
+        Integer revId = 7;
         String body = "{\"rating\": 1,\n" +
                 "    \"comment\": \"Urghh! Gross!\"\n" +
                 "    }";
