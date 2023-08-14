@@ -1,4 +1,4 @@
-package dev.drew.restaurantreview.controller;
+package dev.drew.restaurantreview.controller.integration;
 
 import dev.drew.restaurantreview.GlobalTestContainer;
 import io.restassured.http.ContentType;

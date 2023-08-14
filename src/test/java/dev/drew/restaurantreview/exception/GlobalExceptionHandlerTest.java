@@ -1,6 +1,5 @@
-package dev.drew.restaurantreview.controller;
+package dev.drew.restaurantreview.exception;
 
-import dev.drew.restaurantreview.exception.*;
 import dev.drew.restaurantreview.model.ErrorResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;

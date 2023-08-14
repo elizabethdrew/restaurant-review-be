@@ -1,6 +1,7 @@
-package dev.drew.restaurantreview.controller;
+package dev.drew.restaurantreview.controller.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.drew.restaurantreview.controller.CuisineController;
 import dev.drew.restaurantreview.dto.CuisineDto;
 import dev.drew.restaurantreview.entity.CuisineEntity;
 import dev.drew.restaurantreview.service.CuisineService;
