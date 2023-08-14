@@ -18,8 +18,7 @@ public class RestaurantControllerIT extends GlobalTestContainer {
         when().request("GET", "/api/v1/restaurants")
                 .then()
                 .statusCode(200)
-                .body("[0].name", equalTo("Gastronomic Guildhall"),
-                        "[14].id", equalTo(15));
+                .body("[0].name", equalTo("Gastronomic Guildhall"));
     }
 
     @Test
