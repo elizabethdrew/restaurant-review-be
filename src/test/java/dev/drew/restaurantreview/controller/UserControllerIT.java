@@ -5,6 +5,7 @@ import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.when;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
@@ -61,5 +62,38 @@ public class UserControllerIT extends GlobalTestContainer {
                 .when().request("POST", "/api/v1/signup")
                 .then()
                 .statusCode(400);
+    }
+
+    @Test
+    void testGetUserById_exists_authorised() throws Exception {
+        String token = authorisation();
+        Integer userId = 1;
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .when().request("GET", "/api/v1/user/" + userId)
+                .then()
+                .statusCode(200)
+                .body("name", is("Admin User"),
+                        "id", is(userId));
+    }
+
+    @Test
+    void testGetUserById_notExists_authorised() throws Exception {
+        String token = authorisation();
+        Integer userId = 4;
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .when().request("GET", "/api/v1/user/" + userId)
+                .then()
+                .statusCode(404);
+    }
+
+    @Test
+    void testGetUserById_exists_notAuthorised() throws Exception {
+        Integer userId = 1;
+        given().log().all().contentType(ContentType.JSON)
+                .when().request("GET", "/api/v1/user/" + userId)
+                .then()
+                .statusCode(403);
     }
 }
