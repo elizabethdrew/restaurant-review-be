@@ -17,6 +17,7 @@ public class CorsConfig {
                         .allowedOrigins("http://localhost:3000")
                         .allowedOrigins("http://localhost:89")
                         .allowedOrigins("http://localhost:4200")
+                        .allowedOrigins("https://localhost:4200")
                         .allowedMethods("*")
                         .allowedHeaders("*")
                         .allowCredentials(true);
