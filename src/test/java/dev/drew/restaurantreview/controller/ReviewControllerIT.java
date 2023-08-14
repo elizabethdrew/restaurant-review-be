@@ -73,7 +73,7 @@ public class ReviewControllerIT extends GlobalTestContainer {
 
     @Test
     void testAddNewReview_authorised() throws Exception {
-        String token = authorisation();
+        String token = authorisationAdmin();
         String body = "{\"restaurant_id\": \"15\", \n" +
                 "    \"rating\": \"4\",\n" +
                 "    \"comment\": \"Great Food.\"\n" +
@@ -124,7 +124,7 @@ public class ReviewControllerIT extends GlobalTestContainer {
 
     @Test
     void testAddNewReview_restaurantNotFound() throws Exception {
-        String token = authorisation();
+        String token = authorisationAdmin();
         String body = "{\"restaurant_id\": \"16\", \n" +
                 "    \"rating\": \"4\",\n" +
                 "    \"comment\": \"Great Food.\"\n" +
@@ -140,7 +140,7 @@ public class ReviewControllerIT extends GlobalTestContainer {
 
     @Test
     void testAddNewReview_missingRating() throws Exception {
-        String token = authorisation();
+        String token = authorisationAdmin();
         String body = "{\"restaurant_id\": \"2\", \n" +
                 "    \"comment\": \"Great Food.\"\n" +
                 "    }";
@@ -155,7 +155,7 @@ public class ReviewControllerIT extends GlobalTestContainer {
 
     @Test
     void testAddNewReview_invaildRating() throws Exception {
-        String token = authorisation();
+        String token = authorisationAdmin();
         String body = "{\"restaurant_id\": \"5\", \n" +
                 "    \"rating\": \"6\",\n" +
                 "    \"comment\": \"Great Food.\"\n" +
@@ -171,7 +171,7 @@ public class ReviewControllerIT extends GlobalTestContainer {
 
     @Test
     void testUpdateReviewById_authorised() throws Exception {
-        String token = authorisation();
+        String token = authorisationAdmin();
         Integer revId = 7;
         String body = "{\"rating\": 1,\n" +
                 "    \"comment\": \"Urghh! Gross!\"\n" +
@@ -207,7 +207,7 @@ public class ReviewControllerIT extends GlobalTestContainer {
 
     @Test
     void testDeleteReviewById_authorised() throws Exception {
-        String token = authorisation();
+        String token = authorisationAdmin();
         Integer revId = 5;
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)

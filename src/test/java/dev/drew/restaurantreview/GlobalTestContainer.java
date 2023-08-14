@@ -44,7 +44,7 @@ public class GlobalTestContainer {
         container.stop();
     }
 
-    public String authorisation() {
+    public String authorisationAdmin() {
 
         String token =
         given()
@@ -58,6 +58,25 @@ public class GlobalTestContainer {
                 .extract()
                 .path("token")
                 .toString();
+
+        return token;
+
+    }
+
+    public String authorisationReviewer() {
+
+        String token =
+                given()
+                        .basePath("/api/v1/login")
+                        .contentType("application/json")
+                        .body("{\"username\": \"reviewer\", \"password\": \"reviewer123\"}")
+                        .when()
+                        .post()
+                        .then()
+                        .statusCode(200)
+                        .extract()
+                        .path("token")
+                        .toString();
 
         return token;
 

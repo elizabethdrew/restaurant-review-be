@@ -5,7 +5,6 @@ import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.when;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
@@ -66,7 +65,7 @@ public class UserControllerIT extends GlobalTestContainer {
 
     @Test
     void testGetUserById_exists_authorised() throws Exception {
-        String token = authorisation();
+        String token = authorisationAdmin();
         Integer userId = 1;
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
@@ -79,7 +78,7 @@ public class UserControllerIT extends GlobalTestContainer {
 
     @Test
     void testGetUserById_notExists_authorised() throws Exception {
-        String token = authorisation();
+        String token = authorisationAdmin();
         Integer userId = 4;
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
@@ -95,5 +94,39 @@ public class UserControllerIT extends GlobalTestContainer {
                 .when().request("GET", "/api/v1/user/" + userId)
                 .then()
                 .statusCode(403);
+    }
+
+    @Test
+    void testUpdateUserById() throws Exception {
+        String token = authorisationAdmin();
+        Integer userId = 1;
+        String body = "{\"name\": \"updated admin\", \n" +
+                "    \"email\": \"up@email.com\",\n" +
+                "    \"username\": \"adminupdate\",\n" +
+                "    \"role\": \"ADMIN\"\n" +
+                "    }";
+
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .body(body)
+                .when().request("PUT", "/api/v1/user/" + userId + "/edit")
+                .then()
+                .statusCode(200)
+                .body(
+                        "name", is("updated admin"),
+                        "id", is(userId),
+                        "username", is("adminupdate"),
+                        "role", is("ADMIN")
+                );
+    }
+
+    @Test
+    void testDeleteUserById() throws Exception {
+        String token = authorisationReviewer();
+        Integer userId = 2;
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .when().request("DELETE", "/api/v1/user/" + userId + "/delete")
+                .then().statusCode(204);
     }
 }
