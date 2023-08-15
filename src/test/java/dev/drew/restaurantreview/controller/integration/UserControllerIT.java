@@ -20,7 +20,7 @@ public class UserControllerIT extends GlobalTestContainer {
 
         given().log().all().contentType(ContentType.JSON)
                 .body(body)
-                .when().request("POST", "/api/v1/signup")
+                .when().request("POST", "/api/v1/users")
                 .then()
                 .statusCode(201)
                 .body(
@@ -42,7 +42,7 @@ public class UserControllerIT extends GlobalTestContainer {
 
         given().log().all().contentType(ContentType.JSON)
                 .body(body)
-                .when().request("POST", "/api/v1/signup")
+                .when().request("POST", "/api/v1/users")
                 .then()
                 .statusCode(400);
     }
@@ -58,7 +58,7 @@ public class UserControllerIT extends GlobalTestContainer {
 
         given().log().all().contentType(ContentType.JSON)
                 .body(body)
-                .when().request("POST", "/api/v1/signup")
+                .when().request("POST", "/api/v1/users")
                 .then()
                 .statusCode(400);
     }
@@ -69,7 +69,7 @@ public class UserControllerIT extends GlobalTestContainer {
         Integer userId = 1;
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
-                .when().request("GET", "/api/v1/user/" + userId)
+                .when().request("GET", "/api/v1/users/" + userId)
                 .then()
                 .statusCode(200)
                 .body("name", is("Admin User"),
@@ -82,7 +82,7 @@ public class UserControllerIT extends GlobalTestContainer {
         Integer userId = 4;
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
-                .when().request("GET", "/api/v1/user/" + userId)
+                .when().request("GET", "/api/v1/users/" + userId)
                 .then()
                 .statusCode(404);
     }
@@ -91,7 +91,7 @@ public class UserControllerIT extends GlobalTestContainer {
     void testGetUserById_exists_notAuthorised() throws Exception {
         Integer userId = 1;
         given().log().all().contentType(ContentType.JSON)
-                .when().request("GET", "/api/v1/user/" + userId)
+                .when().request("GET", "/api/v1/users/" + userId)
                 .then()
                 .statusCode(403);
     }
@@ -109,7 +109,7 @@ public class UserControllerIT extends GlobalTestContainer {
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
                 .body(body)
-                .when().request("PUT", "/api/v1/user/" + userId + "/edit")
+                .when().request("PUT", "/api/v1/users/" + userId)
                 .then()
                 .statusCode(200)
                 .body(
@@ -126,7 +126,7 @@ public class UserControllerIT extends GlobalTestContainer {
         Integer userId = 2;
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
-                .when().request("DELETE", "/api/v1/user/" + userId + "/delete")
+                .when().request("DELETE", "/api/v1/users/" + userId)
                 .then().statusCode(204);
     }
 }

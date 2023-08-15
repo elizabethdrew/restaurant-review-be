@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/users")
 @PreAuthorize("isAuthenticated()")
 public class UserController implements UserApi {
 
@@ -32,7 +32,7 @@ public class UserController implements UserApi {
      * @return response entity containing the new user data
      */
 
-    @PostMapping("/signup")
+    @PostMapping
     @PreAuthorize("permitAll()")
     public ResponseEntity<User> addUser( @Valid @RequestBody UserInput userInput ) {
         User user = userService.addNewUser(userInput);
@@ -49,7 +49,7 @@ public class UserController implements UserApi {
             name = "Bearer Authentication"
     )
     @Override
-    @DeleteMapping("/user/{userId}/delete")
+    @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUserById(
             @PathVariable Integer userId) {
         userService.deleteUserById(userId);
@@ -66,7 +66,7 @@ public class UserController implements UserApi {
             name = "Bearer Authentication"
     )
     @Override
-    @GetMapping("/user/{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<User> getUserById(@PathVariable Integer userId) {
         User user = userService.getUserById(userId);
         return ResponseEntity.ok(user);
@@ -83,7 +83,7 @@ public class UserController implements UserApi {
             name = "Bearer Authentication"
     )
     @Override
-    @PutMapping("/user/{userId}/edit")
+    @PutMapping("/{userId}")
     public ResponseEntity<User> updateUserById(
             @PathVariable Integer userId,
             @RequestBody @Valid UserInput userInput)

@@ -234,7 +234,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/v1/signup:
+  /api/v1/users:
     post:
       summary: Add a new user
       tags:
@@ -270,7 +270,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/v1/user/{userId}:
+  /api/v1/users/{userId}:
 
     get:
       summary: Get a user by ID
@@ -308,7 +308,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/v1/user/{userId}/edit:
     put:
       summary: Update a user
       tags:
@@ -358,7 +357,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/v1/user/{userId}/delete:
     delete:
       summary: Delete a user by ID
       tags:
