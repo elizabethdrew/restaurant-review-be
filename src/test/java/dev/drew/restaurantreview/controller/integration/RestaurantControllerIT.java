@@ -52,6 +52,22 @@ public class RestaurantControllerIT extends GlobalTestContainer {
     }
 
     @Test
+    void testGetAllRestaurants_withPagination() throws Exception {
+        when().request("GET", "/api/v1/restaurants?page=1&size=5")
+                .then()
+                .statusCode(200)
+                .body("[0].id", is(6));
+    }
+
+    @Test
+    void testGetAllRestaurants_withSorting() throws Exception {
+        when().request("GET", "/api/v1/restaurants?sort=city,asc")
+                .then()
+                .statusCode(200)
+                .body("[0].city", is("Bath"));
+    }
+
+    @Test
     void testAddNewRestaurant_authorised() throws Exception {
         String token = authorisationAdmin();
         String body = "{\n" +

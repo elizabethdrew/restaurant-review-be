@@ -54,6 +54,22 @@ public class ReviewControllerIT extends GlobalTestContainer {
     }
 
     @Test
+    void testGetAllReviews_withPagination() throws Exception {
+        when().request("GET", "/api/v1/reviews?page=1&size=5")
+                .then()
+                .statusCode(200)
+                .body("[0].id", is(7));
+    }
+
+    @Test
+    void testGetAllReviews_withSorting() throws Exception {
+        when().request("GET", "/api/v1/reviews?sort=restaurant_name,asc")
+                .then()
+                .statusCode(200)
+                .body("[0].restaurant_name", is("Aroma Abbey"));
+    }
+
+    @Test
     void testGetReviewById_exists() throws Exception {
         Integer revId = 1;
         when().request("GET", "/api/v1/reviews/" + revId)
