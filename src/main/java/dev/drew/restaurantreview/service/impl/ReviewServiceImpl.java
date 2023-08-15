@@ -11,6 +11,7 @@ import dev.drew.restaurantreview.mapper.ReviewMapper;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
 import dev.drew.restaurantreview.repository.ReviewRepository;
 import dev.drew.restaurantreview.repository.UserRepository;
+import dev.drew.restaurantreview.repository.specification.ReviewSpecification;
 import dev.drew.restaurantreview.service.ReviewService;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import org.openapitools.model.Review;
 import org.openapitools.model.ReviewInput;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,10 +71,16 @@ public class ReviewServiceImpl implements ReviewService {
 
         // Check if the user has already reviewed the restaurant within the last year
         OffsetDateTime oneYearAgo = OffsetDateTime.now().minusYears(1);
-        List<ReviewEntity> existingReviews = reviewRepository.findValidReviewsByUserIdAndRestaurantId(currentUserId, reviewInput.getRestaurantId());
 
-        boolean hasReviewWithinOneYear = existingReviews.stream()
-                .anyMatch(review -> review.getCreatedAt().isAfter(oneYearAgo));
+        Specification<ReviewEntity> spec = Specification
+                .where(ReviewSpecification.hasUserId(currentUserId))
+                .and(ReviewSpecification.hasRestaurantId(reviewInput.getRestaurantId()))
+                .and(ReviewSpecification.isNotDeleted())
+                .and(ReviewSpecification.isCreatedAfter(oneYearAgo));
+
+        List<ReviewEntity> existingReviews = reviewRepository.findAll(spec);
+
+        boolean hasReviewWithinOneYear = !existingReviews.isEmpty();
 
         if (hasReviewWithinOneYear) {
             // Return error response if a review within the last year exists
@@ -96,9 +104,15 @@ public class ReviewServiceImpl implements ReviewService {
         return savedApiReview;
     }
 
+    @Override
     public List<Review> getAllReviews(Long restaurantId, Long userId, Integer rating, Pageable pageable) {
-
-        Page<ReviewEntity> filteredEntities = reviewRepository.findAllByRestaurantIdAndUserIdAndRating(restaurantId, userId, rating, pageable);
+        Page<ReviewEntity> filteredEntities = reviewRepository.findAll(
+            Specification.where(ReviewSpecification.hasRestaurantId(restaurantId))
+                .and(ReviewSpecification.hasUserId(userId))
+                .and(ReviewSpecification.hasRating(rating))
+                .and(ReviewSpecification.isNotDeleted()),
+                pageable
+        );
 
         return filteredEntities.stream().map(reviewMapper::toReview).collect(Collectors.toList());
     }
@@ -173,11 +187,15 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     public void updateRestaurantRating(Long restaurantId) {
-        List<ReviewEntity> reviews = reviewRepository.findValidReviewsByRestaurantId(restaurantId);
+
+        Specification<ReviewEntity> spec = Specification
+                .where(ReviewSpecification.hasRestaurantId(restaurantId))
+                .and(ReviewSpecification.isNotDeleted());
+
+        List<ReviewEntity> reviews = reviewRepository.findAll(spec);
 
         if (!reviews.isEmpty()) {
             double averageRating = reviews.stream()
-                    .filter(review -> !review.getIsDeleted())
                     .mapToDouble(ReviewEntity::getRating)
                     .average()
                     .orElse(0);
