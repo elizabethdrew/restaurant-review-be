@@ -98,7 +98,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     public List<Review> getAllReviews(Long restaurantId, Long userId, Integer rating, Pageable pageable) {
 
-        Page<ReviewEntity> filteredEntities = reviewRepository.findAllByRestaurantIdAndUserIdAndRating(restaurantId, userId, rating);
+        Page<ReviewEntity> filteredEntities = reviewRepository.findAllByRestaurantIdAndUserIdAndRating(restaurantId, userId, rating, pageable);
 
         return filteredEntities.stream().map(reviewMapper::toReview).collect(Collectors.toList());
     }

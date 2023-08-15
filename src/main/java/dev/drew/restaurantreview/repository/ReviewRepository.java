@@ -2,6 +2,7 @@ package dev.drew.restaurantreview.repository;
 
 import dev.drew.restaurantreview.entity.ReviewEntity;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,7 +18,8 @@ public interface ReviewRepository extends JpaRepository<ReviewEntity, Long> {
     Page<ReviewEntity> findAllByRestaurantIdAndUserIdAndRating(
             @Param("restaurantId") Long restaurantId,
             @Param("userId") Long userId,
-            @Param("rating") Integer rating);
+            @Param("rating") Integer rating,
+            Pageable pageable);
 
     @Query("SELECT r FROM ReviewEntity r WHERE r.user.id = :userId and r.restaurant.id = :restaurantId and r.isDeleted = false")
     List<ReviewEntity> findValidReviewsByUserIdAndRestaurantId(
