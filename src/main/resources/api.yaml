@@ -641,7 +641,6 @@ paths:
       summary: Get all cuisines
       operationId: getCuisines
       description: Lists all the available cuisines
-      x-spring-paginated: true
       security: []
       responses:
         '200':

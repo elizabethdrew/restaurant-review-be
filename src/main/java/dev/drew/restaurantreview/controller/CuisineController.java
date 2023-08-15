@@ -4,7 +4,6 @@ import dev.drew.restaurantreview.dto.CuisineDto;
 import dev.drew.restaurantreview.entity.CuisineEntity;
 import dev.drew.restaurantreview.service.CuisineService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +18,7 @@ public class CuisineController {
     private CuisineService cuisineService;
 
     @GetMapping
-    public ResponseEntity<List<String>> getAllCuisines(Pageable pageable) {
+    public ResponseEntity<List<String>> getAllCuisines() {
         List<String> cuisineNames = cuisineService.getAllCuisineNames();
         return new ResponseEntity<>(cuisineNames, HttpStatus.OK);
     }
