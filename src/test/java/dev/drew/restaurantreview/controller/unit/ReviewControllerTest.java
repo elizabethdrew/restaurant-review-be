@@ -51,7 +51,7 @@ class ReviewControllerTest {
 
         when(reviewService.addNewReview(any(ReviewInput.class))).thenReturn(review);
 
-        mockMvc.perform(post("/api/v1/review/add")
+        mockMvc.perform(post("/api/v1/reviews")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(input)))
                 .andExpect(status().isCreated());
@@ -62,7 +62,7 @@ class ReviewControllerTest {
     void testDeleteReviewById() throws Exception {
         int reviewId = 1;
 
-        mockMvc.perform(delete("/api/v1/review/{reviewId}/delete", reviewId)
+        mockMvc.perform(delete("/api/v1/reviews/{reviewId}", reviewId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
@@ -88,7 +88,7 @@ class ReviewControllerTest {
 
         when(reviewService.getReviewById(eq(reviewId))).thenReturn(review);
 
-        mockMvc.perform(get("/api/v1/review/{reviewId}", reviewId)
+        mockMvc.perform(get("/api/v1/reviews/{reviewId}", reviewId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
@@ -102,7 +102,7 @@ class ReviewControllerTest {
 
         when(reviewService.updateReviewById(eq(reviewId), any(ReviewInput.class))).thenReturn(updatedReview);
 
-        mockMvc.perform(put("/api/v1/review/{reviewId}/edit", reviewId)
+        mockMvc.perform(put("/api/v1/reviews/{reviewId}", reviewId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(input)))
                 .andExpect(status().isOk());

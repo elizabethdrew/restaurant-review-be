@@ -417,6 +417,7 @@ paths:
       tags:
         - Reviews
       description: Returns a list of all reviews.
+      x-spring-paginated: true
       parameters:
         - name: restaurant_id
           in: query
@@ -456,7 +457,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/v1/review/add:
     post:
       summary: Add a new review
       operationId: addNewReview
@@ -492,7 +492,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/v1/review/{reviewId}:
+  /api/v1/reviews/{reviewId}:
     get:
       security: []
       summary: Get a review by ID
@@ -528,7 +528,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/v1/review/{reviewId}/edit:
     put:
       summary: Update a review
       operationId: updateReviewById
@@ -578,7 +577,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/v1/review/{reviewId}/delete:
     delete:
       summary: Delete a review
       operationId: deleteReviewById
@@ -616,6 +614,7 @@ paths:
       summary: Get all cuisines
       operationId: getCuisines
       description: Lists all the available cuisines
+      x-spring-paginated: true
       security: []
       responses:
         '200':

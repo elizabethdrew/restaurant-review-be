@@ -16,7 +16,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/reviews")
 @PreAuthorize("isAuthenticated()")
 public class ReviewController implements ReviewsApi {
 
@@ -35,7 +35,7 @@ public class ReviewController implements ReviewsApi {
     @SecurityRequirement(
             name = "Bearer Authentication"
     )
-    @PostMapping("/review/add")
+    @PostMapping
     @Override
     public ResponseEntity<Review> addNewReview(
             @RequestBody @Valid ReviewInput reviewInput) {
@@ -53,7 +53,7 @@ public class ReviewController implements ReviewsApi {
             name = "Bearer Authentication"
     )
     @Override
-    @DeleteMapping("/review/{reviewId}/delete")
+    @DeleteMapping("/{reviewId}")
     public ResponseEntity<Void> deleteReviewById(
             @PathVariable Integer reviewId) {
         reviewService.deleteReviewById(reviewId);
@@ -69,7 +69,7 @@ public class ReviewController implements ReviewsApi {
      * @return response entity containing the list of reviews
      */
     @Override
-    @GetMapping("/reviews")
+    @GetMapping
     @PreAuthorize("permitAll()")
     public ResponseEntity<List<Review>> getAllReviews(
             @Valid @RequestParam(value = "restaurant_id", required = false) Long restaurantId,
@@ -88,7 +88,7 @@ public class ReviewController implements ReviewsApi {
      * @return response entity containing the review data
      */
     @Override
-    @GetMapping("/review/{reviewId}")
+    @GetMapping("/{reviewId}")
     @PreAuthorize("permitAll()")
     public ResponseEntity<Review> getReviewById(@PathVariable Integer reviewId) {
         Review review = reviewService.getReviewById(reviewId);
@@ -106,7 +106,7 @@ public class ReviewController implements ReviewsApi {
             name = "Bearer Authentication"
     )
     @Override
-    @PutMapping("review/{reviewId}/edit")
+    @PutMapping("/{reviewId}")
     public ResponseEntity<Review> updateReviewById(
             @PathVariable Integer reviewId,
             @RequestBody @Valid ReviewInput reviewInput)
