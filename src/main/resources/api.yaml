@@ -443,15 +443,21 @@ paths:
             maximum: 5
       responses:
         '200':
-          description: A list of reviews.
+          description: Success
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Review'
+        '404':
+          description: No Results Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '500':
-          description: Internal server error
+          description: Internal Server Error
           content:
             application/json:
               schema:
@@ -474,19 +480,28 @@ paths:
               $ref: '#/components/schemas/ReviewInput'
       responses:
         '201':
-          description: The new review
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Review'
         '400':
-          description: Invalid input
+          description: Invalid Input
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '409':
+          description: Already Exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
         '500':
-          description: Internal server error
+          description: Internal Server Error
           content:
             application/json:
               schema:
@@ -510,19 +525,19 @@ paths:
             minimum: 1
       responses:
         '200':
-          description: The review.
+          description: Success
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Review'
         '404':
-          description: Review not found.
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '500':
-          description: Internal server error
+          description: Internal Server Error
           content:
             application/json:
               schema:
@@ -553,25 +568,31 @@ paths:
               $ref: '#/components/schemas/ReviewInput'
       responses:
         '200':
-          description: The updated review.
+          description: Updated
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Review'
         '400':
-          description: Invalid input.
+          description: Invalid Input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient Permissions
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: Review not found.
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '500':
-          description: Internal server error.
+          description: Internal Server Error.
           content:
             application/json:
               schema:
@@ -595,15 +616,21 @@ paths:
             minimum: 1
       responses:
         '204':
-          description: Successfully deleted.
+          description: Deleted
+        '403':
+          description: Insufficient Permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
-          description: Review not found.
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '500':
-          description: Internal server error.
+          description: Internal Server Error.
           content:
             application/json:
               schema:
