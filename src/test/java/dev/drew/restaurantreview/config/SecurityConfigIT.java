@@ -1,244 +1,399 @@
 package dev.drew.restaurantreview.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.drew.restaurantreview.auth.JwtService;
-import dev.drew.restaurantreview.entity.RestaurantEntity;
-import dev.drew.restaurantreview.entity.ReviewEntity;
-import dev.drew.restaurantreview.model.SecurityUser;
-import dev.drew.restaurantreview.entity.UserEntity;
-import dev.drew.restaurantreview.repository.RestaurantRepository;
-import dev.drew.restaurantreview.repository.ReviewRepository;
-import dev.drew.restaurantreview.repository.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import dev.drew.restaurantreview.GlobalTestContainer;
+import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Nested;
-import org.mockito.Mockito;
-import org.openapitools.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
+import org.junit.jupiter.api.Test;
+import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.when;
+import static org.hamcrest.Matchers.*;
 
-import java.util.Optional;
+public class SecurityConfigIT extends GlobalTestContainer {
 
-import static org.mockito.Mockito.when;
-import static org.openapitools.model.User.RoleEnum.ADMIN;
-import static org.openapitools.model.User.RoleEnum.REVIEWER;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
-public class SecurityConfigIT {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private JwtService jwtService;
-
-    @MockBean
-    private RestaurantRepository restaurantRepository;
-
-    @MockBean
-    private UserRepository userRepository;
-
-    @MockBean
-    private ReviewRepository reviewRepository;
-
-    private RestaurantEntity restaurantEntity;
-    private UserEntity userEntity;
-    private ReviewEntity reviewEntity;
-
-    @Autowired
-    private final BCryptPasswordEncoder passwordEncoder;
-
-    public SecurityConfigIT() {
-        passwordEncoder = new BCryptPasswordEncoder();
-    }
-
-    private SecurityUser createSecurityUserWithRole(User.RoleEnum role) {
-        userEntity = new UserEntity();
-        userEntity.setId(1L);
-        userEntity.setUsername("admin");
-        userEntity.setPassword(passwordEncoder.encode("password"));
-        userEntity.setRole(role);
-
-        return new SecurityUser(userEntity);
-    }
-
-    private String generateJwtToken(SecurityUser securityUser) {
-        //SecurityUser securityUser = new SecurityUser(userEntity);
-        return jwtService.generateToken(securityUser);
-    }
-
-    // Set up the test environment before each test
-    @BeforeEach
-    public void setUp() {
-        restaurantEntity = new RestaurantEntity();
-        restaurantEntity.setId(1L);
-        restaurantEntity.setName("Test Restaurant");
-        restaurantEntity.setCity("City");
-
-        reviewEntity = new ReviewEntity();
-        reviewEntity.setId(1L);
-        reviewEntity.setRestaurantId(1L);
-        reviewEntity.setUserId(1L);
-        reviewEntity.setRating(4);
-        reviewEntity.setComment("Great food!");
-
-        userEntity = new UserEntity();
-        userEntity.setId(2L);
-        userEntity.setUsername("REVIEWER");
-        userEntity.setPassword(passwordEncoder.encode("password"));
-        userEntity.setRole(REVIEWER);
-
-        when(restaurantRepository.findById(1L)).thenReturn(Optional.of(restaurantEntity));
-        when(userRepository.findById(1L)).thenReturn(Optional.of(userEntity));
-        when(reviewRepository.findById(1L)).thenReturn(Optional.of(reviewEntity));
-
-    }
-
-    // Test accessing public endpoints without authentication
+    //Test accessing public endpoints without authentication
     @Nested
     class WithoutAuthentication {
 
-//        @Test
-//        public void testGetRestaurants() throws Exception {
-//            mockMvc.perform(get("/api/v1/restaurants")).andExpect(status().isOk());
-//        }
-//
-//        @Test
-//        public void testGetRestaurantById() throws Exception {
-//            mockMvc.perform(get("/api/v1/restaurants/1")).andExpect(status().isOk());
-//        }
-//
-//        @Test
-//        public void testGetReviews() throws Exception {
-//            mockMvc.perform(get("/api/v1/reviews")).andExpect(status().isOk());
-//        }
-//
-//        @Test
-//        public void testGetReviewById() throws Exception {
-//            mockMvc.perform(get("/api/v1/reviews/1")).andExpect(status().isOk());
-//        }
-//
-//        @Test
-//        public void testPostUser() throws Exception {
-//            // Create a new user to be added
-//            User newUser = new User();
-//            newUser.setUsername("newUser");
-//            newUser.setPassword("password");
-//            newUser.setRole(User.RoleEnum.REVIEWER);
-//
-//            // Convert the newUser object to a JSON string
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            String newUserJson = objectMapper.writeValueAsString(newUser);
-//
-//            mockMvc.perform(post("/api/v1/user")
-//                            .contentType(MediaType.APPLICATION_JSON)
-//                            .content(newUserJson))
-//                    .andExpect(status().isCreated());
-//        }
-    }
+        @Test
+        public void testGetRestaurants() throws Exception {
+            when().request("GET", "/api/v1/restaurants")
+                    .then()
+                    .statusCode(200);
+        }
 
-    // Test accessing protected endpoints without authentication
-    @Nested
-    class ProtectedWithoutAuthentication {
-//        @Test
-//        public void testGetUserById() throws Exception {
-//            mockMvc.perform(get("/api/v1/user/1")).andExpect(status().isForbidden());
-//        }
-//
-//        @Test
-//        public void testDeleteUserById() throws Exception {
-//            mockMvc.perform(delete("/api/v1/user/1")).andExpect(status().isForbidden());
-//        }
-//
-//        @Test
-//        public void testPutUserById() throws Exception {
-//            // Create an object to represent the updated user data
-//            User updatedUser = new User();
-//            updatedUser.setId(1L);
-//            updatedUser.setUsername("updatedUsername");
-//            updatedUser.setPassword("updatedPassword");
-//            updatedUser.setRole(User.RoleEnum.ADMIN);
-//
-//            // Convert the updatedUser object to a JSON string
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            String updatedUserJson = objectMapper.writeValueAsString(updatedUser);
-//
-//            mockMvc.perform(put("/api/v1/user/1")
-//                            .contentType(MediaType.APPLICATION_JSON)
-//                            .content(updatedUserJson))
-//                    .andExpect(status().isForbidden());
-//        }
+        @Test
+        public void testGetCuisines() throws Exception {
+            when().request("GET", "/api/v1/cuisines")
+                    .then()
+                    .statusCode(200);
+        }
+
+        @Test
+        public void testGetRestaurantById() throws Exception {
+            when().request("GET", "/api/v1/restaurants/1")
+                    .then()
+                    .statusCode(200);
+        }
+
+        @Test
+        public void testGetReviews() throws Exception {
+            when().request("GET", "/api/v1/reviews")
+                    .then()
+                    .statusCode(200);
+        }
+
+        @Test
+        public void testGetReviewById() throws Exception {
+            when().request("GET", "/api/v1/reviews/1")
+                    .then()
+                    .statusCode(200);
+        }
+
+        @Test
+        public void testPostUser() throws Exception {
+            String body = "{\"name\": \"rev\", \n" +
+                    "    \"email\": \"rev@email.com\",\n" +
+                    "    \"username\": \"rev\",\n" +
+                    "    \"password\": \"password\",\n" +
+                    "    \"role\": \"REVIEWER\"\n" +
+                    "    }";
+
+            given().log().all().contentType(ContentType.JSON)
+                    .body(body)
+                    .when().request("POST", "/api/v1/users")
+                    .then()
+                    .statusCode(201)
+                    .body(
+                            "name", is("rev"),
+                            "id", notNullValue(),
+                            "username", is("rev"),
+                                "role", is("REVIEWER")
+                    );
+        }
     }
 
     // Test accessing protected endpoints with authentication
     @Nested
-    class ProtectedWithAuthentication {
+    class ProtectedWithAdminAuthentication {
 
-        private String bearerToken;
-
-        @BeforeEach
-        public void setUpProtectedWithAuthentication() {
-
-            // Create SecurityUser and set it as the principal in the Authentication object
-            SecurityUser securityUser = createSecurityUserWithRole(ADMIN);
-            Authentication authentication = Mockito.mock(Authentication.class);
-            when(authentication.getPrincipal()).thenReturn(securityUser);
-            when(authentication.isAuthenticated()).thenReturn(true);
-
-            // Set the Authentication object in the SecurityContextHolder
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            // Generate the JWT bearer token
-            bearerToken = generateJwtToken(securityUser);
-
+        @Test
+        public void testAdminAuthenticated_GetUserById() throws Exception {
+            String token = authorisationAdmin();
+            Integer userId = 1;
+            given().log().all().contentType(ContentType.JSON)
+                    .header("Authorization", "Bearer "+ token)
+                    .when().request("GET", "/api/v1/users/" + userId)
+                    .then()
+                    .statusCode(200);
         }
-//        @Test
-//        public void testAuthenticatedGetUserById() throws Exception {
-//            mockMvc.perform(get("/api/v1/user/1")
-//                            .header("Authorization", "Bearer " + bearerToken))
-//                    .andExpect(status().isOk());
-//        }
-//
-//        @Test
-//        public void testAuthenticatedDeleteUserById() throws Exception {
-//            mockMvc.perform(delete("/api/v1/user/1")
-//                            .header("Authorization", "Bearer " + bearerToken))
-//                    .andExpect(status().isNoContent());
-//        }
-//
-//        @Test
-//        public void testAuthenticatedPutUserById() throws Exception {
-//            // Create an object to represent the updated user data
-//            User updatedUser = new User();
-//            updatedUser.setId(1L);
-//            updatedUser.setUsername("updatedUsername");
-//            updatedUser.setPassword("updatedPassword");
-//            updatedUser.setRole(User.RoleEnum.ADMIN);
-//
-//            // Convert the updatedUser object to a JSON string
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            String updatedUserJson = objectMapper.writeValueAsString(updatedUser);
-//
-//            mockMvc.perform(put("/api/v1/user/1")
-//                            .contentType(MediaType.APPLICATION_JSON)
-//                            .content(updatedUserJson)
-//                            .header("Authorization", "Bearer " + bearerToken))
-//                    .andExpect(status().isOk());
-//        }
+
+        @Test
+        public void testAdminAuthenticated_DeleteUserById() throws Exception {
+            String token = authorisationAdmin();
+            Integer userId = 2;
+            given().log().all().contentType(ContentType.JSON)
+                    .header("Authorization", "Bearer "+ token)
+                    .when().request("DELETE", "/api/v1/users/" + userId)
+                    .then()
+                    .statusCode(204);
+        }
+
+        @Test
+        public void testAdminAuthenticated_EditUserById() throws Exception {
+            String token = authorisationAdmin();
+            Integer userId = 1;
+            String body = "{\"name\": \"updated admin\", \n" +
+                    "    \"email\": \"admin@email.com\",\n" +
+                    "    \"username\": \"admin\",\n" +
+                    "    \"role\": \"ADMIN\"\n" +
+                    "    }";
+            given().log().all().contentType(ContentType.JSON)
+                    .header("Authorization", "Bearer "+ token)
+                    .body(body)
+                    .when().request("PUT", "/api/v1/users/" + userId)
+                    .then()
+                    .statusCode(200)
+                    .body(
+                            "name", is("updated admin")
+                    );
+        }
+
+
+
     }
 }
+
+
+
+////        @Test
+////        public void testAuthenticatedDeleteUserById() throws Exception {
+////            mockMvc.perform(delete("/api/v1/user/1")
+////                            .header("Authorization", "Bearer " + bearerToken))
+////                    .andExpect(status().isNoContent());
+////        }
+////
+////        @Test
+////        public void testAuthenticatedPutUserById() throws Exception {
+////            // Create an object to represent the updated user data
+////            User updatedUser = new User();
+////            updatedUser.setId(1L);
+////            updatedUser.setUsername("updatedUsername");
+////            updatedUser.setPassword("updatedPassword");
+////            updatedUser.setRole(User.RoleEnum.ADMIN);
+////
+////            // Convert the updatedUser object to a JSON string
+////            ObjectMapper objectMapper = new ObjectMapper();
+////            String updatedUserJson = objectMapper.writeValueAsString(updatedUser);
+////
+////            mockMvc.perform(put("/api/v1/user/1")
+////                            .contentType(MediaType.APPLICATION_JSON)
+////                            .content(updatedUserJson)
+////                            .header("Authorization", "Bearer " + bearerToken))
+////                    .andExpect(status().isOk());
+////        }
+//    }
+
+
+//
+//import com.fasterxml.jackson.databind.ObjectMapper;
+//import dev.drew.restaurantreview.auth.JwtService;
+//import dev.drew.restaurantreview.entity.RestaurantEntity;
+//import dev.drew.restaurantreview.entity.ReviewEntity;
+//import dev.drew.restaurantreview.model.SecurityUser;
+//import dev.drew.restaurantreview.entity.UserEntity;
+//import dev.drew.restaurantreview.repository.RestaurantRepository;
+//import dev.drew.restaurantreview.repository.ReviewRepository;
+//import dev.drew.restaurantreview.repository.UserRepository;
+//import org.junit.jupiter.api.BeforeEach;
+//import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.extension.ExtendWith;
+//import org.junit.jupiter.api.Nested;
+//import org.mockito.Mockito;
+//import org.openapitools.model.User;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+//import org.springframework.boot.test.context.SpringBootTest;
+//import org.springframework.boot.test.mock.mockito.MockBean;
+//import org.springframework.http.MediaType;
+//import org.springframework.security.core.Authentication;
+//import org.springframework.security.core.context.SecurityContextHolder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.test.context.ActiveProfiles;
+//import org.springframework.test.context.junit.jupiter.SpringExtension;
+//import org.springframework.test.web.servlet.MockMvc;
+//
+//import java.util.Optional;
+//
+//import static org.mockito.Mockito.when;
+//import static org.openapitools.model.User.RoleEnum.ADMIN;
+//import static org.openapitools.model.User.RoleEnum.REVIEWER;
+//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+//
+//@ExtendWith(SpringExtension.class)
+//@SpringBootTest
+//@AutoConfigureMockMvc
+//@ActiveProfiles("test")
+//public class SecurityConfigIT {
+//
+//    @Autowired
+//    private MockMvc mockMvc;
+//
+//    @Autowired
+//    private JwtService jwtService;
+//
+//    @MockBean
+//    private RestaurantRepository restaurantRepository;
+//
+//    @MockBean
+//    private UserRepository userRepository;
+//
+//    @MockBean
+//    private ReviewRepository reviewRepository;
+//
+//    private RestaurantEntity restaurantEntity;
+//    private UserEntity userEntity;
+//    private ReviewEntity reviewEntity;
+//
+//    @Autowired
+//    private final BCryptPasswordEncoder passwordEncoder;
+//
+//    public SecurityConfigIT() {
+//        passwordEncoder = new BCryptPasswordEncoder();
+//    }
+//
+//    private SecurityUser createSecurityUserWithRole(User.RoleEnum role) {
+//        userEntity = new UserEntity();
+//        userEntity.setId(1L);
+//        userEntity.setUsername("admin");
+//        userEntity.setPassword(passwordEncoder.encode("password"));
+//        userEntity.setRole(role);
+//
+//        return new SecurityUser(userEntity);
+//    }
+//
+//    private String generateJwtToken(SecurityUser securityUser) {
+//        //SecurityUser securityUser = new SecurityUser(userEntity);
+//        return jwtService.generateToken(securityUser);
+//    }
+//
+//    // Set up the test environment before each test
+//    @BeforeEach
+//    public void setUp() {
+//        restaurantEntity = new RestaurantEntity();
+//        restaurantEntity.setId(1L);
+//        restaurantEntity.setName("Test Restaurant");
+//        restaurantEntity.setCity("City");
+//
+//        reviewEntity = new ReviewEntity();
+//        reviewEntity.setId(1L);
+//        reviewEntity.setRestaurantId(1L);
+//        reviewEntity.setUserId(1L);
+//        reviewEntity.setRating(4);
+//        reviewEntity.setComment("Great food!");
+//
+//        userEntity = new UserEntity();
+//        userEntity.setId(2L);
+//        userEntity.setUsername("REVIEWER");
+//        userEntity.setPassword(passwordEncoder.encode("password"));
+//        userEntity.setRole(REVIEWER);
+//
+//        when(restaurantRepository.findById(1L)).thenReturn(Optional.of(restaurantEntity));
+//        when(userRepository.findById(1L)).thenReturn(Optional.of(userEntity));
+//        when(reviewRepository.findById(1L)).thenReturn(Optional.of(reviewEntity));
+//
+//    }
+//
+//    // Test accessing public endpoints without authentication
+//    @Nested
+//    class WithoutAuthentication {
+//
+////        @Test
+////        public void testGetRestaurants() throws Exception {
+////            mockMvc.perform(get("/api/v1/restaurants")).andExpect(status().isOk());
+////        }
+////
+////        @Test
+////        public void testGetRestaurantById() throws Exception {
+////            mockMvc.perform(get("/api/v1/restaurants/1")).andExpect(status().isOk());
+////        }
+////
+////        @Test
+////        public void testGetReviews() throws Exception {
+////            mockMvc.perform(get("/api/v1/reviews")).andExpect(status().isOk());
+////        }
+////
+////        @Test
+////        public void testGetReviewById() throws Exception {
+////            mockMvc.perform(get("/api/v1/reviews/1")).andExpect(status().isOk());
+////        }
+////
+////        @Test
+////        public void testPostUser() throws Exception {
+////            // Create a new user to be added
+////            User newUser = new User();
+////            newUser.setUsername("newUser");
+////            newUser.setPassword("password");
+////            newUser.setRole(User.RoleEnum.REVIEWER);
+////
+////            // Convert the newUser object to a JSON string
+////            ObjectMapper objectMapper = new ObjectMapper();
+////            String newUserJson = objectMapper.writeValueAsString(newUser);
+////
+////            mockMvc.perform(post("/api/v1/user")
+////                            .contentType(MediaType.APPLICATION_JSON)
+////                            .content(newUserJson))
+////                    .andExpect(status().isCreated());
+////        }
+//    }
+//
+//    // Test accessing protected endpoints without authentication
+//    @Nested
+//    class ProtectedWithoutAuthentication {
+////        @Test
+////        public void testGetUserById() throws Exception {
+////            mockMvc.perform(get("/api/v1/user/1")).andExpect(status().isForbidden());
+////        }
+////
+////        @Test
+////        public void testDeleteUserById() throws Exception {
+////            mockMvc.perform(delete("/api/v1/user/1")).andExpect(status().isForbidden());
+////        }
+////
+////        @Test
+////        public void testPutUserById() throws Exception {
+////            // Create an object to represent the updated user data
+////            User updatedUser = new User();
+////            updatedUser.setId(1L);
+////            updatedUser.setUsername("updatedUsername");
+////            updatedUser.setPassword("updatedPassword");
+////            updatedUser.setRole(User.RoleEnum.ADMIN);
+////
+////            // Convert the updatedUser object to a JSON string
+////            ObjectMapper objectMapper = new ObjectMapper();
+////            String updatedUserJson = objectMapper.writeValueAsString(updatedUser);
+////
+////            mockMvc.perform(put("/api/v1/user/1")
+////                            .contentType(MediaType.APPLICATION_JSON)
+////                            .content(updatedUserJson))
+////                    .andExpect(status().isForbidden());
+////        }
+//    }
+//
+//    // Test accessing protected endpoints with authentication
+//    @Nested
+//    class ProtectedWithAuthentication {
+//
+//        private String bearerToken;
+//
+//        @BeforeEach
+//        public void setUpProtectedWithAuthentication() {
+//
+//            // Create SecurityUser and set it as the principal in the Authentication object
+//            SecurityUser securityUser = createSecurityUserWithRole(ADMIN);
+//            Authentication authentication = Mockito.mock(Authentication.class);
+//            when(authentication.getPrincipal()).thenReturn(securityUser);
+//            when(authentication.isAuthenticated()).thenReturn(true);
+//
+//            // Set the Authentication object in the SecurityContextHolder
+//            SecurityContextHolder.getContext().setAuthentication(authentication);
+//
+//            // Generate the JWT bearer token
+//            bearerToken = generateJwtToken(securityUser);
+//
+//        }
+////        @Test
+////        public void testAuthenticatedGetUserById() throws Exception {
+////            mockMvc.perform(get("/api/v1/user/1")
+////                            .header("Authorization", "Bearer " + bearerToken))
+////                    .andExpect(status().isOk());
+////        }
+////
+////        @Test
+////        public void testAuthenticatedDeleteUserById() throws Exception {
+////            mockMvc.perform(delete("/api/v1/user/1")
+////                            .header("Authorization", "Bearer " + bearerToken))
+////                    .andExpect(status().isNoContent());
+////        }
+////
+////        @Test
+////        public void testAuthenticatedPutUserById() throws Exception {
+////            // Create an object to represent the updated user data
+////            User updatedUser = new User();
+////            updatedUser.setId(1L);
+////            updatedUser.setUsername("updatedUsername");
+////            updatedUser.setPassword("updatedPassword");
+////            updatedUser.setRole(User.RoleEnum.ADMIN);
+////
+////            // Convert the updatedUser object to a JSON string
+////            ObjectMapper objectMapper = new ObjectMapper();
+////            String updatedUserJson = objectMapper.writeValueAsString(updatedUser);
+////
+////            mockMvc.perform(put("/api/v1/user/1")
+////                            .contentType(MediaType.APPLICATION_JSON)
+////                            .content(updatedUserJson)
+////                            .header("Authorization", "Bearer " + bearerToken))
+////                    .andExpect(status().isOk());
+////        }
+//    }
+//}
