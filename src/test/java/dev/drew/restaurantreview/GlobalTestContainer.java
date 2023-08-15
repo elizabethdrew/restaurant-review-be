@@ -27,17 +27,15 @@ public abstract class GlobalTestContainer {
     @Autowired
     EntityManagerFactory emf;
 
-    //@Container
+    @Container
     public static MySQLContainer<?> container = new MySQLContainer<>("mysql:latest")
             .withDatabaseName("example_db")
             .withUsername("Test")
-            .withPassword("Test")
-            .withReuse(true);
+            .withPassword("Test");
 
     @BeforeAll
     public static void setUp(){
         RestAssured.baseURI = "http://localhost:8081";
-        container.start();
     }
 
     @AfterAll
