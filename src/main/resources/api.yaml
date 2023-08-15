@@ -123,7 +123,7 @@ paths:
             minimum: 1
       responses:
         '200':
-          description: Created
+          description: Found
           content:
             application/json:
               schema:
@@ -252,19 +252,28 @@ paths:
               $ref: '#/components/schemas/UserInput'
       responses:
         '201':
-          description: The new user
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
         '400':
-          description: Invalid input
+          description: Invalid Input
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '409':
+          description: Already Exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
         '500':
-          description: Internal server error
+          description: Internal Server Error
           content:
             application/json:
               schema:
@@ -290,19 +299,19 @@ paths:
             minimum: 1
       responses:
         '200':
-          description: The user
+          description: Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
         '404':
-          description: User not found
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '500':
-          description: Internal server error
+          description: Internal Server Error
           content:
             application/json:
               schema:
@@ -333,25 +342,31 @@ paths:
               $ref: '#/components/schemas/UserInput'
       responses:
         '200':
-          description: The updated user
+          description: Updated
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
         '400':
-          description: Invalid input
+          description: Invalid Input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient Permissions
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: User not found
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '500':
-          description: Internal server error
+          description: Internal Server Error
           content:
             application/json:
               schema:
@@ -374,15 +389,21 @@ paths:
             minimum: 1
       responses:
         '204':
-          description: User deleted
+          description: Deleted
+        '403':
+          description: Insufficient Permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
-          description: User not found
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '500':
-          description: Internal server error
+          description: Internal Server Error
           content:
             application/json:
               schema:
