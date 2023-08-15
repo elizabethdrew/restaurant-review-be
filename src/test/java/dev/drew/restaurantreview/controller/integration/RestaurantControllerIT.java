@@ -68,7 +68,7 @@ public class RestaurantControllerIT extends GlobalTestContainer {
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
                 .body(body)
-                .when().request("POST", "/api/v1/restaurant/add")
+                .when().request("POST", "/api/v1/restaurants")
                 .then()
                 .statusCode(201)
                 .body(
@@ -93,7 +93,7 @@ public class RestaurantControllerIT extends GlobalTestContainer {
 
         given().log().all().contentType(ContentType.JSON)
                 .body(body)
-                .when().request("POST", "/api/v1/restaurant/add")
+                .when().request("POST", "/api/v1/restaurants")
                 .then()
                 .statusCode(403);
     }
@@ -115,7 +115,7 @@ public class RestaurantControllerIT extends GlobalTestContainer {
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
                 .body(body)
-                .when().request("POST", "/api/v1/restaurant/add")
+                .when().request("POST", "/api/v1/restaurants")
                 .then()
                 .statusCode(409);
     }
@@ -136,7 +136,7 @@ public class RestaurantControllerIT extends GlobalTestContainer {
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
                 .body(body)
-                .when().request("POST", "/api/v1/restaurant/add")
+                .when().request("POST", "/api/v1/restaurants")
                 .then()
                 .statusCode(400);
     }
@@ -158,7 +158,7 @@ public class RestaurantControllerIT extends GlobalTestContainer {
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
                 .body(body)
-                .when().request("POST", "/api/v1/restaurant/add")
+                .when().request("POST", "/api/v1/restaurants")
                 .then()
                 .statusCode(400);
     }
@@ -167,7 +167,7 @@ public class RestaurantControllerIT extends GlobalTestContainer {
     void testGetRestaurantById_exists() throws Exception {
 
         Integer resId = 1;
-        when().request("GET", "/api/v1/restaurant/" +resId)
+        when().request("GET", "/api/v1/restaurants/" +resId)
                 .then()
                 .statusCode(200)
                 .body("name", is("Gastronomic Guildhall"));
@@ -177,7 +177,7 @@ public class RestaurantControllerIT extends GlobalTestContainer {
     void testGetRestaurantById_notExist() throws Exception {
 
         Integer resId = 100;
-        when().request("GET", "/api/v1/restaurant/" +resId)
+        when().request("GET", "/api/v1/restaurants/" +resId)
                 .then()
                 .statusCode(404);
     }
@@ -200,7 +200,7 @@ public class RestaurantControllerIT extends GlobalTestContainer {
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
                 .body(body)
-                .when().request("PUT", "/api/v1/restaurant/" + resId +"/edit")
+                .when().request("PUT", "/api/v1/restaurants/" + resId)
                 .then()
                 .statusCode(200)
                 .body(
@@ -226,7 +226,7 @@ public class RestaurantControllerIT extends GlobalTestContainer {
 
         given().log().all().contentType(ContentType.JSON)
                 .body(body)
-                .when().request("PUT", "/api/v1/restaurant/" + resId +"/edit")
+                .when().request("PUT", "/api/v1/restaurants/" + resId)
                 .then()
                 .statusCode(403);
     }
@@ -237,7 +237,7 @@ public class RestaurantControllerIT extends GlobalTestContainer {
         Integer resId = 5;
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
-                .when().request("DELETE", "/api/v1/restaurant/" +resId+"/delete")
+                .when().request("DELETE", "/api/v1/restaurants/" + resId)
                 .then().statusCode(204);
     }
 

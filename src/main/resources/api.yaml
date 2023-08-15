@@ -55,7 +55,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/v1/restaurant/add:
     post:
       summary: Add a new restaurant
       operationId: addNewRestaurant
@@ -99,7 +98,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /api/v1/restaurant/{restaurantId}:
+
+  /api/v1/restaurants/{restaurantId}:
     get:
       security: []
       summary: Get a restaurant by ID
@@ -123,7 +123,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Restaurant'
 
-  /api/v1/restaurant/{restaurantId}/edit:
     put:
       summary: Update a restaurant
       operationId: updateRestaurantById
@@ -155,7 +154,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Restaurant'
 
-  /api/v1/restaurant/{restaurantId}/delete:
     delete:
       summary: Delete a restaurant
       operationId: deleteRestaurantById
