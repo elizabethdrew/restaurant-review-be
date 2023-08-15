@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 9
+      author: elizabeth_drew
+      context: standard
+      changes:
+        - addColumn:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: price_range
+                  type: int
+                  constraints:
+                    nullable: true
+              - column:
+                  name: latitude
+                  type: double
+                  constraints:
+                    nullable: true
+              - column:
+                  name: longitude
+                  type: double
+                  constraints:
+                    nullable: true

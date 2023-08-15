@@ -1,6 +1,7 @@
-package dev.drew.restaurantreview.controller;
+package dev.drew.restaurantreview.controller.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.drew.restaurantreview.controller.ReviewController;
 import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.ReviewNotFoundException;
 import dev.drew.restaurantreview.service.ReviewService;
@@ -93,9 +94,7 @@ class ReviewControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "YOUR_USER", password
-
-            = "YOUR_PASSWORD")
+    @WithMockUser(username = "YOUR_USER", password = "YOUR_PASSWORD")
     void testUpdateReviewById() throws Exception {
         int reviewId = 1;
         ReviewInput input = new ReviewInput().restaurantId(1L).rating(5);

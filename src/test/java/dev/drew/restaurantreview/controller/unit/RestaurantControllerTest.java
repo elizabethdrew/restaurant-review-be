@@ -1,6 +1,7 @@
-package dev.drew.restaurantreview.controller;
+package dev.drew.restaurantreview.controller.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.drew.restaurantreview.controller.RestaurantController;
 import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import dev.drew.restaurantreview.service.RestaurantService;

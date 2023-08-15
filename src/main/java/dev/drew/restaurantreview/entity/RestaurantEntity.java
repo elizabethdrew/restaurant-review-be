@@ -1,6 +1,8 @@
 package dev.drew.restaurantreview.entity;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import javax.validation.constraints.*;
 import jakarta.persistence.*;
@@ -23,6 +25,23 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
     @Column(name = "city")
     private String city;
 
+    @Min(1)
+    @Max(3)
+    @Column(name = "price_range")
+    private Integer priceRange;
+
+    @Column(name = "latitude")
+    private Double latitude;
+
+    @Column(name = "longitude")
+    private Double longitude;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE, CascadeType.PERSIST })
+    @JoinTable(name = "restaurant_cuisine",
+            joinColumns = @JoinColumn(name = "restaurant_id"),
+            inverseJoinColumns = @JoinColumn(name = "cuisine_id"))
+    private List<CuisineEntity> cuisines = new ArrayList<>();
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
@@ -43,11 +62,15 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
     public RestaurantEntity() {
     }
 
-    public RestaurantEntity(Long id, String name, String city, UserEntity user, Integer rating, OffsetDateTime createdAt, boolean isDeleted) {
+    public RestaurantEntity(Long id, String name, String city, UserEntity user, Integer priceRange, Double latitude, Double longitude, List<CuisineEntity> cuisines, Integer rating, OffsetDateTime createdAt, boolean isDeleted) {
         this.id = id;
         this.name = name;
         this.city = city;
         this.user = user;
+        this.priceRange = priceRange;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.cuisines = cuisines;
         this.rating = rating;
         this.createdAt = createdAt;
         this.isDeleted = isDeleted;
@@ -85,6 +108,14 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
         this.user = user;
     }
 
+    public List<CuisineEntity> getRestaurantCuisines() {
+        return cuisines;
+    }
+
+    public void setRestaurantCuisines(List<CuisineEntity> cuisines) {
+        this.cuisines = cuisines;
+    }
+
     public Integer getRating() {
         return rating;
     }
@@ -109,6 +140,30 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
         this.isDeleted = isDeleted;
     }
 
+    public Integer getPriceRange() {
+        return priceRange;
+    }
+
+    public void setPriceRange(Integer priceRange) {
+        this.priceRange = priceRange;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -118,6 +173,9 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
                 Objects.equals(name, that.name) &&
                 Objects.equals(city, that.city) &&
                 Objects.equals(user, that.user) &&
+                Objects.equals(priceRange, that.priceRange) &&
+                Objects.equals(latitude, that.latitude) &&
+                Objects.equals(longitude, that.longitude) &&
                 Objects.equals(rating, that.rating) &&
                 Objects.equals(createdAt, that.createdAt) &&
                 isDeleted == that.isDeleted;
@@ -125,6 +183,6 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, city, user, rating, createdAt, isDeleted);
+        return Objects.hash(id, name, city, user, priceRange, latitude, longitude, rating, createdAt, isDeleted);
     }
 }

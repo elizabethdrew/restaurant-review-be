@@ -16,7 +16,6 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1")
-@CrossOrigin(origins ="http://localhost:3000")
 @PreAuthorize("isAuthenticated()")
 public class UserController implements UserApi {
 

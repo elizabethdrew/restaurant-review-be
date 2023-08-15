@@ -1,4 +1,4 @@
-package dev.drew.restaurantreview.controller;
+package dev.drew.restaurantreview.exception;
 
 import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
@@ -36,6 +36,26 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
+    // Handle DuplicateRestaurantException
+    @ExceptionHandler(DuplicateRestaurantException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateRestaurantException(DuplicateRestaurantException e) {
+        ErrorResponse error = new ErrorResponse();
+        error.setCode(HttpStatus.CONFLICT.value());
+        error.setMessage("Restaurant with the name " + e.getMessage() + " already exists." );
+        log.warn("Restaurant already exists", e);
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    // Handle InvalidInputException
+    @ExceptionHandler(InvalidInputException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidInputException(InvalidInputException e) {
+        ErrorResponse error = new ErrorResponse();
+        error.setCode(HttpStatus.BAD_REQUEST.value());
+        error.setMessage(e.getMessage());
+        log.warn("Invalid Input", e);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
     // Handle ReviewNotFoundException
     @ExceptionHandler(ReviewNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleReviewNotFoundException(ReviewNotFoundException e) {
@@ -44,6 +64,36 @@ public class GlobalExceptionHandler {
         error.setMessage("Not Found");
         log.warn("Review not found error", e);
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    // Handle CuisineNotFoundException
+    @ExceptionHandler(CuisineNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCuisineNotFoundException(CuisineNotFoundException e) {
+        ErrorResponse error = new ErrorResponse();
+        error.setCode(HttpStatus.NOT_FOUND.value());
+        error.setMessage("No cuisine found with name " + e.getMessage());
+        log.warn("Cuisine not found error", e);
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    // Handle DuplicateCuisineException
+    @ExceptionHandler(DuplicateCuisineException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateCuisineException(DuplicateCuisineException e) {
+        ErrorResponse error = new ErrorResponse();
+        error.setCode(HttpStatus.CONFLICT.value());
+        error.setMessage("Cuisine with the name " + e.getMessage() + " already exists." );
+        log.warn("Cuisine already exists", e);
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    // Handle CuisineReferencedByRestaurantException
+    @ExceptionHandler(CuisineReferencedByRestaurantException.class)
+    public ResponseEntity<ErrorResponse> handleCuisineReferencedByRestaurantException(CuisineReferencedByRestaurantException e) {
+        ErrorResponse error = new ErrorResponse();
+        error.setCode(HttpStatus.CONFLICT.value());
+        error.setMessage("Cuisine with the name " + e.getMessage() + " is referenced by restaurants." );
+        log.warn("Cuisine is referenced by restaurants", e);
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
     // Handle InsufficientPermissionException
