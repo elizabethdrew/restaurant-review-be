@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.openapitools.api.RestaurantsApi;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -59,8 +60,9 @@ public class RestaurantController implements RestaurantsApi {
             @RequestParam(value = "city", required = false) String city,
             @RequestParam(value = "rating", required = false)
             @Min(1) @Max(5) Integer rating,
-            @RequestParam(value = "user_id", required = false) Long userId) {
-        List<Restaurant> restaurants = restaurantService.getAllRestaurants(city, rating, userId);
+            @RequestParam(value = "user_id", required = false) Long userId,
+            Pageable pageable) {
+        List<Restaurant> restaurants = restaurantService.getAllRestaurants(city, rating, userId, pageable);
         return ResponseEntity.ok(restaurants);
     }
 

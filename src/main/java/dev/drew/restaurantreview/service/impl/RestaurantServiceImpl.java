@@ -15,6 +15,8 @@ import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -107,12 +109,13 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
 
-    public List<Restaurant> getAllRestaurants(String city, Integer rating, Long userId) {
-        List<RestaurantEntity> filteredEntities = restaurantRepository.findAll(
+    public List<Restaurant> getAllRestaurants(String city, Integer rating, Long userId, Pageable pageable) {
+        Page<RestaurantEntity> filteredEntities = restaurantRepository.findAll(
                 Specification.where(RestaurantSpecification.isNotDeleted())
                         .and(RestaurantSpecification.hasCity(city))
                         .and(RestaurantSpecification.hasRating(rating))
-                        .and(RestaurantSpecification.hasUserId(userId))
+                        .and(RestaurantSpecification.hasUserId(userId)),
+                pageable
         );
 
         return filteredEntities.stream().map(restaurantMapper::toRestaurant).collect(Collectors.toList());
