@@ -645,7 +645,7 @@ paths:
       security: []
       responses:
         '200':
-          description: Successful operation
+          description: Success
           content:
             application/json:
               schema:
@@ -653,13 +653,13 @@ paths:
                 items:
                   type: string
         '404':
-          description: Cuisines not found.
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '500':
-          description: Internal server error.
+          description: Internal Server Error
           content:
             application/json:
               schema:
@@ -681,14 +681,19 @@ paths:
                   type: string
       responses:
         '201':
-          description: Successfully created the cuisine
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Cuisine'
-
+        '400':
+          description: Invalid Input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '409':
-          description: Cuisine with the same name already exists
+          description: Already Exists
           content:
             application/json:
               schema:
@@ -696,6 +701,12 @@ paths:
                 properties:
                   error:
                     type: string
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /api/v1/cuisines/{name}:
     delete:
@@ -713,18 +724,21 @@ paths:
             type: string
       responses:
         '204':
-          description: Successfully deleted the cuisine
+          description: Successfully Deleted
         '404':
-          description: Cuisine not found
+          description: Not Found
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient Permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '409':
-          description: Cuisine is referenced by restaurants
+          description: Referenced By Restaurants
           content:
             application/json:
               schema:
@@ -732,6 +746,13 @@ paths:
                 properties:
                   error:
                     type: string
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 
 components:
 
