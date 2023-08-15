@@ -41,15 +41,21 @@ paths:
             format: int64
       responses:
         '200':
-          description: A list of restaurants.
+          description: Success
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Restaurant'
+        '404':
+          description: No Results Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '500':
-          description: Internal server error
+          description: Internal Server Error
           content:
             application/json:
               schema:
@@ -72,19 +78,19 @@ paths:
               $ref: '#/components/schemas/RestaurantInput'
       responses:
         '201':
-          description: The new restaurant
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Restaurant'
         '400':
-          description: Invalid input
+          description: Invalid Input
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '409':
-          description: Restaurant with the same name and city already exists
+          description: Already Exists
           content:
             application/json:
               schema:
@@ -93,7 +99,7 @@ paths:
                   error:
                     type: string
         '500':
-          description: Internal server error
+          description: Internal Server Error
           content:
             application/json:
               schema:
@@ -117,11 +123,23 @@ paths:
             minimum: 1
       responses:
         '200':
-          description: The restaurant.
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Restaurant'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
     put:
       summary: Update a restaurant
@@ -148,11 +166,35 @@ paths:
               $ref: '#/components/schemas/RestaurantInput'
       responses:
         '200':
-          description: The updated restaurant.
+          description: Updated
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Restaurant'
+        '400':
+          description: Invalid Input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient Permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
     delete:
       summary: Delete a restaurant
@@ -172,15 +214,21 @@ paths:
             minimum: 1
       responses:
         '204':
-          description: Restaurant deleted successfully.
+          description: Successfully Deleted
         '404':
-          description: Restaurant not found.
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient Permissions
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '500':
-          description: Internal server error
+          description: Internal Server Error
           content:
             application/json:
               schema:
