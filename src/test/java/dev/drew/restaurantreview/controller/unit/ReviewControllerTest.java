@@ -74,7 +74,7 @@ class ReviewControllerTest {
                 new Review().id(2L).restaurantId(2L).userId(2L).rating(4)
         );
 
-        when(reviewService.getAllReviews(null, null, null)).thenReturn(reviews);
+        when(reviewService.getAllReviews(null, null, null, null)).thenReturn(reviews);
 
         mockMvc.perform(get("/api/v1/reviews")
                         .contentType(MediaType.APPLICATION_JSON))

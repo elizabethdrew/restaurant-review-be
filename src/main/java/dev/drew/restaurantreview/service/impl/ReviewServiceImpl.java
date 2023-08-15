@@ -16,6 +16,8 @@ import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.openapitools.model.Review;
 import org.openapitools.model.ReviewInput;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -94,9 +96,9 @@ public class ReviewServiceImpl implements ReviewService {
         return savedApiReview;
     }
 
-    public List<Review> getAllReviews(Long restaurantId, Long userId, Integer rating) {
+    public List<Review> getAllReviews(Long restaurantId, Long userId, Integer rating, Pageable pageable) {
 
-        List<ReviewEntity> filteredEntities = reviewRepository.findAllByRestaurantIdAndUserIdAndRating(restaurantId, userId, rating);
+        Page<ReviewEntity> filteredEntities = reviewRepository.findAllByRestaurantIdAndUserIdAndRating(restaurantId, userId, rating);
 
         return filteredEntities.stream().map(reviewMapper::toReview).collect(Collectors.toList());
     }

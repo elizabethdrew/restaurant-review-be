@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.openapitools.api.ReviewsApi;
 import org.openapitools.model.Review;
 import org.openapitools.model.ReviewInput;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -74,9 +75,10 @@ public class ReviewController implements ReviewsApi {
     public ResponseEntity<List<Review>> getAllReviews(
             @Valid @RequestParam(value = "restaurant_id", required = false) Long restaurantId,
             @Valid @RequestParam(value = "user_id", required = false) Long userId,
-            @Valid @RequestParam(value = "rating", required = false) Integer rating
+            @Valid @RequestParam(value = "rating", required = false) Integer rating,
+            Pageable pageable
     ){
-        List<Review> reviews = reviewService.getAllReviews(restaurantId,  userId, rating);
+        List<Review> reviews = reviewService.getAllReviews(restaurantId,  userId, rating, pageable);
         return ResponseEntity.ok(reviews);
     }
 

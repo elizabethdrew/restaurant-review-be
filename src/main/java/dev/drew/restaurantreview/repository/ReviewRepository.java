@@ -1,6 +1,7 @@
 package dev.drew.restaurantreview.repository;
 
 import dev.drew.restaurantreview.entity.ReviewEntity;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,7 +14,7 @@ import java.util.List;
 public interface ReviewRepository extends JpaRepository<ReviewEntity, Long> {
 
     @Query("SELECT r FROM ReviewEntity r WHERE (:restaurantId is null or r.restaurant.id = :restaurantId) and (:rating is null or r.rating = :rating) and (:userId is null or r.user.id = :userId) and r.isDeleted = false")
-    List<ReviewEntity> findAllByRestaurantIdAndUserIdAndRating(
+    Page<ReviewEntity> findAllByRestaurantIdAndUserIdAndRating(
             @Param("restaurantId") Long restaurantId,
             @Param("userId") Long userId,
             @Param("rating") Integer rating);
