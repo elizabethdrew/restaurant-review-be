@@ -110,17 +110,6 @@ public class SecurityConfigIT extends GlobalTestContainer {
                     );
         }
 
-        @Test
-        public void testAdminAuthenticated_DeleteUserById() throws Exception {
-            String token = authorisationAdmin();
-            Integer userId = 2;
-            given().log().all().contentType(ContentType.JSON)
-                    .header("Authorization", "Bearer "+ token)
-                    .when().request("DELETE", "/api/v1/users/" + userId)
-                    .then()
-                    .statusCode(204);
-        }
-
     }
 
     // Test accessing protected endpoints with Reviewer authentication
@@ -139,7 +128,7 @@ public class SecurityConfigIT extends GlobalTestContainer {
         }
 
         @Test
-        public void testReviewerAuthenticated_DeleteUserById() throws Exception {
+        public void testReviewerAuthenticated_DeleteAdminById() throws Exception {
             String token = authorisationReviewer();
             Integer userId = 1;
             given().log().all().contentType(ContentType.JSON)
@@ -147,6 +136,17 @@ public class SecurityConfigIT extends GlobalTestContainer {
                     .when().request("DELETE", "/api/v1/users/" + userId)
                     .then()
                     .statusCode(403);
+        }
+
+        @Test
+        public void testReviewerAuthenticated_DeleteUserById() throws Exception {
+            String token = authorisationReviewer();
+            Integer userId = 2;
+            given().log().all().contentType(ContentType.JSON)
+                    .header("Authorization", "Bearer "+ token)
+                    .when().request("DELETE", "/api/v1/users/" + userId)
+                    .then()
+                    .statusCode(204);
         }
 
         @Test
