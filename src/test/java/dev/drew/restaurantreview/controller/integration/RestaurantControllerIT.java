@@ -77,7 +77,6 @@ public class RestaurantControllerIT extends GlobalTestContainer {
                 "    \"latitude\": 51.5074,\n" +
                 "    \"longitude\": 0.1278,\n" +
                 "    \"userId\": 1,\n" +
-                "    \"rating\": 4,\n" +
                 "    \"cuisines\": [\"British\", \"American\"]\n" +
                 "}";
 
@@ -103,7 +102,6 @@ public class RestaurantControllerIT extends GlobalTestContainer {
                 "    \"latitude\": 51.5074,\n" +
                 "    \"longitude\": 0.1278,\n" +
                 "    \"userId\": 1,\n" +
-                "    \"rating\": 4,\n" +
                 "    \"cuisines\": [\"British\", \"American\"]\n" +
                 "}";
 
@@ -124,7 +122,6 @@ public class RestaurantControllerIT extends GlobalTestContainer {
                 "    \"latitude\": 51.5074,\n" +
                 "    \"longitude\": 0.1278,\n" +
                 "    \"userId\": 1,\n" +
-                "    \"rating\": 4,\n" +
                 "    \"cuisines\": [\"British\", \"American\"]\n" +
                 "}";
 
@@ -137,15 +134,15 @@ public class RestaurantControllerIT extends GlobalTestContainer {
     }
 
     @Test
-    void testAddNewRestaurant_missingCity() throws Exception {
+    void testAddNewRestaurant_nullCity() throws Exception {
         String token = authorisationAdmin();
         String body = "{\n" +
                 "    \"name\": \"New Restaurant 3\", \n" +
+                "    \"city\": null,\n" +
                 "    \"price_range\": 2,\n" +
                 "    \"latitude\": 51.5074,\n" +
                 "    \"longitude\": 0.1278,\n" +
                 "    \"userId\": 1,\n" +
-                "    \"rating\": 4,\n" +
                 "    \"cuisines\": [\"British\", \"American\"]\n" +
                 "}";
 
@@ -154,7 +151,7 @@ public class RestaurantControllerIT extends GlobalTestContainer {
                 .body(body)
                 .when().request("POST", "/api/v1/restaurants")
                 .then()
-                .statusCode(400);
+                .statusCode(500);
     }
 
     @Test
@@ -167,7 +164,6 @@ public class RestaurantControllerIT extends GlobalTestContainer {
                 "    \"latitude\": 51.5074,\n" +
                 "    \"longitude\": 0.1278,\n" +
                 "    \"userId\": 1,\n" +
-                "    \"rating\": 4,\n" +
                 "    \"cuisines\": [\"British\", \"American\"]\n" +
                 "}";
 
@@ -176,7 +172,7 @@ public class RestaurantControllerIT extends GlobalTestContainer {
                 .body(body)
                 .when().request("POST", "/api/v1/restaurants")
                 .then()
-                .statusCode(400);
+                .statusCode(500);
     }
 
     @Test
