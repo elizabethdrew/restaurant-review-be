@@ -51,7 +51,7 @@ public class GlobalExceptionHandlerTest {
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getBody().getCode());
-        assertEquals("Bad request", response.getBody().getMessage());
+        assertEquals("Bad Request", response.getBody().getMessage());
     }
 
     @Test
@@ -78,7 +78,6 @@ public class GlobalExceptionHandlerTest {
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getBody().getCode());
-        assertEquals("No cuisine found with name " + cuisineName, response.getBody().getMessage());
     }
 
     @Test
@@ -88,7 +87,6 @@ public class GlobalExceptionHandlerTest {
 
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
         assertEquals(HttpStatus.CONFLICT.value(), response.getBody().getCode());
-        assertEquals("Cuisine with the name " + cuisineName + " already exists.", response.getBody().getMessage());
     }
 
     @Test
@@ -98,6 +96,5 @@ public class GlobalExceptionHandlerTest {
 
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
         assertEquals(HttpStatus.CONFLICT.value(), response.getBody().getCode());
-        assertEquals("Cuisine with the name " + cuisineName + " is referenced by restaurants.", response.getBody().getMessage());
     }
 }

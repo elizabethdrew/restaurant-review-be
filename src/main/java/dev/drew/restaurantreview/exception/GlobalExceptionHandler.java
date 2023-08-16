@@ -81,12 +81,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
-        return generateErrorResponse(HttpStatus.BAD_REQUEST, "Data Integrity Error", e);
+        return generateErrorResponse(HttpStatus.BAD_REQUEST, "Bad Request", e);
     }
 
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<ErrorResponse> handleDataAccessException(DataAccessException e) {
-        return generateErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Data Access Error", e);
+        return generateErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", e);
     }
 
     @ExceptionHandler(Exception.class)
