@@ -1,6 +1,7 @@
 package dev.drew.restaurantreview.exception;
 
 import dev.drew.restaurantreview.model.ErrorResponse;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -22,6 +23,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, status);
     }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException e) {
+        return generateErrorResponse(HttpStatus.BAD_REQUEST, "Constraint Violation", e);
+    }
+
+    @ExceptionHandler(InvalidStateException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidStateException(InvalidStateException e) {
+        return generateErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Invalid State", e);
+    }
 
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleInvalidCredentialsException(InvalidCredentialsException e) {
