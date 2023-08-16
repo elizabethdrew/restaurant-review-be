@@ -2,8 +2,6 @@ package dev.drew.restaurantreview.controller.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.drew.restaurantreview.controller.RestaurantController;
-import dev.drew.restaurantreview.exception.InsufficientPermissionException;
-import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import dev.drew.restaurantreview.service.RestaurantService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +11,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -64,7 +64,8 @@ class RestaurantControllerTest {
                 new Restaurant().id(2L).name("Restaurant 2").city("City 2")
         );
 
-        when(restaurantService.getAllRestaurants(null, null, null, null)).thenReturn(restaurants);
+        Pageable defaultPageable = PageRequest.of(0, 20); // Corresponds to the default size we set
+        when(restaurantService.getAllRestaurants(null, null, null, defaultPageable)).thenReturn(restaurants);
 
         mockMvc.perform(get("/api/v1/restaurants")
                         .contentType(MediaType.APPLICATION_JSON))
