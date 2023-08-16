@@ -2,7 +2,6 @@ package dev.drew.restaurantreview.exception;
 
 import dev.drew.restaurantreview.model.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.auth.InvalidCredentialsException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;

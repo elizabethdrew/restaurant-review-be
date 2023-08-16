@@ -279,8 +279,51 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/v1/users/{userId}:
+  /api/v1/login:
+    post:
+      summary: Authenticate a user and generate a JWT token
+      description: Authenticate a user with provided credentials and return a JWT token for further authenticated requests.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  userId:
+                    type: integer
+                    format: int64
+                  expirationTime:
+                    type: string
+                    format: date-time
+        '400':
+          description: Invalid Credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
+  /api/v1/users/{userId}:
     get:
       summary: Get a user by ID
       tags:
