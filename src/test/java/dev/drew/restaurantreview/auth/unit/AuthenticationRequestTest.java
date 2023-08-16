@@ -1,5 +1,6 @@
-package dev.drew.restaurantreview.auth;
+package dev.drew.restaurantreview.auth.unit;
 
+import dev.drew.restaurantreview.auth.AuthenticationRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
