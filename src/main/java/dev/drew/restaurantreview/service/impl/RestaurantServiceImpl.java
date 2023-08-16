@@ -48,7 +48,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         this.cuisineRepository = cuisineRepository;
     }
 
-    private void validateRestaurantInput(RestaurantInput restaurantInput) {
+    public void validateRestaurantInput(RestaurantInput restaurantInput) {
 
         if(restaurantInput.getPriceRange() != null && restaurantInput.getPriceRange() < 1 || restaurantInput.getPriceRange() > 3) {
             throw new InvalidInputException("Price Range not 1, 2 or 3");
@@ -94,7 +94,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         return restaurantMapper.toRestaurant(savedRestaurant);
     }
 
-    private List<CuisineEntity> getCuisines(List<String> cuisineNames) {
+    public List<CuisineEntity> getCuisines(List<String> cuisineNames) {
         return cuisineNames.stream()
                 .map(name -> cuisineRepository.findByName(name)
                         .orElseThrow(() -> new CuisineNotFoundException(name)))
@@ -143,7 +143,6 @@ public class RestaurantServiceImpl implements RestaurantService {
                         .and(RestaurantSpecification.isNotDeleted())
         ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
 
-        System.out.println(restaurantEntity);
 
         // Check if the current user is an admin or the owner of the restaurant
         if (!isAdminOrOwner(restaurantEntity, restaurantUserIdProvider)) {
