@@ -861,6 +861,9 @@ components:
         updated_at:
           type: string
           format: date-time
+        is_deleted:
+          type: boolean
+          default: false
       required:
         - id
         - restaurant_id
@@ -913,6 +916,9 @@ components:
           type: string
           format: date-time
           description: The date and time the user was created.
+        is_deleted:
+          type: boolean
+          default: false
       required:
         - username
         - name
@@ -990,6 +996,9 @@ components:
         user_id:
           type: integer
           format: int64
+        is_deleted:
+          type: boolean
+          default: false
       required:
         - name
         - city
