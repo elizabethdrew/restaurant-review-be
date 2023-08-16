@@ -20,7 +20,7 @@ public class JwtService {
     private static final String SECRET_KEY = "472B4B6250645367566B5970337336763979244226452948404D635166546A57";
 
     // Extract the username from the JWT token
-    public static String extractUsername(String token) {
+    public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
