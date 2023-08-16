@@ -1,5 +1,6 @@
 package dev.drew.restaurantreview.repository.specification;
 
+import dev.drew.restaurantreview.entity.RestaurantEntity;
 import org.springframework.data.jpa.domain.Specification;
 import dev.drew.restaurantreview.entity.ReviewEntity;
 
@@ -25,5 +26,10 @@ public class ReviewSpecification {
 
     public static Specification<ReviewEntity> isCreatedAfter(OffsetDateTime dateTime) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("createdAt"), dateTime);
+    }
+
+
+    public static Specification<ReviewEntity> hasId(Long id) {
+        return (root, query, criteriaBuilder) -> id == null ? null : criteriaBuilder.equal(root.get("id"), id);
     }
 }
