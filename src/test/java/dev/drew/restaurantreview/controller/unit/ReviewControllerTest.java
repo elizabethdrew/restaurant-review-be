@@ -46,7 +46,7 @@ class ReviewControllerTest {
     @Test
     @WithMockUser(username = "YOUR_USER", password = "YOUR_PASSWORD")
     void testAddNewReview() throws Exception {
-        ReviewInput input = new ReviewInput().restaurantId(1L).rating(5);
+        ReviewInput input = new ReviewInput().restaurantId(1L).rating(5).comment("nice");
         Review review = new Review().id(1L).restaurantId(input.getRestaurantId()).rating(input.getRating());
 
         when(reviewService.addNewReview(any(ReviewInput.class))).thenReturn(review);
@@ -97,7 +97,7 @@ class ReviewControllerTest {
     @WithMockUser(username = "YOUR_USER", password = "YOUR_PASSWORD")
     void testUpdateReviewById() throws Exception {
         int reviewId = 1;
-        ReviewInput input = new ReviewInput().restaurantId(1L).rating(5);
+        ReviewInput input = new ReviewInput().restaurantId(1L).rating(5).comment("very nice");
         Review updatedReview = new Review().id((long)reviewId).restaurantId(input.getRestaurantId()).rating(input.getRating());
 
         when(reviewService.updateReviewById(eq(reviewId), any(ReviewInput.class))).thenReturn(updatedReview);
