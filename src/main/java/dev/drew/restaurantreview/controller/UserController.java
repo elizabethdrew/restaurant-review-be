@@ -4,6 +4,7 @@ import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.UserNotFoundException;
 import dev.drew.restaurantreview.service.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.constraints.Min;
 import org.openapitools.api.UserApi;
 import org.openapitools.model.User;
 import org.openapitools.model.UserInput;
@@ -12,7 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+//import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -25,12 +27,6 @@ public class UserController implements UserApi {
         this.userService = userService;
     }
 
-    /**
-     * Add a new user to the database.
-     *
-     * @param userInput input data for the new user
-     * @return response entity containing the new user data
-     */
 
     @PostMapping
     @PreAuthorize("permitAll()")
@@ -39,53 +35,31 @@ public class UserController implements UserApi {
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
-    /**
-     * Delete a user from the database by their ID.
-     *
-     * @param userId the ID of the user to delete
-     * @return response entity indicating success or failure of the operation
-     */
-    @SecurityRequirement(
-            name = "Bearer Authentication"
-    )
+
+    @SecurityRequirement(name = "Bearer Authentication")
     @Override
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUserById(
-            @PathVariable Integer userId) {
+            @Min(1) @PathVariable Integer userId) {
         userService.deleteUserById(userId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    /**
-     * Get a specific user by their ID.
-     *
-     * @param userId the ID of the user to retrieve
-     * @return response entity containing the user data
-     */
-    @SecurityRequirement(
-            name = "Bearer Authentication"
-    )
+
+    @SecurityRequirement(name = "Bearer Authentication")
     @Override
     @GetMapping("/{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable Integer userId) {
+    public ResponseEntity<User> getUserById(
+            @Min(1) @PathVariable Integer userId) {
         User user = userService.getUserById(userId);
         return ResponseEntity.ok(user);
     }
 
-    /**
-     * Update a user's data by their ID.
-     *
-     * @param userId the ID of the user to update
-     * @param userInput the updated user data
-     * @return response entity containing the updated user data
-     */
-    @SecurityRequirement(
-            name = "Bearer Authentication"
-    )
+    @SecurityRequirement(name = "Bearer Authentication")
     @Override
     @PutMapping("/{userId}")
     public ResponseEntity<User> updateUserById(
-            @PathVariable Integer userId,
+            @Min(1) @PathVariable Integer userId,
             @RequestBody @Valid UserInput userInput)
             throws UserNotFoundException, InsufficientPermissionException {
         User updatedUser = userService.updateUserById(userId, userInput);
