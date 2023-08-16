@@ -37,7 +37,7 @@ public class AuthenticationControllerIT extends GlobalTestContainer {
                 .body(body)
                 .when().request("POST", "api/v1/login")
                 .then()
-                .statusCode(500);
+                .statusCode(400);
     }
 
     @Test
@@ -51,6 +51,6 @@ public class AuthenticationControllerIT extends GlobalTestContainer {
                 .body(body)
                 .when().request("POST", "api/v1/login")
                 .then()
-                .statusCode(500);
+                .statusCode(400);
     }
 }
