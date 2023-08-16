@@ -20,6 +20,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.openapitools.model.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -106,30 +111,35 @@ public class ReviewServiceTest {
         assertEquals(input.getComment(), response.getComment());
     }
 
-//    @Test
-//    public void testGetAllReviews() {
-//        // Prepare expected data
-//        List<ReviewEntity> reviewEntities = new ArrayList<>();
-//
-//        ReviewEntity reviewEntity1 = new ReviewEntity();
-//        reviewEntity1.setId(1L);
-//        reviewEntity1.setRating(5);
-//        reviewEntities.add(reviewEntity1);
-//
-//        ReviewEntity reviewEntity2 = new ReviewEntity();
-//        reviewEntity2.setId(2L);
-//        reviewEntity2.setRating(4);
-//        reviewEntities.add(reviewEntity2);
-//
-//        // Mock the repository call
-//        when(reviewRepository.findAll()).thenReturn(reviewEntities);
-//
-//        // Call the service method
-//        List<Review> response = reviewServiceImpl.getAllReviews(null, null, null);
-//
-//        // Verify the response status and data
-//        assertEquals(2, response.size());
-//    }
+    @Test
+    public void testGetAllReviews() {
+
+        List<ReviewEntity> reviewEntities = new ArrayList<>();
+
+        ReviewEntity reviewEntity1 = new ReviewEntity();
+        reviewEntity1.setId(1L);
+        reviewEntity1.setRating(5);
+        reviewEntities.add(reviewEntity1);
+
+        ReviewEntity reviewEntity2 = new ReviewEntity();
+        reviewEntity2.setId(2L);
+        reviewEntity2.setRating(4);
+        reviewEntities.add(reviewEntity2);
+
+        Page<ReviewEntity> page = new PageImpl<>(reviewEntities);
+
+        // Mock the repository call
+        when(reviewRepository.findAll(
+                any(Specification.class),
+                any(Pageable.class)
+        )).thenReturn(page);
+
+        // Call the service method
+        List<Review> response = reviewServiceImpl.getAllReviews(null, null, null, PageRequest.of(0, 20));
+
+        // Verify the response status and data
+        assertEquals(2, response.size());
+    }
 
     @Test
     public void testGetReviewById() {
