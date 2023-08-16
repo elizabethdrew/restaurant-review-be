@@ -45,12 +45,12 @@ public class UserEntity {
     private User.RoleEnum role;
 
     @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted = false;
+    private Boolean isDeleted = false;
 
     public UserEntity() {
     }
 
-    public UserEntity(Long id, String name, String email, String username, String password, OffsetDateTime createdAt, User.RoleEnum role, boolean isDeleted) {
+    public UserEntity(Long id, String name, String email, String username, String password, OffsetDateTime createdAt, User.RoleEnum role, Boolean isDeleted) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -117,11 +117,11 @@ public class UserEntity {
         this.role = role;
     }
 
-    public boolean getIsDeleted() {
+    public Boolean getIsDeleted() {
         return isDeleted;
     }
 
-    public void setIsDeleted(boolean isDeleted) {
+    public void setIsDeleted(Boolean isDeleted) {
         this.isDeleted = isDeleted;
     }
 
