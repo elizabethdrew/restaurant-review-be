@@ -4,7 +4,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -46,7 +46,6 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @NotNull
     @Min(1)
     @Max(5)
     @Column(name = "rating")

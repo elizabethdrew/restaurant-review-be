@@ -1,10 +1,9 @@
 package dev.drew.restaurantreview.entity;
 
-import io.swagger.models.auth.In;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
