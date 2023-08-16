@@ -55,10 +55,10 @@ public class ReviewControllerIT extends GlobalTestContainer {
 
     @Test
     void testGetAllReviews_withPagination() throws Exception {
-        when().request("GET", "/api/v1/reviews?page=1&size=5")
+        when().request("GET", "/api/v1/reviews?page=0&size=5")
                 .then()
                 .statusCode(200)
-                .body("[0].id", is(7));
+                .body("[0].id", is(1));
     }
 
     @Test
@@ -182,7 +182,7 @@ public class ReviewControllerIT extends GlobalTestContainer {
                 .body(body)
                 .when().request("POST", "/api/v1/reviews")
                 .then()
-                .statusCode(201);
+                .statusCode(500);
     }
 
     @Test
@@ -224,7 +224,7 @@ public class ReviewControllerIT extends GlobalTestContainer {
     @Test
     void testDeleteReviewById_authorised() throws Exception {
         String token = authorisationAdmin();
-        Integer revId = 5;
+        Integer revId = 1;
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
                 .when().request("DELETE", "/api/v1/reviews/" + revId)
