@@ -56,12 +56,12 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
     private OffsetDateTime createdAt;
 
     @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted = false;
+    private Boolean isDeleted = false;
 
     public RestaurantEntity() {
     }
 
-    public RestaurantEntity(Long id, String name, String city, UserEntity user, Integer priceRange, Double latitude, Double longitude, List<CuisineEntity> cuisines, Integer rating, OffsetDateTime createdAt, boolean isDeleted) {
+    public RestaurantEntity(Long id, String name, String city, UserEntity user, Integer priceRange, Double latitude, Double longitude, List<CuisineEntity> cuisines, Integer rating, OffsetDateTime createdAt, Boolean isDeleted) {
         this.id = id;
         this.name = name;
         this.city = city;
@@ -131,11 +131,11 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
         this.createdAt = createdAt;
     }
 
-    public boolean getIsDeleted() {
+    public Boolean getIsDeleted() {
         return isDeleted;
     }
 
-    public void setIsDeleted(boolean isDeleted) {
+    public void setIsDeleted(Boolean isDeleted) {
         this.isDeleted = isDeleted;
     }
 
