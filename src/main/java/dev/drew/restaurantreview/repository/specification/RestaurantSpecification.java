@@ -1,6 +1,8 @@
 package dev.drew.restaurantreview.repository.specification;
 
+import dev.drew.restaurantreview.entity.CuisineEntity;
 import dev.drew.restaurantreview.entity.RestaurantEntity;
+import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
@@ -36,7 +38,17 @@ public class RestaurantSpecification {
     }
 
     public static Specification<RestaurantEntity> hasCuisine(List<String> cuisines) {
-        return (root, query, criteriaBuilder) -> cuisines == null || cuisines.isEmpty() ? null : root.get("cuisine").in(cuisines);
+        return (root, query, criteriaBuilder) -> {
+            if (cuisines == null || cuisines.isEmpty()) {
+                return null;
+            }
+
+            // Create a join on the cuisines attribute of RestaurantEntity
+            Join<RestaurantEntity, CuisineEntity> cuisineJoin = root.join("cuisines");
+
+            // Use the 'name' attribute of CuisineEntity for the filtering
+            return cuisineJoin.get("name").in(cuisines);
+        };
     }
 
 
