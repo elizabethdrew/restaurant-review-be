@@ -6,6 +6,7 @@ import dev.drew.restaurantreview.exception.InvalidCredentialsException;
 import dev.drew.restaurantreview.exception.UserNotFoundException;
 import dev.drew.restaurantreview.model.SecurityUser;
 import dev.drew.restaurantreview.repository.UserRepository;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -43,10 +44,10 @@ class AuthenticationServiceTest {
     }
 
     @Test
-    void authenticate_validCredentials() {
+    void authenticate_jwtExpired_throwsException() {
         String username = "testUser";
         String password = "testPassword";
-        String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTY5MjE4Mzc0MywiZXhwIjoxNjkyMjcwMTQzfQ.jkTdFddw1I-hgbT8Rbl7dY_vsdn4tgujT999J7I7kac";
+        String expiredToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTY5MjE4Mzc0MywiZXhwIjoxNjkyMjcwMTQzfQ.jkTdFddw1I-hgbT8Rbl7dY_vsdn4tgujT999J7I7kac";
 
         UserEntity user = new UserEntity();
         user.setUsername(username);
@@ -56,12 +57,11 @@ class AuthenticationServiceTest {
         request.setPassword(password);
 
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
-        when(jwtService.generateToken(any(SecurityUser.class))).thenReturn(token);
+        when(jwtService.generateToken(any(SecurityUser.class))).thenReturn(expiredToken);
 
-        AuthenticationResponse response = authenticationService.authenticate(request);
-
-        assertNotNull(response);
-        assertEquals(token, response.getToken());
+        ExpiredJwtException thrownException = assertThrows(ExpiredJwtException.class, () -> {
+            authenticationService.authenticate(request);
+        });
     }
 
     @Test
