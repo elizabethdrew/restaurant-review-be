@@ -10,6 +10,7 @@ import dev.drew.restaurantreview.model.SecurityUser;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
 import dev.drew.restaurantreview.repository.ReviewRepository;
 import dev.drew.restaurantreview.repository.UserRepository;
+import dev.drew.restaurantreview.repository.specification.RestaurantSpecification;
 import dev.drew.restaurantreview.service.impl.ReviewServiceImpl;
 import dev.drew.restaurantreview.util.SecurityUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -93,10 +94,15 @@ public class ReviewServiceTest {
         review.setRating(input.getRating());
         review.setComment(input.getComment());
 
+        RestaurantEntity restaurantEntity = new RestaurantEntity();
+        restaurantEntity.setId(1L);
+        restaurantEntity.setName("Restaurant 1");
+        restaurantEntity.setUser(securityUser.getUserEntity());
+
         Review reviewResponse = new Review().restaurantId(input.getRestaurantId()).rating(input.getRating()).comment(input.getComment());
 
         // Mock the repository and mapper calls
-        when(restaurantRepository.findById(input.getRestaurantId())).thenReturn(Optional.of(new RestaurantEntity()));
+        when(restaurantRepository.findOne(any(Specification.class))).thenReturn(Optional.of(restaurantEntity));
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(securityUser.getUserEntity()));
         when(reviewMapper.toReviewEntity(any(ReviewInput.class))).thenReturn(review);
         when(reviewRepository.save(any(ReviewEntity.class))).thenReturn(review);
