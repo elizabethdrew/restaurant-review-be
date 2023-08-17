@@ -50,12 +50,13 @@ public class RestaurantController implements RestaurantsApi {
     @GetMapping
     @PreAuthorize("permitAll()")
     public ResponseEntity<List<Restaurant>> getAllRestaurants(
-            @Valid @RequestParam(value = "city", required = false) String city,
-            @Valid @RequestParam(value = "rating", required = false)
-            @Min(1) @Max(5) Integer rating,
+            @Valid @RequestParam(value = "city", required = false) List<String> city,
+            @Valid @RequestParam(value = "rating", required = false) List<Integer> rating,
             @Valid @RequestParam(value = "user_id", required = false) Long userId,
+            @Valid @RequestParam(value = "price_range", required = false) List<Integer> price_range,
+            @Valid @RequestParam(value = "cuisine", required = false) List<String> cuisine,
             Pageable pageable) {
-        List<Restaurant> restaurants = restaurantService.getAllRestaurants(city, rating, userId, pageable);
+        List<Restaurant> restaurants = restaurantService.getAllRestaurants(city, rating, userId, price_range, cuisine, pageable);
         return ResponseEntity.ok(restaurants);
     }
 

@@ -168,7 +168,7 @@ class RestaurantServiceTests {
         )).thenReturn(page);
 
         // Call the service method
-        List<Restaurant> response = restaurantServiceImpl.getAllRestaurants(null, null, null, PageRequest.of(0, 20));
+        List<Restaurant> response = restaurantServiceImpl.getAllRestaurants(null, null, null, null, null, PageRequest.of(0, 20));
 
         // Verify the response status and data
         assertEquals(2, response.size());
