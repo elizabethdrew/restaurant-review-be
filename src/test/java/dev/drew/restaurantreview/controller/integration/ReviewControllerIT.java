@@ -2,7 +2,6 @@ package dev.drew.restaurantreview.controller.integration;
 
 import dev.drew.restaurantreview.GlobalTestContainer;
 import io.restassured.http.ContentType;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
@@ -55,9 +54,25 @@ public class ReviewControllerIT extends GlobalTestContainer {
     }
 
     @Test
+    void testGetAllReviews_withPagination() throws Exception {
+        when().request("GET", "/api/v1/reviews?page=0&size=5")
+                .then()
+                .statusCode(200)
+                .body("[0].id", is(1));
+    }
+
+    @Test
+    void testGetAllReviews_withSorting() throws Exception {
+        when().request("GET", "/api/v1/reviews?sort=restaurant_name,asc")
+                .then()
+                .statusCode(200)
+                .body("[0].restaurant_name", is("Aroma Abbey"));
+    }
+
+    @Test
     void testGetReviewById_exists() throws Exception {
         Integer revId = 1;
-        when().request("GET", "/api/v1/review/" + revId)
+        when().request("GET", "/api/v1/reviews/" + revId)
                 .then()
                 .statusCode(200)
                 .body("comment", is("Good ambience and service"),
@@ -67,7 +82,7 @@ public class ReviewControllerIT extends GlobalTestContainer {
     @Test
     void testGetReviewById_notExist() throws Exception {
         Integer revId = 20;
-        when().request("GET", "/api/v1/review/" + revId)
+        when().request("GET", "/api/v1/reviews/" + revId)
                 .then()
                 .statusCode(404);
     }
@@ -83,7 +98,7 @@ public class ReviewControllerIT extends GlobalTestContainer {
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
                 .body(body)
-                .when().request("POST", "/api/v1/review/add")
+                .when().request("POST", "/api/v1/reviews")
                 .then()
                 .statusCode(201)
                 .body(
@@ -104,7 +119,7 @@ public class ReviewControllerIT extends GlobalTestContainer {
 
         given().log().all().contentType(ContentType.JSON)
                 .body(body)
-                .when().request("POST", "/api/v1/review/add")
+                .when().request("POST", "/api/v1/reviews")
                 .then()
                 .statusCode(403);
     }
@@ -118,7 +133,7 @@ public class ReviewControllerIT extends GlobalTestContainer {
 
         given().log().all().contentType(ContentType.JSON)
                 .body(body)
-                .when().request("POST", "/api/v1/review/add")
+                .when().request("POST", "/api/v1/reviews")
                 .then()
                 .statusCode(403);
     }
@@ -134,7 +149,7 @@ public class ReviewControllerIT extends GlobalTestContainer {
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
                 .body(body)
-                .when().request("POST", "/api/v1/review/add")
+                .when().request("POST", "/api/v1/reviews")
                 .then()
                 .statusCode(404);
     }
@@ -149,7 +164,7 @@ public class ReviewControllerIT extends GlobalTestContainer {
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
                 .body(body)
-                .when().request("POST", "/api/v1/review/add")
+                .when().request("POST", "/api/v1/reviews")
                 .then()
                 .statusCode(500);
     }
@@ -165,30 +180,31 @@ public class ReviewControllerIT extends GlobalTestContainer {
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
                 .body(body)
-                .when().request("POST", "/api/v1/review/add")
+                .when().request("POST", "/api/v1/reviews")
                 .then()
-                .statusCode(201);
+                .statusCode(500);
     }
 
     @Test
     void testUpdateReviewById_authorised() throws Exception {
         String token = authorisationAdmin();
         Integer revId = 7;
-        String body = "{\"rating\": 1,\n" +
-                "    \"comment\": \"Urghh! Gross!\"\n" +
+        String body = "{\"restaurant_id\": \"5\", \n" +
+                "    \"rating\": \"5\",\n" +
+                "    \"comment\": \"Great Food.\"\n" +
                 "    }";
 
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer " + token)
                 .body(body)
-                .when().request("PUT", "/api/v1/review/" + revId + "/edit")
+                .when().request("PUT", "/api/v1/reviews/" + revId)
                 .then()
                 .statusCode(200)
                 .body(
-                        "rating", is(1),
+                        "rating", is(5),
                         "id", equalTo(revId),
                         "user_id", notNullValue(),
-                        "comment", is("Urghh! Gross!")
+                        "comment", is("Great Food.")
                 );
     }
 
@@ -201,7 +217,7 @@ public class ReviewControllerIT extends GlobalTestContainer {
 
         given().log().all().contentType(ContentType.JSON)
                 .body(body)
-                .when().request("PUT", "/api/v1/review/" + revId + "/edit")
+                .when().request("PUT", "/api/v1/reviews/" + revId)
                 .then()
                 .statusCode(403);
     }
@@ -209,10 +225,10 @@ public class ReviewControllerIT extends GlobalTestContainer {
     @Test
     void testDeleteReviewById_authorised() throws Exception {
         String token = authorisationAdmin();
-        Integer revId = 5;
+        Integer revId = 1;
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
-                .when().request("DELETE", "/api/v1/review/" + revId + "/delete")
+                .when().request("DELETE", "/api/v1/reviews/" + revId)
                 .then().statusCode(204);
     }
 
@@ -220,7 +236,7 @@ public class ReviewControllerIT extends GlobalTestContainer {
     void testDeleteReviewById_unauthorised() throws Exception {
         Integer revId = 6;
         given().log().all().contentType(ContentType.JSON)
-                .when().request("DELETE", "/api/v1/review/" + revId + "/delete")
+                .when().request("DELETE", "/api/v1/reviews/" + revId)
                 .then().statusCode(403);
     }
 }

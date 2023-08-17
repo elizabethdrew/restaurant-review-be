@@ -13,6 +13,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.openapitools.model.Review;
 import org.openapitools.model.ReviewInput;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -40,18 +43,20 @@ class ReviewControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(reviewController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(reviewController)
+                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+                .build();
     }
 
     @Test
     @WithMockUser(username = "YOUR_USER", password = "YOUR_PASSWORD")
     void testAddNewReview() throws Exception {
-        ReviewInput input = new ReviewInput().restaurantId(1L).rating(5);
+        ReviewInput input = new ReviewInput().restaurantId(1L).rating(5).comment("nice");
         Review review = new Review().id(1L).restaurantId(input.getRestaurantId()).rating(input.getRating());
 
         when(reviewService.addNewReview(any(ReviewInput.class))).thenReturn(review);
 
-        mockMvc.perform(post("/api/v1/review/add")
+        mockMvc.perform(post("/api/v1/reviews")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(input)))
                 .andExpect(status().isCreated());
@@ -62,7 +67,7 @@ class ReviewControllerTest {
     void testDeleteReviewById() throws Exception {
         int reviewId = 1;
 
-        mockMvc.perform(delete("/api/v1/review/{reviewId}/delete", reviewId)
+        mockMvc.perform(delete("/api/v1/reviews/{reviewId}", reviewId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
@@ -74,7 +79,8 @@ class ReviewControllerTest {
                 new Review().id(2L).restaurantId(2L).userId(2L).rating(4)
         );
 
-        when(reviewService.getAllReviews(null, null, null)).thenReturn(reviews);
+        Pageable pageable = PageRequest.of(0,20);
+        when(reviewService.getAllReviews(null, null, null, pageable)).thenReturn(reviews);
 
         mockMvc.perform(get("/api/v1/reviews")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -88,7 +94,7 @@ class ReviewControllerTest {
 
         when(reviewService.getReviewById(eq(reviewId))).thenReturn(review);
 
-        mockMvc.perform(get("/api/v1/review/{reviewId}", reviewId)
+        mockMvc.perform(get("/api/v1/reviews/{reviewId}", reviewId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
@@ -97,12 +103,12 @@ class ReviewControllerTest {
     @WithMockUser(username = "YOUR_USER", password = "YOUR_PASSWORD")
     void testUpdateReviewById() throws Exception {
         int reviewId = 1;
-        ReviewInput input = new ReviewInput().restaurantId(1L).rating(5);
+        ReviewInput input = new ReviewInput().restaurantId(1L).rating(5).comment("very nice");
         Review updatedReview = new Review().id((long)reviewId).restaurantId(input.getRestaurantId()).rating(input.getRating());
 
         when(reviewService.updateReviewById(eq(reviewId), any(ReviewInput.class))).thenReturn(updatedReview);
 
-        mockMvc.perform(put("/api/v1/review/{reviewId}/edit", reviewId)
+        mockMvc.perform(put("/api/v1/reviews/{reviewId}", reviewId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(input)))
                 .andExpect(status().isOk());

@@ -1,5 +1,6 @@
-package dev.drew.restaurantreview.auth;
+package dev.drew.restaurantreview.auth.unit;
 
+import dev.drew.restaurantreview.auth.ApplicationConfig;
 import dev.drew.restaurantreview.service.JpaUserDetailsService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

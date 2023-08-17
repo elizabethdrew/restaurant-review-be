@@ -52,6 +52,102 @@
 			"response": []
 		},
 		{
+			"name": "Get All Restaurants - Paginate",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const response = pm.response.json();",
+							"const restaurant = response[0];",
+							"console.log(restaurant.id)",
+							"",
+							"pm.test(\"Restaurant Found\", () => {",
+							"    pm.expect(restaurant).to.be.an('object');",
+							"});",
+							"",
+							"// If a restaurant found, add id to global variable",
+							"if (restaurant) {",
+							"    pm.globals.set(\"restaurantId\", restaurant.id);",
+							"}",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/restaurants?sort=city,asc",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"restaurants"
+					],
+					"query": [
+						{
+							"key": "sort",
+							"value": "city,asc"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Cuisines",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const response = pm.response.json();",
+							"const restaurant = response[0];",
+							"console.log(restaurant.id)",
+							"",
+							"pm.test(\"Restaurant Found\", () => {",
+							"    pm.expect(restaurant).to.be.an('object');",
+							"});",
+							"",
+							"// If a restaurant found, add id to global variable",
+							"if (restaurant) {",
+							"    pm.globals.set(\"restaurantId\", restaurant.id);",
+							"}",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/cuisines",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"cuisines"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get All Restaurants by City",
 			"event": [
 				{
@@ -250,6 +346,61 @@
 			"response": []
 		},
 		{
+			"name": "Get All Reviews - Paginate",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const response = pm.response.json();",
+							"const restaurant = response[0];",
+							"console.log(restaurant.id)",
+							"",
+							"pm.test(\"Restaurant Found\", () => {",
+							"    pm.expect(restaurant).to.be.an('object');",
+							"});",
+							"",
+							"// If a restaurant found, add id to global variable",
+							"if (restaurant) {",
+							"    pm.globals.set(\"restaurantId\", restaurant.id);",
+							"}",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/reviews?page=0&size=5",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"reviews"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get All Reviews by Restaurant",
 			"event": [
 				{
@@ -424,12 +575,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/restaurant/:restaurantId",
+					"raw": "{{baseUrl}}/restaurants/:restaurantId",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"restaurant",
+						"restaurants",
 						":restaurantId"
 					],
 					"variable": [
@@ -461,12 +612,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/review/:reviewtId",
+					"raw": "{{baseUrl}}/reviews/:reviewtId",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"review",
+						"reviews",
 						":reviewtId"
 					],
 					"variable": [
@@ -515,12 +666,12 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "{{baseUrl}}/user/:userid",
+					"raw": "{{baseUrl}}/users/:userid",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"user",
+						"users",
 						":userid"
 					],
 					"variable": [
@@ -563,7 +714,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"Updated {{$randomStreetName}} Restaurant\", \n    \"city\": \"Bristol\"\n    }",
+					"raw": "{\n    \"name\": \"Updated {{$randomStreetName}} Restaurant\", \n    \"city\": \"Bristol\",\n    \"cuisines\": [\"British\"],\n    \"latitude\": 51.4545,\n    \"longitude\": -2.5879,\n    \"price_range\": 1\n    }",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -571,19 +722,18 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/restaurant/:restaurantId/edit",
+					"raw": "{{baseUrl}}/restaurants/:restaurantId",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"restaurant",
-						":restaurantId",
-						"edit"
+						"restaurants",
+						":restaurantId"
 					],
 					"variable": [
 						{
 							"key": "restaurantId",
-							"value": "2"
+							"value": "5"
 						}
 					]
 				}
@@ -628,19 +778,18 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/review/:reviewId/edit",
+					"raw": "{{baseUrl}}/reviews/:reviewtId",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"review",
-						":reviewId",
-						"edit"
+						"reviews",
+						":reviewtId"
 					],
 					"variable": [
 						{
-							"key": "reviewId",
-							"value": "4"
+							"key": "reviewtId",
+							"value": null
 						}
 					]
 				}
@@ -685,19 +834,18 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/user/:userId/edit",
+					"raw": "{{baseUrl}}/users/:userid",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"user",
-						":userId",
-						"edit"
+						"users",
+						":userid"
 					],
 					"variable": [
 						{
-							"key": "userId",
-							"value": "1"
+							"key": "userid",
+							"value": null
 						}
 					]
 				}
@@ -733,19 +881,65 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/restaurant/:restaurantId/delete",
+					"raw": "{{baseUrl}}/restaurants/:restaurantId",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"restaurant",
-						":restaurantId",
-						"delete"
+						"restaurants",
+						":restaurantId"
 					],
 					"variable": [
 						{
 							"key": "restaurantId",
 							"value": "{{restaurant_id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Cuisine",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/cuisines/:cuisinename",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"cuisines",
+						":cuisinename"
+					],
+					"variable": [
+						{
+							"key": "cuisinename",
+							"value": "Dog Food"
 						}
 					]
 				}
@@ -781,19 +975,18 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/review/:reviewId/delete",
+					"raw": "{{baseUrl}}/reviews/:reviewtId",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"review",
-						":reviewId",
-						"delete"
+						"reviews",
+						":reviewtId"
 					],
 					"variable": [
 						{
-							"key": "reviewId",
-							"value": "{{review_id}}"
+							"key": "reviewtId",
+							"value": null
 						}
 					]
 				}
@@ -829,19 +1022,18 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/user/:userId/delete",
+					"raw": "{{baseUrl}}/users/:userid",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"user",
-						":userId",
-						"delete"
+						"users",
+						":userid"
 					],
 					"variable": [
 						{
-							"key": "userId",
-							"value": "2"
+							"key": "userid",
+							"value": null
 						}
 					]
 				}
@@ -881,7 +1073,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"{{$randomStreetName}} Restaurant\", \n    \"city\": \"{{$randomCity}}\"\n    }",
+					"raw": "{\n    \"name\": \"{{$randomStreetName}} Restaurant\", \n    \"city\": \"{{$randomCity}}\",\n    \"price_range\": 2,\n    \"latitude\": 51.5074,\n    \"longitude\": 0.1278,\n    \"userId\": 1,\n    \"rating\": 4,\n    \"cuisines\": [\"British\", \"American\"]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -889,13 +1081,64 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/restaurant/add",
+					"raw": "{{baseUrl}}/restaurants",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"restaurant",
-						"add"
+						"restaurants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Cuisine",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"const responseJson = pm.response.json();",
+							"pm.environment.set(\"restaurant_id\", responseJson.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Cat Food\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/cuisines",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"cuisines"
 					]
 				}
 			},
@@ -943,13 +1186,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/review/add",
+					"raw": "{{baseUrl}}/reviews",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"review",
-						"add"
+						"reviews"
 					]
 				}
 			},
@@ -986,12 +1228,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/signup",
+					"raw": "{{baseUrl}}/users",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"signup"
+						"users"
 					]
 				}
 			},

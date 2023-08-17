@@ -15,10 +15,11 @@ import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLOutput;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -47,7 +48,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         this.cuisineRepository = cuisineRepository;
     }
 
-    private void validateRestaurantInput(RestaurantInput restaurantInput) {
+    public void validateRestaurantInput(RestaurantInput restaurantInput) {
 
         if(restaurantInput.getPriceRange() != null && restaurantInput.getPriceRange() < 1 || restaurantInput.getPriceRange() > 3) {
             throw new InvalidInputException("Price Range not 1, 2 or 3");
@@ -93,7 +94,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         return restaurantMapper.toRestaurant(savedRestaurant);
     }
 
-    private List<CuisineEntity> getCuisines(List<String> cuisineNames) {
+    public List<CuisineEntity> getCuisines(List<String> cuisineNames) {
         return cuisineNames.stream()
                 .map(name -> cuisineRepository.findByName(name)
                         .orElseThrow(() -> new CuisineNotFoundException(name)))
@@ -107,12 +108,13 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
 
-    public List<Restaurant> getAllRestaurants(String city, Integer rating, Long userId) {
-        List<RestaurantEntity> filteredEntities = restaurantRepository.findAll(
+    public List<Restaurant> getAllRestaurants(String city, Integer rating, Long userId, Pageable pageable) {
+        Page<RestaurantEntity> filteredEntities = restaurantRepository.findAll(
                 Specification.where(RestaurantSpecification.isNotDeleted())
                         .and(RestaurantSpecification.hasCity(city))
                         .and(RestaurantSpecification.hasRating(rating))
-                        .and(RestaurantSpecification.hasUserId(userId))
+                        .and(RestaurantSpecification.hasUserId(userId)),
+                pageable
         );
 
         return filteredEntities.stream().map(restaurantMapper::toRestaurant).collect(Collectors.toList());
@@ -141,7 +143,6 @@ public class RestaurantServiceImpl implements RestaurantService {
                         .and(RestaurantSpecification.isNotDeleted())
         ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
 
-        System.out.println(restaurantEntity);
 
         // Check if the current user is an admin or the owner of the restaurant
         if (!isAdminOrOwner(restaurantEntity, restaurantUserIdProvider)) {
@@ -181,8 +182,13 @@ public class RestaurantServiceImpl implements RestaurantService {
             throw new InsufficientPermissionException("User does not have permission to delete this restaurant");
         }
 
+        System.out.println(restaurantEntity);
+
         // Instead of deleting, we mark the restaurant as deleted
         restaurantEntity.setIsDeleted(true);
+
+        System.out.println(restaurantEntity);
+
         restaurantRepository.save(restaurantEntity);
     }
 

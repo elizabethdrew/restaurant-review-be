@@ -1,10 +1,10 @@
 package dev.drew.restaurantreview.entity;
 
-import io.swagger.models.auth.In;
 import jakarta.persistence.*;
+import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
@@ -17,11 +17,14 @@ public class ReviewEntity extends org.openapitools.model.Review {
     @Column(name = "id")
     private Long id;
 
-    @NotNull
+    //@Getter
+    @Getter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
     private RestaurantEntity restaurant;
 
+    //@Getter
+    @Getter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
@@ -42,130 +45,100 @@ public class ReviewEntity extends org.openapitools.model.Review {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime updatedAt;
 
-    @Transient
-    private String restaurant_name;
-
-    @Transient
-    private String restaurant_city;
-
     @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted = false;
+    private Boolean isDeleted = false;
 
-    public ReviewEntity() {
-    }
-
-    public ReviewEntity(Long id, RestaurantEntity restaurant, UserEntity user, Integer rating, String comment, OffsetDateTime createdAt, OffsetDateTime updatedAt, boolean isDeleted) {
-        this.id = id;
-        this.restaurant = restaurant;
-        this.user = user;
-        this.rating = rating;
-        this.comment = comment;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        if(restaurant != null) {
-            this.restaurant_name = restaurant.getName();
-            this.restaurant_city = restaurant.getCity();
-        }
-        this.isDeleted = isDeleted;
-    }
-
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public RestaurantEntity getRestaurant() {
-        return restaurant;
     }
 
     public void setRestaurant(RestaurantEntity restaurant) {
         this.restaurant = restaurant;
     }
 
-    public UserEntity getUser() {
-        return user;
-    }
-
     public void setUser(UserEntity user) {
         this.user = user;
     }
 
+    @Override
     public Integer getRating() {
         return rating;
     }
 
+    @Override
     public void setRating(Integer rating) {
         this.rating = rating;
     }
 
+    @Override
     public String getComment() {
         return comment;
     }
 
+    @Override
     public void setComment(String comment) {
         this.comment = comment;
     }
 
+    @Override
     public OffsetDateTime getCreatedAt() {
         return createdAt;
     }
 
+    @Override
     public void setCreatedAt(OffsetDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
+    @Override
     public OffsetDateTime getUpdatedAt() {
         return updatedAt;
     }
 
+    @Override
     public void setUpdatedAt(OffsetDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 
-    public String getRestaurant_name() {
-        return restaurant_name;
-    }
-
-    public void setRestaurant_name(String restaurant_name) {
-        this.restaurant_name = restaurant_name;
-    }
-
-    public String getRestaurant_city() {
-        return restaurant_city;
-    }
-
-    public void setRestaurant_city(String restaurant_city) {
-        this.restaurant_city = restaurant_city;
-    }
-
-    public boolean getIsDeleted() {
+    public Boolean getDeleted() {
         return isDeleted;
     }
 
-    public void setIsDeleted(boolean isDeleted) {
-        this.isDeleted = isDeleted;
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ReviewEntity that = (ReviewEntity) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(restaurant, that.restaurant) &&
-                Objects.equals(user, that.user) &&
-                Objects.equals(rating, that.rating) &&
-                Objects.equals(comment, that.comment) &&
-                Objects.equals(createdAt, that.createdAt) &&
-                Objects.equals(updatedAt, that.updatedAt) &&
-                isDeleted == that.isDeleted;
+        if (!(o instanceof ReviewEntity that)) return false;
+        if (!super.equals(o)) return false;
+        return Objects.equals(getId(), that.getId()) && Objects.equals(getRestaurant(), that.getRestaurant()) && Objects.equals(getUser(), that.getUser()) && Objects.equals(getRating(), that.getRating()) && Objects.equals(getComment(), that.getComment()) && Objects.equals(getCreatedAt(), that.getCreatedAt()) && Objects.equals(getUpdatedAt(), that.getUpdatedAt()) && Objects.equals(getIsDeleted(), that.getIsDeleted());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, restaurant, user, rating, comment, createdAt, updatedAt, isDeleted);
+        return Objects.hash(super.hashCode(), getId(), getRestaurant(), getUser(), getRating(), getComment(), getCreatedAt(), getUpdatedAt(), getIsDeleted());
     }
+
+    @Override
+    public String toString() {
+        return "ReviewEntity{" +
+                "id=" + id +
+                ", restaurant=" + restaurant +
+                ", user=" + user +
+                ", rating=" + rating +
+                ", comment='" + comment + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", isDeleted=" + isDeleted +
+                '}';
+    }
+
 }

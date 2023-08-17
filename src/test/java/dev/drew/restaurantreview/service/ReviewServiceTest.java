@@ -10,6 +10,7 @@ import dev.drew.restaurantreview.model.SecurityUser;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
 import dev.drew.restaurantreview.repository.ReviewRepository;
 import dev.drew.restaurantreview.repository.UserRepository;
+import dev.drew.restaurantreview.repository.specification.RestaurantSpecification;
 import dev.drew.restaurantreview.service.impl.ReviewServiceImpl;
 import dev.drew.restaurantreview.util.SecurityUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -20,6 +21,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.openapitools.model.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,9 +34,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -88,10 +94,15 @@ public class ReviewServiceTest {
         review.setRating(input.getRating());
         review.setComment(input.getComment());
 
+        RestaurantEntity restaurantEntity = new RestaurantEntity();
+        restaurantEntity.setId(1L);
+        restaurantEntity.setName("Restaurant 1");
+        restaurantEntity.setUser(securityUser.getUserEntity());
+
         Review reviewResponse = new Review().restaurantId(input.getRestaurantId()).rating(input.getRating()).comment(input.getComment());
 
         // Mock the repository and mapper calls
-        when(restaurantRepository.findById(input.getRestaurantId())).thenReturn(Optional.of(new RestaurantEntity()));
+        when(restaurantRepository.findOne(any(Specification.class))).thenReturn(Optional.of(restaurantEntity));
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(securityUser.getUserEntity()));
         when(reviewMapper.toReviewEntity(any(ReviewInput.class))).thenReturn(review);
         when(reviewRepository.save(any(ReviewEntity.class))).thenReturn(review);
@@ -106,30 +117,35 @@ public class ReviewServiceTest {
         assertEquals(input.getComment(), response.getComment());
     }
 
-//    @Test
-//    public void testGetAllReviews() {
-//        // Prepare expected data
-//        List<ReviewEntity> reviewEntities = new ArrayList<>();
-//
-//        ReviewEntity reviewEntity1 = new ReviewEntity();
-//        reviewEntity1.setId(1L);
-//        reviewEntity1.setRating(5);
-//        reviewEntities.add(reviewEntity1);
-//
-//        ReviewEntity reviewEntity2 = new ReviewEntity();
-//        reviewEntity2.setId(2L);
-//        reviewEntity2.setRating(4);
-//        reviewEntities.add(reviewEntity2);
-//
-//        // Mock the repository call
-//        when(reviewRepository.findAll()).thenReturn(reviewEntities);
-//
-//        // Call the service method
-//        List<Review> response = reviewServiceImpl.getAllReviews(null, null, null);
-//
-//        // Verify the response status and data
-//        assertEquals(2, response.size());
-//    }
+    @Test
+    public void testGetAllReviews() {
+
+        List<ReviewEntity> reviewEntities = new ArrayList<>();
+
+        ReviewEntity reviewEntity1 = new ReviewEntity();
+        reviewEntity1.setId(1L);
+        reviewEntity1.setRating(5);
+        reviewEntities.add(reviewEntity1);
+
+        ReviewEntity reviewEntity2 = new ReviewEntity();
+        reviewEntity2.setId(2L);
+        reviewEntity2.setRating(4);
+        reviewEntities.add(reviewEntity2);
+
+        Page<ReviewEntity> page = new PageImpl<>(reviewEntities);
+
+        // Mock the repository call
+        when(reviewRepository.findAll(
+                any(Specification.class),
+                any(Pageable.class)
+        )).thenReturn(page);
+
+        // Call the service method
+        List<Review> response = reviewServiceImpl.getAllReviews(null, null, null, PageRequest.of(0, 20));
+
+        // Verify the response status and data
+        assertEquals(2, response.size());
+    }
 
     @Test
     public void testGetReviewById() {
@@ -138,13 +154,17 @@ public class ReviewServiceTest {
         ReviewEntity reviewEntity = new ReviewEntity();
         reviewEntity.setId(reviewId);
         reviewEntity.setRating(5);
+        reviewEntity.setComment("Comment");
+        reviewEntity.setIsDeleted(false);
 
         Review expectedReview = new Review();
         expectedReview.setId(reviewId);
         expectedReview.setRating(5);
+        expectedReview.setComment("Comment");
+        expectedReview.setIsDeleted(false);
 
-        // Mock the repository call
-        when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(reviewEntity));
+        // Mock the repository call with any Specification
+        when(reviewRepository.findOne(any(Specification.class))).thenReturn(Optional.of(reviewEntity));
 
         // Mock the mapper call
         when(reviewMapper.toReview(reviewEntity)).thenReturn(expectedReview);
@@ -173,18 +193,21 @@ public class ReviewServiceTest {
         ReviewEntity reviewEntity = new ReviewEntity();
         reviewEntity.setId(reviewId);
         reviewEntity.setRating(5);
+        reviewEntity.setComment("Comment");
+        reviewEntity.setIsDeleted(false);
         reviewEntity.setUser(securityUser.getUserEntity());
         reviewEntity.setRestaurant(restaurantEntity); // Associate the restaurant entity
 
         ReviewEntity updatedEntity = new ReviewEntity();
         updatedEntity.setId(reviewId);
-        updatedEntity.setRating(updatedInput.getRating());
-        updatedEntity.setComment(updatedInput.getComment());
+        updatedEntity.setRating(5);
+        updatedEntity.setComment("Comment");
+        updatedEntity.setIsDeleted(false);
         updatedEntity.setUser(securityUser.getUserEntity());
         updatedEntity.setRestaurant(restaurantEntity); // Associate the restaurant entity
 
-        // Mock the repository and mapper calls
-        when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(reviewEntity));
+        // Mock the repository call with any Specification
+        when(reviewRepository.findOne(any(Specification.class))).thenReturn(Optional.of(reviewEntity));
         when(reviewRepository.save(any(ReviewEntity.class))).thenReturn(updatedEntity);
 
         Review updatedReviewResponse = new Review().id(reviewId).rating(updatedInput.getRating()).comment(updatedInput.getComment());
@@ -200,14 +223,14 @@ public class ReviewServiceTest {
 
     @Test
     void testDeleteReviewByIdNotFound() {
-        // Prepare expected data
-        Long reviewId = 1L;
+
+        Long deleteReviewId = 2L;
 
         // Mock the repository call
-        when(reviewRepository.findById(reviewId)).thenReturn(Optional.empty());
+        when(reviewRepository.findOne(any(Specification.class))).thenReturn(Optional.empty());
 
         // Verify the response status
-        assertThrows(ReviewNotFoundException.class, () -> reviewServiceImpl.deleteReviewById(reviewId.intValue()));
+        assertThrows(ReviewNotFoundException.class, () -> reviewServiceImpl.deleteReviewById(deleteReviewId.intValue()));
 
         verify(reviewRepository, never()).deleteById(anyLong());
     }
@@ -225,16 +248,13 @@ public class ReviewServiceTest {
         reviewEntity.setRestaurant(restaurantEntity); // Associate the restaurant entity
         reviewEntity.setUserId(2L); // Different user ID
 
-        // Mock the repository call
-        when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(reviewEntity));
-
         // Change the current user to a non-admin role
         SecurityUser securityUser = createSecurityUserWithRole(User.RoleEnum.REVIEWER);
         Authentication mockAuthentication = new UsernamePasswordAuthenticationToken(
                 securityUser, null, securityUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(mockAuthentication);
 
-        when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(reviewEntity));
+        when(reviewRepository.findOne(any(Specification.class))).thenReturn(Optional.of(reviewEntity));
 
         assertThrows(InsufficientPermissionException.class, () -> reviewServiceImpl.deleteReviewById(reviewId.intValue()));
 

@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.stream.Collectors;
 import dev.drew.restaurantreview.entity.RestaurantEntity;
 import org.openapitools.model.Restaurant;
+import org.springframework.stereotype.Component;
 
+@Component
 public abstract class RestaurantMapperDecorator implements RestaurantMapper {
 
     @Autowired

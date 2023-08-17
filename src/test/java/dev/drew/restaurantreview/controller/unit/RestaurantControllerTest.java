@@ -2,8 +2,6 @@ package dev.drew.restaurantreview.controller.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.drew.restaurantreview.controller.RestaurantController;
-import dev.drew.restaurantreview.exception.InsufficientPermissionException;
-import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import dev.drew.restaurantreview.service.RestaurantService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +11,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -39,7 +40,9 @@ class RestaurantControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(restaurantController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(restaurantController)
+                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+                .build();
     }
 
     @Test
@@ -51,7 +54,7 @@ class RestaurantControllerTest {
         when(restaurantService.addNewRestaurant(any(RestaurantInput.class))).thenReturn(restaurant);
 
         // Call the endpoint and check the response status
-        mockMvc.perform(post("/api/v1/restaurant/add")
+        mockMvc.perform(post("/api/v1/restaurants")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(input)))
                 .andExpect(status().isCreated());
@@ -64,7 +67,8 @@ class RestaurantControllerTest {
                 new Restaurant().id(2L).name("Restaurant 2").city("City 2")
         );
 
-        when(restaurantService.getAllRestaurants(null, null, null)).thenReturn(restaurants);
+        Pageable pageable = PageRequest.of(0, 20); // Corresponds to the default size we set
+        when(restaurantService.getAllRestaurants(null, null, null, pageable)).thenReturn(restaurants);
 
         mockMvc.perform(get("/api/v1/restaurants")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -78,7 +82,7 @@ class RestaurantControllerTest {
 
         when(restaurantService.getRestaurantById(eq(restaurantId))).thenReturn(restaurant);
 
-        mockMvc.perform(get("/api/v1/restaurant/{restaurantId}", restaurantId)
+        mockMvc.perform(get("/api/v1/restaurants/{restaurantId}", restaurantId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
@@ -93,7 +97,7 @@ class RestaurantControllerTest {
 
         mockMvc
 
-                .perform(put("/api/v1/restaurant/{restaurantId}/edit", restaurantId)
+                .perform(put("/api/v1/restaurants/{restaurantId}", restaurantId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(input)))
                 .andExpect(status().isOk());
@@ -103,7 +107,7 @@ class RestaurantControllerTest {
     void testDeleteRestaurantById() throws Exception {
         int restaurantId = 1;
 
-        mockMvc.perform(delete("/api/v1/restaurant/{restaurantId}/delete", restaurantId)
+        mockMvc.perform(delete("/api/v1/restaurants/{restaurantId}", restaurantId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }

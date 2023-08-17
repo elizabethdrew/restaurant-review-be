@@ -16,6 +16,7 @@ paths:
       tags:
         - Restaurants
       description: Returns a list of all restaurants.
+      x-spring-paginated: true
       parameters:
         - name: city
           in: query
@@ -40,21 +41,26 @@ paths:
             format: int64
       responses:
         '200':
-          description: A list of restaurants.
+          description: Success
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Restaurant'
+        '404':
+          description: No Results Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '500':
-          description: Internal server error
+          description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/v1/restaurant/add:
     post:
       summary: Add a new restaurant
       operationId: addNewRestaurant
@@ -72,33 +78,31 @@ paths:
               $ref: '#/components/schemas/RestaurantInput'
       responses:
         '201':
-          description: The new restaurant
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Restaurant'
         '400':
-          description: Invalid input
+          description: Invalid Input
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '409':
-          description: Restaurant with the same name and city already exists
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-        '500':
-          description: Internal server error
+          description: Already Exists
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /api/v1/restaurant/{restaurantId}:
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/v1/restaurants/{restaurantId}:
     get:
       security: []
       summary: Get a restaurant by ID
@@ -116,13 +120,24 @@ paths:
             minimum: 1
       responses:
         '200':
-          description: The restaurant.
+          description: Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Restaurant'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
-  /api/v1/restaurant/{restaurantId}/edit:
     put:
       summary: Update a restaurant
       operationId: updateRestaurantById
@@ -148,13 +163,36 @@ paths:
               $ref: '#/components/schemas/RestaurantInput'
       responses:
         '200':
-          description: The updated restaurant.
+          description: Updated
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Restaurant'
+        '400':
+          description: Invalid Input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient Permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
-  /api/v1/restaurant/{restaurantId}/delete:
     delete:
       summary: Delete a restaurant
       operationId: deleteRestaurantById
@@ -173,21 +211,27 @@ paths:
             minimum: 1
       responses:
         '204':
-          description: Restaurant deleted successfully.
+          description: Successfully Deleted
         '404':
-          description: Restaurant not found.
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient Permissions
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '500':
-          description: Internal server error
+          description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/v1/signup:
+  /api/v1/users:
     post:
       summary: Add a new user
       tags:
@@ -205,26 +249,75 @@ paths:
               $ref: '#/components/schemas/UserInput'
       responses:
         '201':
-          description: The new user
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
         '400':
-          description: Invalid input
+          description: Invalid Input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Already Exists
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '500':
-          description: Internal server error
+          description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/v1/user/{userId}:
+  /api/v1/login:
+    post:
+      summary: Authenticate a user and generate a JWT token
+      description: Authenticate a user with provided credentials and return a JWT token for further authenticated requests.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  userId:
+                    type: integer
+                    format: int64
+                  expirationTime:
+                    type: string
+                    format: date-time
+        '400':
+          description: Invalid Credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
+  /api/v1/users/{userId}:
     get:
       summary: Get a user by ID
       tags:
@@ -243,25 +336,24 @@ paths:
             minimum: 1
       responses:
         '200':
-          description: The user
+          description: Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
         '404':
-          description: User not found
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '500':
-          description: Internal server error
+          description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/v1/user/{userId}/edit:
     put:
       summary: Update a user
       tags:
@@ -287,31 +379,36 @@ paths:
               $ref: '#/components/schemas/UserInput'
       responses:
         '200':
-          description: The updated user
+          description: Updated
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
         '400':
-          description: Invalid input
+          description: Invalid Input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient Permissions
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: User not found
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '500':
-          description: Internal server error
+          description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/v1/user/{userId}/delete:
     delete:
       summary: Delete a user by ID
       tags:
@@ -329,15 +426,21 @@ paths:
             minimum: 1
       responses:
         '204':
-          description: User deleted
+          description: Deleted
+        '403':
+          description: Insufficient Permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
-          description: User not found
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '500':
-          description: Internal server error
+          description: Internal Server Error
           content:
             application/json:
               schema:
@@ -351,6 +454,7 @@ paths:
       tags:
         - Reviews
       description: Returns a list of all reviews.
+      x-spring-paginated: true
       parameters:
         - name: restaurant_id
           in: query
@@ -376,21 +480,26 @@ paths:
             maximum: 5
       responses:
         '200':
-          description: A list of reviews.
+          description: Success
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Review'
+        '404':
+          description: No Results Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '500':
-          description: Internal server error
+          description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/v1/review/add:
     post:
       summary: Add a new review
       operationId: addNewReview
@@ -408,25 +517,31 @@ paths:
               $ref: '#/components/schemas/ReviewInput'
       responses:
         '201':
-          description: The new review
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Review'
         '400':
-          description: Invalid input
+          description: Invalid Input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Already Exists
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '500':
-          description: Internal server error
+          description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/v1/review/{reviewId}:
+  /api/v1/reviews/{reviewId}:
     get:
       security: []
       summary: Get a review by ID
@@ -444,25 +559,24 @@ paths:
             minimum: 1
       responses:
         '200':
-          description: The review.
+          description: Success
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Review'
         '404':
-          description: Review not found.
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '500':
-          description: Internal server error
+          description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/v1/review/{reviewId}/edit:
     put:
       summary: Update a review
       operationId: updateReviewById
@@ -488,31 +602,36 @@ paths:
               $ref: '#/components/schemas/ReviewInput'
       responses:
         '200':
-          description: The updated review.
+          description: Updated
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Review'
         '400':
-          description: Invalid input.
+          description: Invalid Input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient Permissions
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: Review not found.
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '500':
-          description: Internal server error.
+          description: Internal Server Error.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/v1/review/{reviewId}/delete:
     delete:
       summary: Delete a review
       operationId: deleteReviewById
@@ -531,15 +650,21 @@ paths:
             minimum: 1
       responses:
         '204':
-          description: Successfully deleted.
+          description: Deleted
+        '403':
+          description: Insufficient Permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
-          description: Review not found.
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '500':
-          description: Internal server error.
+          description: Internal Server Error.
           content:
             application/json:
               schema:
@@ -553,7 +678,7 @@ paths:
       security: []
       responses:
         '200':
-          description: Successful operation
+          description: Success
           content:
             application/json:
               schema:
@@ -561,13 +686,13 @@ paths:
                 items:
                   type: string
         '404':
-          description: Cuisines not found.
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '500':
-          description: Internal server error.
+          description: Internal Server Error
           content:
             application/json:
               schema:
@@ -589,14 +714,19 @@ paths:
                   type: string
       responses:
         '201':
-          description: Successfully created the cuisine
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Cuisine'
-
+        '400':
+          description: Invalid Input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '409':
-          description: Cuisine with the same name already exists
+          description: Already Exists
           content:
             application/json:
               schema:
@@ -604,6 +734,12 @@ paths:
                 properties:
                   error:
                     type: string
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /api/v1/cuisines/{name}:
     delete:
@@ -621,18 +757,21 @@ paths:
             type: string
       responses:
         '204':
-          description: Successfully deleted the cuisine
+          description: Successfully Deleted
         '404':
-          description: Cuisine not found
+          description: Not Found
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient Permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '409':
-          description: Cuisine is referenced by restaurants
+          description: Referenced By Restaurants
           content:
             application/json:
               schema:
@@ -640,6 +779,13 @@ paths:
                 properties:
                   error:
                     type: string
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 
 components:
 
@@ -715,13 +861,9 @@ components:
         updated_at:
           type: string
           format: date-time
-      required:
-        - id
-        - restaurant_id
-        - user_id
-        - rating
-        - restaurant_name
-        - restaurant_city
+        is_deleted:
+          type: boolean
+          default: false
 
     ReviewInput:
       type: object
@@ -767,12 +909,9 @@ components:
           type: string
           format: date-time
           description: The date and time the user was created.
-      required:
-        - username
-        - name
-        - email
-        - password
-        - role
+        is_deleted:
+          type: boolean
+          default: false
 
     UserInput:
       type: object
@@ -844,9 +983,9 @@ components:
         user_id:
           type: integer
           format: int64
-      required:
-        - name
-        - city
+        is_deleted:
+          type: boolean
+          default: false
 
     RestaurantInput:
       type: object
@@ -887,9 +1026,6 @@ components:
           format: int64
         name:
           type: string
-      required:
-        - id
-        - name
 
     Error:
       type: object

@@ -4,6 +4,7 @@ import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public interface RestaurantService {
     Restaurant addNewRestaurant(RestaurantInput restaurantInput);
 
     // Get all restaurants with optional filters (city, rating, and userId)
-    List<Restaurant> getAllRestaurants(String city, Integer rating, Long userId);
+    List<Restaurant> getAllRestaurants(String city, Integer rating, Long userId, Pageable pageable);
 
     // Get a restaurant by its ID
     Restaurant getRestaurantById(Integer restaurantId) throws RestaurantNotFoundException;

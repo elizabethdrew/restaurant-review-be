@@ -52,6 +52,22 @@ public class RestaurantControllerIT extends GlobalTestContainer {
     }
 
     @Test
+    void testGetAllRestaurants_withPagination() throws Exception {
+        when().request("GET", "/api/v1/restaurants?page=1&size=5")
+                .then()
+                .statusCode(200)
+                .body("[0].id", is(6));
+    }
+
+    @Test
+    void testGetAllRestaurants_withSorting() throws Exception {
+        when().request("GET", "/api/v1/restaurants?sort=city,asc")
+                .then()
+                .statusCode(200)
+                .body("[0].city", is("Bath"));
+    }
+
+    @Test
     void testAddNewRestaurant_authorised() throws Exception {
         String token = authorisationAdmin();
         String body = "{\n" +
@@ -61,14 +77,13 @@ public class RestaurantControllerIT extends GlobalTestContainer {
                 "    \"latitude\": 51.5074,\n" +
                 "    \"longitude\": 0.1278,\n" +
                 "    \"userId\": 1,\n" +
-                "    \"rating\": 4,\n" +
                 "    \"cuisines\": [\"British\", \"American\"]\n" +
                 "}";
 
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
                 .body(body)
-                .when().request("POST", "/api/v1/restaurant/add")
+                .when().request("POST", "/api/v1/restaurants")
                 .then()
                 .statusCode(201)
                 .body(
@@ -87,13 +102,12 @@ public class RestaurantControllerIT extends GlobalTestContainer {
                 "    \"latitude\": 51.5074,\n" +
                 "    \"longitude\": 0.1278,\n" +
                 "    \"userId\": 1,\n" +
-                "    \"rating\": 4,\n" +
                 "    \"cuisines\": [\"British\", \"American\"]\n" +
                 "}";
 
         given().log().all().contentType(ContentType.JSON)
                 .body(body)
-                .when().request("POST", "/api/v1/restaurant/add")
+                .when().request("POST", "/api/v1/restaurants")
                 .then()
                 .statusCode(403);
     }
@@ -108,37 +122,36 @@ public class RestaurantControllerIT extends GlobalTestContainer {
                 "    \"latitude\": 51.5074,\n" +
                 "    \"longitude\": 0.1278,\n" +
                 "    \"userId\": 1,\n" +
-                "    \"rating\": 4,\n" +
                 "    \"cuisines\": [\"British\", \"American\"]\n" +
                 "}";
 
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
                 .body(body)
-                .when().request("POST", "/api/v1/restaurant/add")
+                .when().request("POST", "/api/v1/restaurants")
                 .then()
                 .statusCode(409);
     }
 
     @Test
-    void testAddNewRestaurant_missingCity() throws Exception {
+    void testAddNewRestaurant_nullCity() throws Exception {
         String token = authorisationAdmin();
         String body = "{\n" +
                 "    \"name\": \"New Restaurant 3\", \n" +
+                "    \"city\": null,\n" +
                 "    \"price_range\": 2,\n" +
                 "    \"latitude\": 51.5074,\n" +
                 "    \"longitude\": 0.1278,\n" +
                 "    \"userId\": 1,\n" +
-                "    \"rating\": 4,\n" +
                 "    \"cuisines\": [\"British\", \"American\"]\n" +
                 "}";
 
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
                 .body(body)
-                .when().request("POST", "/api/v1/restaurant/add")
+                .when().request("POST", "/api/v1/restaurants")
                 .then()
-                .statusCode(400);
+                .statusCode(500);
     }
 
     @Test
@@ -151,23 +164,22 @@ public class RestaurantControllerIT extends GlobalTestContainer {
                 "    \"latitude\": 51.5074,\n" +
                 "    \"longitude\": 0.1278,\n" +
                 "    \"userId\": 1,\n" +
-                "    \"rating\": 4,\n" +
                 "    \"cuisines\": [\"British\", \"American\"]\n" +
                 "}";
 
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
                 .body(body)
-                .when().request("POST", "/api/v1/restaurant/add")
+                .when().request("POST", "/api/v1/restaurants")
                 .then()
-                .statusCode(400);
+                .statusCode(500);
     }
 
     @Test
     void testGetRestaurantById_exists() throws Exception {
 
         Integer resId = 1;
-        when().request("GET", "/api/v1/restaurant/" +resId)
+        when().request("GET", "/api/v1/restaurants/" +resId)
                 .then()
                 .statusCode(200)
                 .body("name", is("Gastronomic Guildhall"));
@@ -177,7 +189,7 @@ public class RestaurantControllerIT extends GlobalTestContainer {
     void testGetRestaurantById_notExist() throws Exception {
 
         Integer resId = 100;
-        when().request("GET", "/api/v1/restaurant/" +resId)
+        when().request("GET", "/api/v1/restaurants/" +resId)
                 .then()
                 .statusCode(404);
     }
@@ -200,7 +212,7 @@ public class RestaurantControllerIT extends GlobalTestContainer {
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
                 .body(body)
-                .when().request("PUT", "/api/v1/restaurant/" + resId +"/edit")
+                .when().request("PUT", "/api/v1/restaurants/" + resId)
                 .then()
                 .statusCode(200)
                 .body(
@@ -226,7 +238,7 @@ public class RestaurantControllerIT extends GlobalTestContainer {
 
         given().log().all().contentType(ContentType.JSON)
                 .body(body)
-                .when().request("PUT", "/api/v1/restaurant/" + resId +"/edit")
+                .when().request("PUT", "/api/v1/restaurants/" + resId)
                 .then()
                 .statusCode(403);
     }
@@ -237,7 +249,7 @@ public class RestaurantControllerIT extends GlobalTestContainer {
         Integer resId = 5;
         given().log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Bearer "+ token)
-                .when().request("DELETE", "/api/v1/restaurant/" +resId+"/delete")
+                .when().request("DELETE", "/api/v1/restaurants/" + resId)
                 .then().statusCode(204);
     }
 

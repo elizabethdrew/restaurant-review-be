@@ -2,21 +2,23 @@ package dev.drew.restaurantreview;
 
 import io.restassured.RestAssured;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.transaction.Transactional;
 import liquibase.integration.spring.SpringLiquibase;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static io.restassured.RestAssured.given;
 
 
 @Testcontainers
+@Transactional
+@DirtiesContext
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ContextConfiguration(initializers = dev.drew.restaurantreview.DockerMysqlDataSourceInitializer.class)
 public abstract class GlobalTestContainer {
@@ -27,7 +29,6 @@ public abstract class GlobalTestContainer {
     @Autowired
     EntityManagerFactory emf;
 
-    @Container
     public static MySQLContainer<?> container = new MySQLContainer<>("mysql:latest")
             .withDatabaseName("example_db")
             .withUsername("Test")
@@ -35,11 +36,16 @@ public abstract class GlobalTestContainer {
 
     @BeforeAll
     public static void setUp(){
+        if(!container.isRunning()) {
+            container.start();
+        }
         RestAssured.baseURI = "http://localhost:8081";
+
     }
 
     @AfterAll
     public static void tearDown(){
+        container.stop();
     }
 
     public String authorisationAdmin() {
