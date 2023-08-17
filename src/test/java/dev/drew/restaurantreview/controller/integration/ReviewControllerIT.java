@@ -189,8 +189,9 @@ public class ReviewControllerIT extends GlobalTestContainer {
     void testUpdateReviewById_authorised() throws Exception {
         String token = authorisationAdmin();
         Integer revId = 7;
-        String body = "{\"rating\": 1,\n" +
-                "    \"comment\": \"Urghh! Gross!\"\n" +
+        String body = "{\"restaurant_id\": \"5\", \n" +
+                "    \"rating\": \"5\",\n" +
+                "    \"comment\": \"Great Food.\"\n" +
                 "    }";
 
         given().log().all().contentType(ContentType.JSON)
@@ -200,10 +201,10 @@ public class ReviewControllerIT extends GlobalTestContainer {
                 .then()
                 .statusCode(200)
                 .body(
-                        "rating", is(1),
+                        "rating", is(5),
                         "id", equalTo(revId),
                         "user_id", notNullValue(),
-                        "comment", is("Urghh! Gross!")
+                        "comment", is("Great Food.")
                 );
     }
 
