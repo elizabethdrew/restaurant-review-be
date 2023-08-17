@@ -42,6 +42,24 @@ public class RestaurantControllerIT extends GlobalTestContainer {
     }
 
     @Test
+    void testGetAllRestaurants_withPriceRange() throws Exception {
+        given().queryParam("price_range", "2")
+                .when().request("GET", "/api/v1/restaurants")
+                .then()
+                .statusCode(200)
+                .body("[0].price_range", equalTo(2));
+    }
+
+    @Test
+    void testGetAllRestaurants_withCuisine() throws Exception {
+        given().queryParam("cuisine", "Italian")
+                .when().request("GET", "/api/v1/restaurants")
+                .then()
+                .statusCode(200)
+                .body("cuisines.flatten()", hasItem("Italian"));
+    }
+
+    @Test
     void testGetAllRestaurants_withUserId() throws Exception {
 
         given().queryParam("user_id", "1")
@@ -65,6 +83,98 @@ public class RestaurantControllerIT extends GlobalTestContainer {
                 .then()
                 .statusCode(200)
                 .body("[0].city", is("Bath"));
+    }
+
+    @Test
+    void testGetAllRestaurants_withCity_multiple() throws Exception {
+
+        given().queryParam("city", "Bristol,London")
+                .when().request("GET", "/api/v1/restaurants")
+                .then()
+                .statusCode(200)
+                .body("city", not(hasItem("Bath")))
+                .body("city", hasItem("Bristol"))
+                .body("city", hasItem("London"));
+    }
+
+    @Test
+    void testGetAllRestaurants_withRating_multiple() throws Exception {
+
+        given().queryParam("rating", "2,3")
+                .when().request("GET", "/api/v1/restaurants")
+                .then()
+                .statusCode(200)
+                .body("rating", not(hasItem(1)))
+                .body("rating", hasItem(2))
+                .body("rating", hasItem(3));
+    }
+
+    @Test
+    void testGetAllRestaurants_withPriceRange_multiple() throws Exception {
+        given().queryParam("price_range", "1,2")
+                .when().request("GET", "/api/v1/restaurants")
+                .then()
+                .statusCode(200)
+                .body("price_range", not(hasItem(3)))
+                .body("price_range", hasItem(1))
+                .body("price_range", hasItem(2));
+    }
+
+    @Test
+    void testGetAllRestaurants_withCuisine_multiple() throws Exception {
+        given().queryParam("cuisine", "American,Italian")
+                .when().request("GET", "/api/v1/restaurants")
+                .then()
+                .statusCode(200)
+                .body("cuisines.flatten()", not(hasItem("Indian")))
+                .body("cuisines.flatten()", hasItem("Italian"))
+                .body("cuisines.flatten()", hasItem("American"));
+    }
+
+    @Test
+    void testGetAllRestaurants_withCity_incorrect() throws Exception {
+
+        given().queryParam("city", "Moon")
+                .when().request("GET", "/api/v1/restaurants")
+                .then()
+                .statusCode(200);
+    }
+
+    @Test
+    void testGetAllRestaurants_withRating_incorrect() throws Exception {
+
+        given().queryParam("rating", "6")
+                .when().request("GET", "/api/v1/restaurants")
+                .then()
+                .statusCode(200);
+    }
+
+    @Test
+    void testGetAllRestaurants_withPriceRange_incorrect() throws Exception {
+        given().queryParam("price_range", "4")
+                .when().request("GET", "/api/v1/restaurants")
+                .then()
+                .statusCode(200);
+    }
+
+    @Test
+    void testGetAllRestaurants_withCuisine_incorrect() throws Exception {
+        given().queryParam("cuisine", "Mush")
+                .when().request("GET", "/api/v1/restaurants")
+                .then()
+                .statusCode(200);
+    }
+
+    @Test
+    void testGetAllRestaurants_withCityAndRating() throws Exception {
+
+        given().queryParam("city", "Bristol")
+                .queryParam("rating", "4")
+                .when().request("GET", "/api/v1/restaurants")
+                .then()
+                .statusCode(200)
+                .body("rating", hasItem(4))
+                .body("city", hasItem("Bristol"));;
     }
 
     @Test
