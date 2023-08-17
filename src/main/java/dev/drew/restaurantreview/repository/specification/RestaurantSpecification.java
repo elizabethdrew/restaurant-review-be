@@ -34,7 +34,7 @@ public class RestaurantSpecification {
     }
 
     public static Specification<RestaurantEntity> hasPriceRange(List<Integer> priceRanges) {
-        return (root, query, criteriaBuilder) -> priceRanges == null || priceRanges.isEmpty() ? null : root.get("price_range").in(priceRanges);
+        return (root, query, criteriaBuilder) -> priceRanges == null || priceRanges.isEmpty() ? null : root.get("priceRange").in(priceRanges);
     }
 
     public static Specification<RestaurantEntity> hasCuisine(List<String> cuisines) {
