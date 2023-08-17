@@ -166,22 +166,29 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RestaurantEntity that = (RestaurantEntity) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(city, that.city) &&
-                Objects.equals(user, that.user) &&
-                Objects.equals(priceRange, that.priceRange) &&
-                Objects.equals(latitude, that.latitude) &&
-                Objects.equals(longitude, that.longitude) &&
-                Objects.equals(rating, that.rating) &&
-                Objects.equals(createdAt, that.createdAt) &&
-                isDeleted == that.isDeleted;
+        if (!(o instanceof RestaurantEntity that)) return false;
+        if (!super.equals(o)) return false;
+        return Objects.equals(getId(), that.getId()) && Objects.equals(getName(), that.getName()) && Objects.equals(getCity(), that.getCity()) && Objects.equals(getPriceRange(), that.getPriceRange()) && Objects.equals(getLatitude(), that.getLatitude()) && Objects.equals(getLongitude(), that.getLongitude()) && Objects.equals(getCuisines(), that.getCuisines()) && Objects.equals(getUser(), that.getUser()) && Objects.equals(getRating(), that.getRating()) && Objects.equals(getCreatedAt(), that.getCreatedAt()) && Objects.equals(getIsDeleted(), that.getIsDeleted());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, city, user, priceRange, latitude, longitude, rating, createdAt, isDeleted);
+        return Objects.hash(super.hashCode(), getId(), getName(), getCity(), getPriceRange(), getLatitude(), getLongitude(), getCuisines(), getUser(), getRating(), getCreatedAt(), getIsDeleted());
+    }
+
+    @Override
+    public String toString() {
+        return "RestaurantEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", city='" + city + '\'' +
+                ", priceRange=" + priceRange +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", user=" + user +
+                ", rating=" + rating +
+                ", createdAt=" + createdAt +
+                ", isDeleted=" + isDeleted +
+                '}';
     }
 }

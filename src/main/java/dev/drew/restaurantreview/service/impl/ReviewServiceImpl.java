@@ -4,14 +4,17 @@ import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.entity.ReviewEntity;
 import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.exception.*;
+import dev.drew.restaurantreview.mapper.RestaurantMapper;
 import dev.drew.restaurantreview.mapper.ReviewMapper;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
 import dev.drew.restaurantreview.repository.ReviewRepository;
 import dev.drew.restaurantreview.repository.UserRepository;
+import dev.drew.restaurantreview.repository.specification.RestaurantSpecification;
 import dev.drew.restaurantreview.repository.specification.ReviewSpecification;
 import dev.drew.restaurantreview.service.ReviewService;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import lombok.extern.slf4j.Slf4j;
+import org.openapitools.model.Restaurant;
 import org.openapitools.model.Review;
 import org.openapitools.model.ReviewInput;
 import org.springframework.data.domain.Page;
@@ -34,14 +37,17 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReviewMapper reviewMapper;
 
+    private final RestaurantMapper restaurantMapper;
+
     private final RestaurantRepository restaurantRepository;
 
     private final EntityUserIdProvider<ReviewEntity> reviewUserIdProvider = ReviewEntity::getUserId;
     private UserRepository userRepository;
 
-    public ReviewServiceImpl(ReviewRepository reviewRepository, ReviewMapper reviewMapper, RestaurantRepository restaurantRepository, UserRepository userRepository) {
+    public ReviewServiceImpl(ReviewRepository reviewRepository, ReviewMapper reviewMapper, RestaurantMapper restaurantMapper, RestaurantRepository restaurantRepository, UserRepository userRepository) {
         this.reviewRepository = reviewRepository;
         this.reviewMapper = reviewMapper;
+        this.restaurantMapper = restaurantMapper;
         this.restaurantRepository = restaurantRepository;
         this.userRepository = userRepository;
     }
@@ -50,14 +56,12 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public Review addNewReview(ReviewInput reviewInput) {
 
-        // Fetch the restaurant entity
-        RestaurantEntity currentRestaurant = restaurantRepository.findById(reviewInput.getRestaurantId())
-                .orElseThrow(() -> new RestaurantNotFoundException("Restaurant not found"));
-
-        // Check if the restaurant has been deleted
-        if(currentRestaurant.getIsDeleted()) {
-            throw new RestaurantNotFoundException("Restaurant with ID" + reviewInput.getRestaurantId() + " is deleted.");
-        }
+        // Use a Specification to find a non-deleted restaurant by its ID
+        Long restaurantId = reviewInput.getRestaurantId();
+        RestaurantEntity currentRestaurant = restaurantRepository.findOne(
+                Specification.where(RestaurantSpecification.hasId(restaurantId))
+                        .and(RestaurantSpecification.isNotDeleted())
+        ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
 
         // Fetch the current user entity
         Long currentUserId = getCurrentUserId();
@@ -75,9 +79,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         List<ReviewEntity> existingReviews = reviewRepository.findAll(spec);
 
-        boolean hasReviewWithinOneYear = !existingReviews.isEmpty();
-
-        if (hasReviewWithinOneYear) {
+        if (!existingReviews.isEmpty()) {
             // Return error response if a review within the last year exists
             throw new IllegalArgumentException("User already reviewed");
         }
@@ -91,12 +93,11 @@ public class ReviewServiceImpl implements ReviewService {
         review.setUser(currentUser);
 
         ReviewEntity savedReview = reviewRepository.save(review);
-        Review savedApiReview = reviewMapper.toReview(savedReview);
 
         // Update the restaurant rating
         updateRestaurantRating(savedReview.getRestaurant().getId());
 
-        return savedApiReview;
+        return reviewMapper.toReview(savedReview);
     }
 
     @Override

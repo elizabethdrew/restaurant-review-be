@@ -15,16 +15,9 @@ public interface ReviewMapper {
     // Method to convert a ReviewEntity object to a Review object
     @Mapping(source = "restaurant.id", target = "restaurantId")
     @Mapping(source = "user.id", target = "userId")
+    @Mapping(source = "restaurant.city", target = "restaurantCity")
+    @Mapping(source = "restaurant.name", target = "restaurantName")
     Review toReview(ReviewEntity reviewEntity);
-
-    // Method to populate the restaurant_name and restaurant_city fields in a Review object after mapping
-    @AfterMapping
-    default void populateRestaurantFields(ReviewEntity reviewEntity, @MappingTarget Review review) {
-        if (reviewEntity.getRestaurant() != null) {
-            review.setRestaurantName(reviewEntity.getRestaurant().getName());
-            review.setRestaurantCity(reviewEntity.getRestaurant().getCity());
-        }
-    }
 
     // Method to convert a ReviewInput object to a ReviewEntity object
     ReviewEntity toReviewEntity(ReviewInput reviewInput);

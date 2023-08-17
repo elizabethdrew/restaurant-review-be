@@ -17,14 +17,15 @@ public class ReviewEntity extends org.openapitools.model.Review {
     @Column(name = "id")
     private Long id;
 
+    //@Getter
     @Getter
-    @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
     private RestaurantEntity restaurant;
 
+    //@Getter
     @Getter
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
@@ -43,14 +44,6 @@ public class ReviewEntity extends org.openapitools.model.Review {
     @Column(name = "updated_at")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime updatedAt;
-
-    @Getter
-    @Transient
-    private String restaurant_name;
-
-    @Getter
-    @Transient
-    private String restaurant_city;
 
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;
@@ -113,14 +106,6 @@ public class ReviewEntity extends org.openapitools.model.Review {
         this.updatedAt = updatedAt;
     }
 
-    public void setRestaurant_name(String restaurant_name) {
-        this.restaurant_name = restaurant_name;
-    }
-
-    public void setRestaurant_city(String restaurant_city) {
-        this.restaurant_city = restaurant_city;
-    }
-
     public Boolean getDeleted() {
         return isDeleted;
     }
@@ -134,12 +119,12 @@ public class ReviewEntity extends org.openapitools.model.Review {
         if (this == o) return true;
         if (!(o instanceof ReviewEntity that)) return false;
         if (!super.equals(o)) return false;
-        return Objects.equals(getId(), that.getId()) && Objects.equals(getRestaurant(), that.getRestaurant()) && Objects.equals(getUser(), that.getUser()) && Objects.equals(getRating(), that.getRating()) && Objects.equals(getComment(), that.getComment()) && Objects.equals(getCreatedAt(), that.getCreatedAt()) && Objects.equals(getUpdatedAt(), that.getUpdatedAt()) && Objects.equals(getRestaurant_name(), that.getRestaurant_name()) && Objects.equals(getRestaurant_city(), that.getRestaurant_city()) && Objects.equals(getIsDeleted(), that.getIsDeleted());
+        return Objects.equals(getId(), that.getId()) && Objects.equals(getRestaurant(), that.getRestaurant()) && Objects.equals(getUser(), that.getUser()) && Objects.equals(getRating(), that.getRating()) && Objects.equals(getComment(), that.getComment()) && Objects.equals(getCreatedAt(), that.getCreatedAt()) && Objects.equals(getUpdatedAt(), that.getUpdatedAt()) && Objects.equals(getIsDeleted(), that.getIsDeleted());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getId(), getRestaurant(), getUser(), getRating(), getComment(), getCreatedAt(), getUpdatedAt(), getRestaurant_name(), getRestaurant_city(), getIsDeleted());
+        return Objects.hash(super.hashCode(), getId(), getRestaurant(), getUser(), getRating(), getComment(), getCreatedAt(), getUpdatedAt(), getIsDeleted());
     }
 
     @Override
@@ -152,9 +137,8 @@ public class ReviewEntity extends org.openapitools.model.Review {
                 ", comment='" + comment + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
-                ", restaurant_name='" + restaurant_name + '\'' +
-                ", restaurant_city='" + restaurant_city + '\'' +
                 ", isDeleted=" + isDeleted +
                 '}';
     }
+
 }

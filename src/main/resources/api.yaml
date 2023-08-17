@@ -864,13 +864,6 @@ components:
         is_deleted:
           type: boolean
           default: false
-      required:
-        - id
-        - restaurant_id
-        - user_id
-        - rating
-        - restaurant_name
-        - restaurant_city
 
     ReviewInput:
       type: object
@@ -919,12 +912,6 @@ components:
         is_deleted:
           type: boolean
           default: false
-      required:
-        - username
-        - name
-        - email
-        - password
-        - role
 
     UserInput:
       type: object
@@ -999,9 +986,6 @@ components:
         is_deleted:
           type: boolean
           default: false
-      required:
-        - name
-        - city
 
     RestaurantInput:
       type: object
@@ -1042,9 +1026,6 @@ components:
           format: int64
         name:
           type: string
-      required:
-        - id
-        - name
 
     Error:
       type: object

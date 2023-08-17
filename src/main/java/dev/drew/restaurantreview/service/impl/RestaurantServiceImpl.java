@@ -182,8 +182,13 @@ public class RestaurantServiceImpl implements RestaurantService {
             throw new InsufficientPermissionException("User does not have permission to delete this restaurant");
         }
 
+        System.out.println(restaurantEntity);
+
         // Instead of deleting, we mark the restaurant as deleted
         restaurantEntity.setIsDeleted(true);
+
+        System.out.println(restaurantEntity);
+
         restaurantRepository.save(restaurantEntity);
     }
 
