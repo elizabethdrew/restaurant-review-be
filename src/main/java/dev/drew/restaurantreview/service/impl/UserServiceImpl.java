@@ -1,6 +1,7 @@
 package dev.drew.restaurantreview.service.impl;
 
 import dev.drew.restaurantreview.exception.InsufficientPermissionException;
+import dev.drew.restaurantreview.exception.InvalidInputException;
 import dev.drew.restaurantreview.exception.UserNotFoundException;
 import dev.drew.restaurantreview.service.UserService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -34,6 +35,16 @@ public class UserServiceImpl implements UserService {
 
     public User addNewUser(UserInput userInput) {
 
+        // Check if username already exists
+        if(userRepository.existsByUsername(userInput.getUsername())) {
+            throw new InvalidInputException("Username already in use.");
+        }
+
+        // Check if email already exists (Assuming UserInput and UserEntity have an 'email' field)
+        if(userRepository.existsByEmail(userInput.getEmail())) {
+            throw new InvalidInputException("Email already in use.");
+        }
+
         UserEntity user = userMapper.toUserEntity(userInput);
         user.setCreatedAt(OffsetDateTime.now());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -44,6 +55,7 @@ public class UserServiceImpl implements UserService {
 
         return savedApiUser;
     }
+
 
 
     public User getUserById(Integer userId) {
