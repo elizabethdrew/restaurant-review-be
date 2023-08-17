@@ -13,6 +13,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.openapitools.model.Review;
 import org.openapitools.model.ReviewInput;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -40,7 +43,9 @@ class ReviewControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(reviewController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(reviewController)
+                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+                .build();
     }
 
     @Test
@@ -74,7 +79,8 @@ class ReviewControllerTest {
                 new Review().id(2L).restaurantId(2L).userId(2L).rating(4)
         );
 
-        when(reviewService.getAllReviews(null, null, null, null)).thenReturn(reviews);
+        Pageable pageable = PageRequest.of(0,20);
+        when(reviewService.getAllReviews(null, null, null, pageable)).thenReturn(reviews);
 
         mockMvc.perform(get("/api/v1/reviews")
                         .contentType(MediaType.APPLICATION_JSON))
