@@ -33,9 +33,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -148,13 +148,17 @@ public class ReviewServiceTest {
         ReviewEntity reviewEntity = new ReviewEntity();
         reviewEntity.setId(reviewId);
         reviewEntity.setRating(5);
+        reviewEntity.setComment("Comment");
+        reviewEntity.setIsDeleted(false);
 
         Review expectedReview = new Review();
         expectedReview.setId(reviewId);
         expectedReview.setRating(5);
+        expectedReview.setComment("Comment");
+        expectedReview.setIsDeleted(false);
 
-        // Mock the repository call
-        when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(reviewEntity));
+        // Mock the repository call with any Specification
+        when(reviewRepository.findOne(any(Specification.class))).thenReturn(Optional.of(reviewEntity));
 
         // Mock the mapper call
         when(reviewMapper.toReview(reviewEntity)).thenReturn(expectedReview);
@@ -183,18 +187,21 @@ public class ReviewServiceTest {
         ReviewEntity reviewEntity = new ReviewEntity();
         reviewEntity.setId(reviewId);
         reviewEntity.setRating(5);
+        reviewEntity.setComment("Comment");
+        reviewEntity.setIsDeleted(false);
         reviewEntity.setUser(securityUser.getUserEntity());
         reviewEntity.setRestaurant(restaurantEntity); // Associate the restaurant entity
 
         ReviewEntity updatedEntity = new ReviewEntity();
         updatedEntity.setId(reviewId);
-        updatedEntity.setRating(updatedInput.getRating());
-        updatedEntity.setComment(updatedInput.getComment());
+        updatedEntity.setRating(5);
+        updatedEntity.setComment("Comment");
+        updatedEntity.setIsDeleted(false);
         updatedEntity.setUser(securityUser.getUserEntity());
         updatedEntity.setRestaurant(restaurantEntity); // Associate the restaurant entity
 
-        // Mock the repository and mapper calls
-        when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(reviewEntity));
+        // Mock the repository call with any Specification
+        when(reviewRepository.findOne(any(Specification.class))).thenReturn(Optional.of(reviewEntity));
         when(reviewRepository.save(any(ReviewEntity.class))).thenReturn(updatedEntity);
 
         Review updatedReviewResponse = new Review().id(reviewId).rating(updatedInput.getRating()).comment(updatedInput.getComment());
@@ -210,14 +217,14 @@ public class ReviewServiceTest {
 
     @Test
     void testDeleteReviewByIdNotFound() {
-        // Prepare expected data
-        Long reviewId = 1L;
+
+        Long deleteReviewId = 2L;
 
         // Mock the repository call
-        when(reviewRepository.findById(reviewId)).thenReturn(Optional.empty());
+        when(reviewRepository.findOne(any(Specification.class))).thenReturn(Optional.empty());
 
         // Verify the response status
-        assertThrows(ReviewNotFoundException.class, () -> reviewServiceImpl.deleteReviewById(reviewId.intValue()));
+        assertThrows(ReviewNotFoundException.class, () -> reviewServiceImpl.deleteReviewById(deleteReviewId.intValue()));
 
         verify(reviewRepository, never()).deleteById(anyLong());
     }
@@ -235,16 +242,13 @@ public class ReviewServiceTest {
         reviewEntity.setRestaurant(restaurantEntity); // Associate the restaurant entity
         reviewEntity.setUserId(2L); // Different user ID
 
-        // Mock the repository call
-        when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(reviewEntity));
-
         // Change the current user to a non-admin role
         SecurityUser securityUser = createSecurityUserWithRole(User.RoleEnum.REVIEWER);
         Authentication mockAuthentication = new UsernamePasswordAuthenticationToken(
                 securityUser, null, securityUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(mockAuthentication);
 
-        when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(reviewEntity));
+        when(reviewRepository.findOne(any(Specification.class))).thenReturn(Optional.of(reviewEntity));
 
         assertThrows(InsufficientPermissionException.class, () -> reviewServiceImpl.deleteReviewById(reviewId.intValue()));
 
