@@ -497,9 +497,11 @@ paths:
           description: The rating value to filter restaurants by.
           required: false
           schema:
-            type: integer
-            minimum: 1
-            maximum: 5
+            type: array
+            items:
+              type: integer
+              minimum: 1
+              maximum: 5
       responses:
         '200':
           description: Success

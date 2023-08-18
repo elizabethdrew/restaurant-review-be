@@ -57,7 +57,7 @@ public class ReviewController implements ReviewsApi {
     public ResponseEntity<List<Review>> getAllReviews(
             @Valid @RequestParam(value = "restaurant_id", required = false) Long restaurantId,
             @Valid @RequestParam(value = "user_id", required = false) Long userId,
-            @Min(1) @Max(5) @Valid @RequestParam(value = "rating", required = false) Integer rating,
+            @Min(1) @Max(5) @Valid @RequestParam(value = "rating", required = false) List<Integer> rating,
             @PageableDefault(size = 20)  Pageable pageable){
         List<Review> reviews = reviewService.getAllReviews(restaurantId,  userId, rating, pageable);
         return ResponseEntity.ok(reviews);
