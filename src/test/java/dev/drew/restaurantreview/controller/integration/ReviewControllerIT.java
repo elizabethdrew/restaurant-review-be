@@ -54,6 +54,16 @@ public class ReviewControllerIT extends GlobalTestContainer {
     }
 
     @Test
+    void testGetAllReviews_withRating_multpile() throws Exception {
+        given().queryParam("rating", "2,3")
+                .then()
+                .statusCode(200)
+                .body("rating", not(hasItem(1)))
+                .body("rating", hasItem(2))
+                .body("rating", hasItem(3));
+    }
+
+    @Test
     void testGetAllReviews_withPagination() throws Exception {
         when().request("GET", "/api/v1/reviews?page=0&size=5")
                 .then()
