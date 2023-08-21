@@ -13,7 +13,7 @@ public interface ReviewService {
     Review addNewReview(ReviewInput reviewInput);
 
     // Get all reviews with optional filters (restaurantId, userId and rating)
-    List<Review> getAllReviews(Long restaurantId, Long userId, Integer rating, Pageable pageable);
+    List<Review> getAllReviews(Long restaurantId, Long userId, List<Integer> rating, Pageable pageable);
 
     // Get a review by its ID
     Review getReviewById(Integer reviewId);

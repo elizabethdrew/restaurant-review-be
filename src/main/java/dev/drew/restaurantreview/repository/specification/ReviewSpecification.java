@@ -1,9 +1,11 @@
 package dev.drew.restaurantreview.repository.specification;
 
+import dev.drew.restaurantreview.entity.RestaurantEntity;
 import org.springframework.data.jpa.domain.Specification;
 import dev.drew.restaurantreview.entity.ReviewEntity;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 public class ReviewSpecification {
 
@@ -15,8 +17,8 @@ public class ReviewSpecification {
         return (root, query, criteriaBuilder) -> userId == null ? null : criteriaBuilder.equal(root.get("user").get("id"), userId);
     }
 
-    public static Specification<ReviewEntity> hasRating(Integer rating) {
-        return (root, query, criteriaBuilder) -> rating == null ? null : criteriaBuilder.equal(root.get("rating"), rating);
+    public static Specification<ReviewEntity> hasRating(List<Integer> ratings) {
+        return (root, query, criteriaBuilder) -> ratings == null || ratings.isEmpty() ? null : root.get("rating").in(ratings);
     }
 
     public static Specification<ReviewEntity> isNotDeleted() {

@@ -23,15 +23,19 @@ paths:
           description: The city to filter restaurants by.
           required: false
           schema:
-            type: string
+            type: array
+            items:
+              type: string
         - name: rating
           in: query
           description: The rating value to filter restaurants by.
           required: false
           schema:
-            type: integer
-            minimum: 1
-            maximum: 5
+            type: array
+            items:
+              type: integer
+              minimum: 1
+              maximum: 5
         - name: user_id
           in: query
           description: The user ID to filter restaurants by.
@@ -39,6 +43,24 @@ paths:
           schema:
             type: integer
             format: int64
+        - name: price_range
+          in: query
+          description: Filter by price range
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+              minimum: 1
+              maximum: 3
+        - name: cuisine
+          in: query
+          description: Filter by cuisine
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         '200':
           description: Success
@@ -475,9 +497,11 @@ paths:
           description: The rating value to filter restaurants by.
           required: false
           schema:
-            type: integer
-            minimum: 1
-            maximum: 5
+            type: array
+            items:
+              type: integer
+              minimum: 1
+              maximum: 5
       responses:
         '200':
           description: Success

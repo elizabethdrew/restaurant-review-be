@@ -135,7 +135,7 @@ The API documentation is provided using OpenAPI and can be explored using Swagge
 
 Once you have the application up and running locally, you can navigate to:
 
-http://localhost:89
+http://localhost:8080/swagger-ui/index.html
 
 Here, you can explore the API's endpoints, understand the structure of request payloads, responses, and even interact with the API by sending requests directly from the interface.
 

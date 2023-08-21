@@ -15,7 +15,7 @@ public interface RestaurantService {
     Restaurant addNewRestaurant(RestaurantInput restaurantInput);
 
     // Get all restaurants with optional filters (city, rating, and userId)
-    List<Restaurant> getAllRestaurants(String city, Integer rating, Long userId, Pageable pageable);
+    List<Restaurant> getAllRestaurants(List<String> city, List<Integer> rating, Long userId, List<Integer> price_range, List<String> cuisine, Pageable pageable);
 
     // Get a restaurant by its ID
     Restaurant getRestaurantById(Integer restaurantId) throws RestaurantNotFoundException;

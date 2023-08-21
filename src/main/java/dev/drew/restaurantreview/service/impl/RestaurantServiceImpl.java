@@ -108,17 +108,20 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
 
-    public List<Restaurant> getAllRestaurants(String city, Integer rating, Long userId, Pageable pageable) {
+    public List<Restaurant> getAllRestaurants(List<String> city, List<Integer> rating, Long userId, List<Integer> price_range, List<String> cuisine, Pageable pageable) {
         Page<RestaurantEntity> filteredEntities = restaurantRepository.findAll(
                 Specification.where(RestaurantSpecification.isNotDeleted())
                         .and(RestaurantSpecification.hasCity(city))
                         .and(RestaurantSpecification.hasRating(rating))
-                        .and(RestaurantSpecification.hasUserId(userId)),
+                        .and(RestaurantSpecification.hasUserId(userId))
+                        .and(RestaurantSpecification.hasPriceRange(price_range))
+                        .and(RestaurantSpecification.hasCuisine(cuisine)),
                 pageable
         );
 
         return filteredEntities.stream().map(restaurantMapper::toRestaurant).collect(Collectors.toList());
     }
+
 
 
     // Get a restaurant by ID

@@ -101,7 +101,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<Review> getAllReviews(Long restaurantId, Long userId, Integer rating, Pageable pageable) {
+    public List<Review> getAllReviews(Long restaurantId, Long userId, List<Integer> rating, Pageable pageable) {
         Page<ReviewEntity> filteredEntities = reviewRepository.findAll(
             Specification.where(ReviewSpecification.hasRestaurantId(restaurantId))
                 .and(ReviewSpecification.hasUserId(userId))
