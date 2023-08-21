@@ -26,15 +26,15 @@ services:
     volumes:
       - db_data:/var/lib/mysql
 
-  api-docs:
-    image: swaggerapi/swagger-ui
-    container_name: "swagger-ui"
-    ports:
-      - 89:8080
-    volumes:
-      - ./src/main/resources/api.yaml:/openapi.json
-    environment:
-      SWAGGER_JSON: /openapi.json
+#  api-docs:
+#    image: swaggerapi/swagger-ui
+#    container_name: "swagger-ui"
+#    ports:
+#      - 89:8080
+#    volumes:
+#      - ./src/main/resources/api.yaml:/openapi.json
+#    environment:
+#      SWAGGER_JSON: /openapi.json
 
 
 volumes:
