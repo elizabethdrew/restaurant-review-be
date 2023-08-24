@@ -20,12 +20,11 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
     @Column(name = "id")
     private Long id;
 
-    @FullTextField()
+    @FullTextField
     @NotNull
     @Column(name = "name")
     private String name;
 
-    @FullTextField()
     @NotNull
     @Column(name = "city")
     private String city;

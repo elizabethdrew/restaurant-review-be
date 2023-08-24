@@ -13,9 +13,7 @@ spring:
       hibernate:
         search:
           backend:
-            type: lucene
             directory:
-              type: local-filesystem
               root: ./data/index
     show-sql: true
     hibernate:
