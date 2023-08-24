@@ -45,7 +45,7 @@ class SearchControllerTest {
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(searchController)
                 .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
-                .setControllerAdvice(new GlobalExceptionHandler())  // if you want to handle exceptions in tests too
+                .setControllerAdvice(new GlobalExceptionHandler())
                 .build();
     }
 
@@ -73,7 +73,7 @@ class SearchControllerTest {
         );
 
         String query = "nonExistentTerm";
-        Pageable pageable = PageRequest.of(0, 20); // Corresponds to the default size we set
+        Pageable pageable = PageRequest.of(0, 20);
         when(searchService.searchRestaurant(query, pageable)).thenThrow(new NoResultsFoundException("No restaurants found for the given query: " + query));
 
         mockMvc.perform(get("/api/v1/search")
