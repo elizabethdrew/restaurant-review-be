@@ -8,6 +8,42 @@ info:
   contact:
     name: Elizabeth Drew
 paths:
+  /api/v1/search:
+    get:
+      summary: Search all restaurants
+      operationId: getSearch
+      tags:
+        - Search
+      description: Returns a list of restaurant results.
+      parameters:
+        - in: query
+          name: query
+          required: true
+          description: Search query to filter restaurants.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Restaurant'
+        '404':
+          description: No Results Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /api/v1/restaurants:
     get:
       security: []

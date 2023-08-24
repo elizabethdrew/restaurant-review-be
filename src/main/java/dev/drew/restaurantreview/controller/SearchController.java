@@ -1,5 +1,6 @@
 package dev.drew.restaurantreview.controller;
 
+import org.openapitools.api.SearchApi;
 import org.openapitools.model.Restaurant;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,7 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/search")
 @PreAuthorize("permitAll()")
-public class SearchController {
+public class SearchController implements SearchApi {
 
     private final SearchService searchService;
 
