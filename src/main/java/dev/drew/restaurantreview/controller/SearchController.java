@@ -1,6 +1,5 @@
 package dev.drew.restaurantreview.controller;
 
-import dev.drew.restaurantreview.dto.SearchDTO;
 import org.openapitools.model.Restaurant;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

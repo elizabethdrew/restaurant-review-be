@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,7 +34,8 @@ public class SearchServiceImpl implements SearchService {
         SearchResult<RestaurantEntity> result = searchSession.search(RestaurantEntity.class)
                 .where(f -> f.match()
                         .fields("name")
-                        .matching(query))
+                        .matching(query)
+                        .fuzzy())
                 .fetch(20);
 
         return result.hits().stream()
