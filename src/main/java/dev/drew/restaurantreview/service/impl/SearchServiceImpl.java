@@ -1,6 +1,7 @@
 package dev.drew.restaurantreview.service.impl;
 
 import dev.drew.restaurantreview.entity.RestaurantEntity;
+import dev.drew.restaurantreview.exception.NoResultsFoundException;
 import dev.drew.restaurantreview.mapper.RestaurantMapper;
 import dev.drew.restaurantreview.service.SearchService;
 import jakarta.persistence.EntityManager;
@@ -38,8 +39,15 @@ public class SearchServiceImpl implements SearchService {
                         .fuzzy())
                 .fetch(20);
 
-        return result.hits().stream()
+        List<Restaurant> restaurants = result.hits().stream()
                 .map(restaurantMapper::toRestaurant)
                 .collect(Collectors.toList());
+
+        if (restaurants.isEmpty()) {
+            throw new NoResultsFoundException("No restaurants found for the given query: " + query);
+        }
+
+        return restaurants;
     }
+
 }
