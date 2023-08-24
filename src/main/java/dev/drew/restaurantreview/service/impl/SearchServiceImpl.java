@@ -33,7 +33,7 @@ public class SearchServiceImpl implements SearchService {
 
         SearchResult<RestaurantEntity> result = searchSession.search(RestaurantEntity.class)
                 .where(f -> f.match()
-                        .fields("name")
+                        .fields("name", "city")
                         .matching(query)
                         .fuzzy())
                 .fetch(20);
