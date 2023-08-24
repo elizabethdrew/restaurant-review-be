@@ -12,6 +12,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.openapitools.model.Restaurant;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -41,34 +44,37 @@ class SearchControllerTest {
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(searchController)
+                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+                .setControllerAdvice(new GlobalExceptionHandler())  // if you want to handle exceptions in tests too
                 .build();
     }
 
     @Test
     void testGetSearch() throws Exception {
-        String query = "searchTerm";
         List<Restaurant> restaurants = Arrays.asList(
                 new Restaurant().id(1L).name("Restaurant 1").city("City 1"),
                 new Restaurant().id(2L).name("Restaurant 2").city("City 2")
         );
 
-        when(searchService.searchRestaurant(eq(query))).thenReturn(restaurants);
+        Pageable pageable = PageRequest.of(0, 20);
+        when(searchService.searchRestaurant("Restaurant", pageable)).thenReturn(restaurants);
 
         mockMvc.perform(get("/api/v1/search")
-                        .param("query", query)
+                        .param("query", "Restaurant")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
     void testGetSearchNoResults() throws Exception {
-
-        mockMvc = MockMvcBuilders.standaloneSetup(searchController)
-                .setControllerAdvice(new GlobalExceptionHandler())
-                .build();
+        List<Restaurant> restaurants = Arrays.asList(
+                new Restaurant().id(1L).name("Restaurant 1").city("City 1"),
+                new Restaurant().id(2L).name("Restaurant 2").city("City 2")
+        );
 
         String query = "nonExistentTerm";
-        when(searchService.searchRestaurant(eq(query))).thenThrow(new NoResultsFoundException("No restaurants found for the given query: " + query));
+        Pageable pageable = PageRequest.of(0, 20); // Corresponds to the default size we set
+        when(searchService.searchRestaurant(query, pageable)).thenThrow(new NoResultsFoundException("No restaurants found for the given query: " + query));
 
         mockMvc.perform(get("/api/v1/search")
                         .param("query", query)

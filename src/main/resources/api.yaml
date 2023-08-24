@@ -15,6 +15,7 @@ paths:
       tags:
         - Search
       description: Returns a list of restaurant results.
+      x-spring-paginated: true
       parameters:
         - in: query
           name: query

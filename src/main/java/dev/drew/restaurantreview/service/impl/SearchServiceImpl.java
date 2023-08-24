@@ -10,6 +10,7 @@ import org.hibernate.search.mapper.orm.Search;
 import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.hibernate.search.engine.search.query.SearchResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,8 +29,12 @@ public class SearchServiceImpl implements SearchService {
         this.restaurantMapper = restaurantMapper;
     }
 
+    protected SearchSession getSearchSession() {
+        return Search.session(entityManager);
+    }
+
     @Override
-    public List<Restaurant> searchRestaurant(String query) {
+    public List<Restaurant> searchRestaurant(String query, Pageable pageable) {
         SearchSession searchSession = Search.session(entityManager);
 
         SearchResult<RestaurantEntity> result = searchSession.search(RestaurantEntity.class)
