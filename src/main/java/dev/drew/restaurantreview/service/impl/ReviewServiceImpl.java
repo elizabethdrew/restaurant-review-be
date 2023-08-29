@@ -68,6 +68,11 @@ public class ReviewServiceImpl implements ReviewService {
         UserEntity currentUser = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
+        // Check if the user is trying to review their own restaurant
+        if (currentRestaurant.getUser().getId().equals(currentUserId)) {
+            throw new UserOwnsRestaurantException("Owners cannot review their own restaurants.");
+        }
+
         // Check if the user has already reviewed the restaurant within the last year
         OffsetDateTime oneYearAgo = OffsetDateTime.now().minusYears(1);
 
@@ -81,7 +86,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         if (!existingReviews.isEmpty()) {
             // Return error response if a review within the last year exists
-            throw new IllegalArgumentException("User already reviewed");
+            throw new DuplicateReviewException("User already reviewed");
         }
 
         // Add the new review
