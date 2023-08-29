@@ -28,6 +28,11 @@ public class GlobalExceptionHandler {
         return generateErrorResponse(HttpStatus.BAD_REQUEST, "Constraint Violation", e);
     }
 
+    @ExceptionHandler(NoResultsFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoResultsFoundException(NoResultsFoundException e) {
+        return generateErrorResponse(HttpStatus.NOT_FOUND, "No Results Found", e);
+    }
+
     @ExceptionHandler(InvalidStateException.class)
     public ResponseEntity<ErrorResponse> handleInvalidStateException(InvalidStateException e) {
         return generateErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Invalid State", e);

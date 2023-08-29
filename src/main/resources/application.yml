@@ -9,6 +9,12 @@ spring:
     username: admin
     password: password
   jpa:
+    properties:
+      hibernate:
+        search:
+          backend:
+            directory:
+              root: ./data/index
     show-sql: true
     hibernate:
       ddl-auto: none

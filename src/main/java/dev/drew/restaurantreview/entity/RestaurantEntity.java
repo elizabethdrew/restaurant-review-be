@@ -6,9 +6,12 @@ import java.util.List;
 import java.util.Objects;
 import jakarta.validation.constraints.*;
 import jakarta.persistence.*;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
+@Indexed
 @Table(name = "restaurant")
 public class RestaurantEntity extends org.openapitools.model.Restaurant {
 
@@ -17,10 +20,12 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
     @Column(name = "id")
     private Long id;
 
+    @FullTextField
     @NotNull
     @Column(name = "name")
     private String name;
 
+    @FullTextField
     @NotNull
     @Column(name = "city")
     private String city;
