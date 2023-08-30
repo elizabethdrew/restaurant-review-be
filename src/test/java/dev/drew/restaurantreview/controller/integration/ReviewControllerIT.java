@@ -149,6 +149,20 @@ public class ReviewControllerIT extends GlobalTestContainer {
     }
 
     @Test
+    void testAddNewReview_restaurantOwner() throws Exception {
+        String body = "{\"restaurant_id\": \"1\", \n" +
+                "    \"rating\": \"5\",\n" +
+                "    \"comment\": \"Can I eat here every day?\"\n" +
+                "    }";
+
+        given().log().all().contentType(ContentType.JSON)
+                .body(body)
+                .when().request("POST", "/api/v1/reviews")
+                .then()
+                .statusCode(403);
+    }
+
+    @Test
     void testAddNewReview_restaurantNotFound() throws Exception {
         String token = authorisationAdmin();
         String body = "{\"restaurant_id\": \"16\", \n" +

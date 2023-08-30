@@ -23,6 +23,17 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, status);
     }
 
+    @ExceptionHandler(DuplicateReviewException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateReviewException(DuplicateReviewException e) {
+        return generateErrorResponse(HttpStatus.BAD_REQUEST, "Restaurant already reviewed by user within last year.", e);
+    }
+
+    @ExceptionHandler(UserOwnsRestaurantException.class)
+    public ResponseEntity<ErrorResponse> handleUserOwnsRestaurantException(UserOwnsRestaurantException e) {
+        return generateErrorResponse(HttpStatus.BAD_REQUEST, "User owns Restaurant", e);
+    }
+
+
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException e) {
         return generateErrorResponse(HttpStatus.BAD_REQUEST, "Constraint Violation", e);
