@@ -1,0 +1,49 @@
+databaseChangeLog:
+  - changeSet:
+      id: 13
+      author: elizabeth_drew
+      changes:
+        - createTable:
+            tableName: restaurant_claim
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: restaurant_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_restaurant_claim_restaurant
+                    references: restaurant(id)
+              - column:
+                  name: claimant_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_restaurant_claim_user
+                    references: users(id)
+              - column:
+                  name: status
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reason
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
