@@ -2,6 +2,8 @@ package dev.drew.restaurantreview.service;
 
 import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
+import org.openapitools.model.ClaimInput;
+import org.openapitools.model.ClaimStatus;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
 import org.springframework.data.domain.Pageable;
@@ -26,4 +28,7 @@ public interface RestaurantService {
 
     // Delete a restaurant by its ID
     void deleteRestaurantById(Integer restaurantId);
+
+    ClaimStatus getClaimStatus(Integer restaurantId);
+    ClaimStatus createClaim(Integer restaurantId, ClaimInput claimInput);
 }
