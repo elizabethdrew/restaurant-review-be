@@ -5,16 +5,16 @@ import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import dev.drew.restaurantreview.service.RestaurantService;
 import java.util.List;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.openapitools.api.RestaurantsApi;
+import org.openapitools.model.ClaimInput;
+import org.openapitools.model.ClaimStatus;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -48,6 +48,7 @@ public class RestaurantController implements RestaurantsApi {
         return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
     }
 
+
     @GetMapping
     @PreAuthorize("permitAll()")
     public ResponseEntity<List<Restaurant>> getAllRestaurants(
@@ -67,6 +68,28 @@ public class RestaurantController implements RestaurantsApi {
             @Min(1) @PathVariable Integer restaurantId) {
         Restaurant restaurant = restaurantService.getRestaurantById(restaurantId);
         return ResponseEntity.ok(restaurant);
+    }
+
+    @SecurityRequirement(
+            name = "Bearer Authentication"
+    )
+    @Override
+    @GetMapping("/{restaurantId}/claim")
+    public ResponseEntity<ClaimStatus> getRestaurantClaimStatus(
+            @Min(1) @PathVariable Integer restaurantId) {
+        ClaimStatus status = restaurantService.getClaimStatus(restaurantId);
+        return ResponseEntity.ok(status);
+    }
+
+    @SecurityRequirement(
+            name = "Bearer Authentication"
+    )
+    @Override
+    @PostMapping("/{restaurantId}/claim")
+    public ResponseEntity<ClaimStatus> createRestaurantClaim(
+            @Min(1) @PathVariable Integer restaurantId, ClaimInput claimInput) {
+        ClaimStatus status = restaurantService.createClaim(restaurantId, claimInput);
+        return ResponseEntity.status(201).body(status);
     }
 
     @SecurityRequirement(
