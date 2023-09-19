@@ -7,9 +7,7 @@ import org.openapitools.model.ClaimStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,5 +23,12 @@ public class AdminController implements AdminApi {
     public ResponseEntity<List<ClaimStatus>> getPendingClaims() {
         List<ClaimStatus> pendingClaims = adminService.getPendingClaims();
         return ResponseEntity.ok(pendingClaims);
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PostMapping("/{claimId}/accept")
+    public ResponseEntity<ClaimStatus> acceptClaim(@PathVariable("claimId") Long claimId) {
+        ClaimStatus claimStatus = adminService.acceptClaim(claimId);
+        return ResponseEntity.ok(claimStatus);
     }
 }
