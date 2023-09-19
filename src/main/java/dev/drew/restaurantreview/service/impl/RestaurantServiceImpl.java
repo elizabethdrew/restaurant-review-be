@@ -212,20 +212,14 @@ public class RestaurantServiceImpl implements RestaurantService {
                         .and(RestaurantSpecification.isNotDeleted())
         ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
 
-        System.out.println("RESTAURANT CLEARED");
-
         // Fetch the current user entity
         Long currentUserId = getCurrentUserId();
         UserEntity currentUser = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        System.out.println("USER CLEARED");
-
         // Fetch the claim for current user and restaurant
         ClaimEntity claimEntity = claimRepository.findByRestaurantAndClaimant(restaurantEntity, currentUser)
                 .orElseThrow(() -> new ClaimNotFoundException("Claim not found"));
-
-        System.out.println("CLAIM CLEARED");
 
         // Return the claim status
         return claimMapper.toClaim(claimEntity);
