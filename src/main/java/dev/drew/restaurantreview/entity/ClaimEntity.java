@@ -40,6 +40,6 @@ public class ClaimEntity {
     public enum ClaimStatus {
         PENDING,
         ACCEPTED,
-        DENIED
+        REJECTED
     }
 }
