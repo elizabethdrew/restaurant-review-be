@@ -652,7 +652,7 @@ paths:
       operationId: addNewReview
       tags:
         - Reviews
-      description: Adds a new review to the database.
+      description: Adds a new review to the database. User cannot review a restaurant more than once within a year. Owner of restaurant cannot review their own restaurant.
       security:
         - basicAuth: [ ]
       requestBody:
