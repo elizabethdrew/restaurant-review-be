@@ -1,20 +1,20 @@
 package dev.drew.restaurantreview.service.impl;
 
 import dev.drew.restaurantreview.entity.CuisineEntity;
+import dev.drew.restaurantreview.entity.FavouriteEntity;
 import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.exception.*;
 import dev.drew.restaurantreview.mapper.RestaurantMapper;
-import dev.drew.restaurantreview.repository.CuisineRepository;
-import dev.drew.restaurantreview.repository.RestaurantRepository;
-import dev.drew.restaurantreview.repository.ReviewRepository;
-import dev.drew.restaurantreview.repository.UserRepository;
+import dev.drew.restaurantreview.repository.*;
 import dev.drew.restaurantreview.repository.specification.RestaurantSpecification;
 import dev.drew.restaurantreview.service.RestaurantService;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -38,6 +38,9 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final EntityUserIdProvider<RestaurantEntity> restaurantUserIdProvider = RestaurantEntity::getUserId;
     private UserRepository userRepository;
     private CuisineRepository cuisineRepository;
+
+    @Autowired
+    private FavouriteRepository favouriteRepository;
 
     // Constructor with required dependencies
     public RestaurantServiceImpl(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper, ReviewRepository reviewRepository, UserRepository userRepository, CuisineRepository cuisineRepository) {
@@ -123,8 +126,6 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
 
-
-    // Get a restaurant by ID
     public Restaurant getRestaurantById(Integer restaurantId) throws RestaurantNotFoundException {
         // Use a Specification to find a non-deleted restaurant by its ID
         RestaurantEntity restaurantEntity = restaurantRepository.findOne(
@@ -134,6 +135,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         return restaurantMapper.toRestaurant(restaurantEntity);
     }
+
 
     public Restaurant updateRestaurantById(Integer restaurantId, RestaurantInput restaurantInput)
             throws RestaurantNotFoundException, InsufficientPermissionException {
@@ -171,7 +173,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         return restaurantMapper.toRestaurant(savedRestaurant);
     }
 
-    // Delete a restaurant by ID
+
     public void deleteRestaurantById(Integer restaurantId) {
 
         // Use a Specification to find a non-deleted restaurant by its ID
@@ -193,6 +195,39 @@ public class RestaurantServiceImpl implements RestaurantService {
         System.out.println(restaurantEntity);
 
         restaurantRepository.save(restaurantEntity);
+    }
+
+
+    @Transactional
+    public boolean toggleFavourite(Integer restaurantId) {
+
+        // Use a Specification to find a non-deleted restaurant by its ID
+        RestaurantEntity restaurantEntity = restaurantRepository.findOne(
+                Specification.where(RestaurantSpecification.hasId(restaurantId.longValue()))
+                        .and(RestaurantSpecification.isNotDeleted())
+        ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
+
+        // Fetch the current user entity
+        Long currentUserId = getCurrentUserId();
+        UserEntity currentUser = userRepository.findById(currentUserId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        // Check if the user has already favourited this restaurant
+        Optional<FavouriteEntity> favouriteOpt = favouriteRepository.findByRestaurantAndUser(restaurantEntity, currentUser);
+
+        if (favouriteOpt.isPresent()) {
+            // If found, we remove it from favourites
+            favouriteRepository.delete(favouriteOpt.get());
+            return false;
+        } else {
+            // Otherwise, add it to favourites
+            FavouriteEntity favourite = new FavouriteEntity();
+            favourite.setRestaurant(restaurantEntity);
+            favourite.setUser(currentUser);
+            favouriteRepository.save(favourite);
+            return true;
+        }
+
     }
 
 }

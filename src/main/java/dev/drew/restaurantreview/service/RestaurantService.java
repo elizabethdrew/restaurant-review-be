@@ -26,4 +26,6 @@ public interface RestaurantService {
 
     // Delete a restaurant by its ID
     void deleteRestaurantById(Integer restaurantId);
+
+    boolean toggleFavourite(Integer restaurantId);
 }

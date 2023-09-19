@@ -14,7 +14,6 @@ import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -89,6 +88,19 @@ public class RestaurantController implements RestaurantsApi {
             @Min(1) @PathVariable Integer restaurantId) {
         restaurantService.deleteRestaurantById(restaurantId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PostMapping("/{restaurantId}/favourite")
+    public ResponseEntity<Restaurant> favouriteRestaurant(@PathVariable Integer restaurantId) {
+
+        boolean favouriteAdded = restaurantService.toggleFavourite(restaurantId);
+
+        if(favouriteAdded) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.noContent().build();
+        }
     }
 
 }
