@@ -5,13 +5,10 @@ import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import dev.drew.restaurantreview.service.RestaurantService;
 import java.util.List;
 
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jdk.swing.interop.SwingInterOpUtils;
 import org.openapitools.api.RestaurantsApi;
 import org.openapitools.model.ClaimInput;
 import org.openapitools.model.ClaimStatus;
