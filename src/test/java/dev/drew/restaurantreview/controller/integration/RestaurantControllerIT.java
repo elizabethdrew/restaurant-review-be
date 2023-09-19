@@ -384,4 +384,46 @@ public class RestaurantControllerIT extends GlobalTestContainer {
                 .then().statusCode(404);
     }
 
+    @Test
+    void testAddNewClaim_authorised() throws Exception {
+        String token = authorisationAdmin();
+        Integer resId = 14;
+        String body = "{\"reason\": \"I love food so I made a restaurant\"}";
+
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .body(body)
+                .when().request("POST", "/api/v1/restaurants/" + resId + "/claim")
+                .then()
+                .statusCode(201);
+    }
+
+    @Test
+    void testAddNewClaim_claimExists() throws Exception {
+        String token = authorisationAdmin();
+        Integer resId = 12;
+        String body = "{\"reason\": \"I love food so I made a restaurant\"}";
+
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .body(body)
+                .when().request("POST", "/api/v1/restaurants/" + resId + "/claim")
+                .then()
+                .statusCode(200);
+    }
+
+    @Test
+    void testAddNewClaim_restaurantNotExists() throws Exception {
+        String token = authorisationAdmin();
+        Integer resId = 30;
+        String body = "{\"reason\": \"I love food so I made a restaurant\"}";
+
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .body(body)
+                .when().request("POST", "/api/v1/restaurants/" + resId + "/claim")
+                .then()
+                .statusCode(404);
+    }
+
 }

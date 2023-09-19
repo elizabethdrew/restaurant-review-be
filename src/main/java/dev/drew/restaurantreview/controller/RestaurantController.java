@@ -79,8 +79,7 @@ public class RestaurantController implements RestaurantsApi {
     @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping("/{restaurantId}/claim")
     public ResponseEntity<ClaimStatus> createRestaurantClaim(@PathVariable Integer restaurantId, ClaimInput claimInput) {
-        ClaimStatus status = restaurantService.createClaim(restaurantId, claimInput);
-        return ResponseEntity.status(201).body(status);
+        return restaurantService.createClaim(restaurantId, claimInput);
     }
 
     @SecurityRequirement(name = "Bearer Authentication")

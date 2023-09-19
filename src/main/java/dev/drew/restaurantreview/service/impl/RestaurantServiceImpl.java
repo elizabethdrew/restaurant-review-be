@@ -20,6 +20,8 @@ import org.openapitools.model.RestaurantInput;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
@@ -227,7 +229,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     @Transactional
-    public ClaimStatus createClaim(Integer restaurantId, ClaimInput claimInput) {
+    public ResponseEntity<ClaimStatus> createClaim(Integer restaurantId, ClaimInput claimInput) {
 
         // Use a Specification to find a non-deleted restaurant by its ID
         RestaurantEntity restaurantEntity = restaurantRepository.findOne(
@@ -236,7 +238,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
 
         // Check if restaurant already has owner
-        if(restaurantEntity.getOwner() != null) {
+        if (restaurantEntity.getOwner() != null) {
             throw new RestaurantOwnedException("Restaurant with id " + restaurantId + " is already owned");
         }
 
@@ -248,7 +250,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         // Check if claim already exists for user and restaurant - return current status if it does
         Optional<ClaimEntity> claimEntity = claimRepository.findByRestaurantAndClaimant(restaurantEntity, currentUser);
         if (claimEntity.isPresent()) {
-            return claimMapper.toClaim(claimEntity.get());
+            return ResponseEntity.ok(claimMapper.toClaim(claimEntity.get())); // Returning 200 OK here
         }
 
         // Convert the input data to a ClaimEntity object
@@ -263,7 +265,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         ClaimEntity savedClaim = claimRepository.save(claim);
 
         // Return the response
-        return claimMapper.toClaim(savedClaim);
+        return ResponseEntity.status(HttpStatus.CREATED).body(claimMapper.toClaim(savedClaim)); // Returning 201 Created here
     }
 
 }

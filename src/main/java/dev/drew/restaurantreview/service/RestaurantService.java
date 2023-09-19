@@ -7,6 +7,7 @@ import org.openapitools.model.ClaimStatus;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -30,5 +31,5 @@ public interface RestaurantService {
     void deleteRestaurantById(Integer restaurantId);
 
     ClaimStatus getClaimStatus(Integer restaurantId);
-    ClaimStatus createClaim(Integer restaurantId, ClaimInput claimInput);
+    ResponseEntity<ClaimStatus> createClaim(Integer restaurantId, ClaimInput claimInput);
 }
