@@ -290,6 +290,53 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /api/v1/restaurants/{restaurantId}/favourite:
+    post:
+      summary: Add or remove a restaurant from the user's favourites.
+      description: Mark or unmark a restaurant as a favourite for the authenticated user.
+      operationId: toggleFavourite
+      tags:
+        - Favourites
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - name: restaurantId
+          in: path
+          required: true
+          description: ID of the restaurant to be marked or unmarked as favourite.
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Restaurant added to favourites successfully.
+        '204':
+          description: Restaurant removed from favourites successfully.
+        '400':
+          description: Invalid input or request parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: User is not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Restaurant not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /api/v1/users:
     post:
       summary: Add a new user
