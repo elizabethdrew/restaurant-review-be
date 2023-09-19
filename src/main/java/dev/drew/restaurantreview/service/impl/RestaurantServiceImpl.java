@@ -235,23 +235,25 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Transactional
     public ClaimStatus createClaim(Integer restaurantId, ClaimInput claimInput) {
 
-
         // Use a Specification to find a non-deleted restaurant by its ID
         RestaurantEntity restaurantEntity = restaurantRepository.findOne(
                 Specification.where(RestaurantSpecification.hasId(restaurantId.longValue()))
                         .and(RestaurantSpecification.isNotDeleted())
         ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
 
+        // Check if restaurant already has owner
+        if(restaurantEntity.getOwner() != null) {
+            throw new RestaurantOwnedException("Restaurant with id " + restaurantId + " is already owned");
+        }
+
         // Fetch the current user entity
         Long currentUserId = getCurrentUserId();
         UserEntity currentUser = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        // Check if claim already exists - return current status if it does
+        // Check if claim already exists for user and restaurant - return current status if it does
         Optional<ClaimEntity> claimEntity = claimRepository.findByRestaurantAndClaimant(restaurantEntity, currentUser);
         if (claimEntity.isPresent()) {
-            System.out.println("CLAIM EXISTS ALREADY");
-            // Return the response
             return claimMapper.toClaim(claimEntity.get());
         }
 
