@@ -75,4 +75,25 @@ public class AdminServiceImpl implements AdminService {
 
         return claimMapper.toClaim(claim);
     }
+
+    @Override
+    @Transactional
+    public ClaimStatus rejectClaim(Long claimId) {
+
+        // Check if the current user is an admin
+        if (!isAdmin()) {
+            throw new InsufficientPermissionException("User does not have permission to view admin page");
+        }
+
+        // Check claim exists
+        ClaimEntity claim = claimRepository.findById(claimId)
+                .orElseThrow(() -> new ClaimNotFoundException("Claim with id " + claimId + " not found"));
+
+        // Update the claim
+        claim.setStatus(ClaimEntity.ClaimStatus.REJECTED);
+        claim.setUpdatedAt(OffsetDateTime.now().toLocalDateTime());
+        claimRepository.save(claim);
+
+        return claimMapper.toClaim(claim);
+    }
 }

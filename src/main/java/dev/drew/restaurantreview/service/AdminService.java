@@ -8,4 +8,6 @@ public interface AdminService {
     List<ClaimStatus> getPendingClaims();
 
     ClaimStatus acceptClaim(Long claimId);
+
+    ClaimStatus rejectClaim(Long claimId);
 }

@@ -31,4 +31,11 @@ public class AdminController implements AdminApi {
         ClaimStatus claimStatus = adminService.acceptClaim(claimId);
         return ResponseEntity.ok(claimStatus);
     }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PostMapping("/{claimId}/reject")
+    public ResponseEntity<ClaimStatus> rejectClaim(@PathVariable("claimId") Long claimId) {
+        ClaimStatus claimStatus = adminService.rejectClaim(claimId);
+        return ResponseEntity.ok(claimStatus);
+    }
 }
