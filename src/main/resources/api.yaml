@@ -1234,6 +1234,9 @@ components:
           type: "integer"
           format: "int64"
           description: "ID of the claim"
+        reason:
+          type: "string"
+          description: "Reason or explanation provided by the user for the claim"
 
     ClaimInput:
       type: "object"
