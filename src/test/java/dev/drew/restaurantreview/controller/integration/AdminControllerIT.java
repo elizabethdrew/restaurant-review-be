@@ -30,4 +30,68 @@ public class AdminControllerIT extends GlobalTestContainer {
                 .then()
                 .statusCode(403);
     }
+
+    @Test
+    void testAcceptClaim() throws Exception {
+        String token = authorisationAdmin();
+        Integer id = 4;
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .when().request("POST", "/api/v1/admin/claims/" + id + "/accept")
+                .then()
+                .statusCode(200)
+                .body("status", is("ACCEPTED"));
+    }
+
+    @Test
+    void testAcceptClaim_unauthorised() throws Exception {
+        Integer id = 4;
+        given().log().all().contentType(ContentType.JSON)
+                .when().request("POST", "/api/v1/admin/claims/" + id + "/accept")
+                .then()
+                .statusCode(403);
+    }
+
+    @Test
+    void testAcceptClaim_noClaim() throws Exception {
+        String token = authorisationAdmin();
+        Integer id = 34;
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .when().request("POST", "/api/v1/admin/claims/" + id + "/accept")
+                .then()
+                .statusCode(404);
+    }
+
+    @Test
+    void testRejectClaim() throws Exception {
+        String token = authorisationAdmin();
+        Integer id = 4;
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .when().request("POST", "/api/v1/admin/claims/" + id + "/reject")
+                .then()
+                .statusCode(200)
+                .body("status", is("REJECTED"));
+    }
+
+    @Test
+    void testRejectClaim_unauthorised() throws Exception {
+        Integer id = 4;
+        given().log().all().contentType(ContentType.JSON)
+                .when().request("POST", "/api/v1/admin/claims/" + id + "/reject")
+                .then()
+                .statusCode(403);
+    }
+
+    @Test
+    void testRejectClaim_noClaim() throws Exception {
+        String token = authorisationAdmin();
+        Integer id = 34;
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .when().request("POST", "/api/v1/admin/claims/" + id + "/reject")
+                .then()
+                .statusCode(404);
+    }
 }
