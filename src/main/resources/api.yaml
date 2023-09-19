@@ -933,6 +933,36 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /api/v1/admin/claims/pending:
+    get:
+      summary: Get all pending claims for restaurant ownership
+      operationId: getPendingClaims
+      tags:
+        - Admin
+      security:
+        - basicAuth: [ ]
+      responses:
+        '200':
+          description: List of all pending claims
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClaimStatus'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 
 components:
 
