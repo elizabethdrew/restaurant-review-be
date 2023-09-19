@@ -963,6 +963,49 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /api/v1/admin/claims/{claimId}/accept:
+    post:
+      summary: Admin accepts a claim
+      description: Admin accepts a claim for restaurant ownership
+      operationId: acceptClaim
+      tags:
+        - Admin
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - name: claimId
+          in: path
+          description: ID of the claim to be accepted
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Claim accepted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClaimStatus'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 
 components:
 
@@ -1163,6 +1206,9 @@ components:
         is_deleted:
           type: boolean
           default: false
+        owner_id:
+          type: integer
+          format: int64
 
     RestaurantInput:
       type: object
