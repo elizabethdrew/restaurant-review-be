@@ -41,7 +41,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final RestaurantMapper restaurantMapper;
 
     private final ClaimMapper claimMapper;
-    private final EntityUserIdProvider<RestaurantEntity> restaurantUserIdProvider = RestaurantEntity::getUserId;
+    private final EntityUserIdProvider<RestaurantEntity> restaurantUserIdProvider = RestaurantEntity::getOwnerId;
     private UserRepository userRepository;
     private CuisineRepository cuisineRepository;
 
