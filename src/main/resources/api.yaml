@@ -1192,14 +1192,10 @@ components:
         status:
           type: "string"
           description: "The claim status (e.g., pending, accepted, denied)"
-        userId:
+        claimant:
           type: "integer"
           format: "int64"
           description: "ID of the user who has made the claim"
-        timestamp:
-          type: "string"
-          format: "date-time"
-          description: "Timestamp when the claim was made"
 
     ClaimInput:
       type: "object"

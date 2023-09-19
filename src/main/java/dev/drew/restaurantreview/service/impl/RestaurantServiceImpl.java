@@ -212,14 +212,20 @@ public class RestaurantServiceImpl implements RestaurantService {
                         .and(RestaurantSpecification.isNotDeleted())
         ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
 
+        System.out.println("RESTAURANT CLEARED");
+
         // Fetch the current user entity
         Long currentUserId = getCurrentUserId();
         UserEntity currentUser = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
+        System.out.println("USER CLEARED");
+
         // Fetch the claim for current user and restaurant
         ClaimEntity claimEntity = claimRepository.findByRestaurantAndClaimant(restaurantEntity, currentUser)
                 .orElseThrow(() -> new ClaimNotFoundException("Claim not found"));
+
+        System.out.println("CLAIM CLEARED");
 
         // Return the claim status
         return claimMapper.toClaim(claimEntity);
@@ -244,14 +250,18 @@ public class RestaurantServiceImpl implements RestaurantService {
         // Check if claim already exists - return current status if it does
         Optional<ClaimEntity> claimEntity = claimRepository.findByRestaurantAndClaimant(restaurantEntity, currentUser);
         if (claimEntity.isPresent()) {
-            // throw claim exists error?
+            System.out.println("CLAIM EXISTS ALREADY");
+            // Return the response
+            return claimMapper.toClaim(claimEntity.get());
         }
 
-        // Convert the input data to a ClaimEntity object and set the created timestamp
+        // Convert the input data to a ClaimEntity object
         ClaimEntity claim = claimMapper.toClaimEntity(claimInput);
         claim.setCreatedAt(OffsetDateTime.now().toLocalDateTime());
         claim.setRestaurant(restaurantEntity);
         claim.setClaimant(currentUser);
+        claim.setStatus(ClaimEntity.ClaimStatus.PENDING);
+        claim.setUpdatedAt(OffsetDateTime.now().toLocalDateTime());
 
         // Save the new claim to the database
         ClaimEntity savedClaim = claimRepository.save(claim);
