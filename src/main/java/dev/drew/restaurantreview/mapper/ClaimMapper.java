@@ -10,6 +10,8 @@ import org.openapitools.model.ClaimStatus;
 public interface ClaimMapper {
 
     @Mapping(source = "claimant.id", target = "claimant")
+    @Mapping(source = "restaurant.id", target = "restaurant")
+    @Mapping(source = "id", target = "claimId")
     ClaimStatus toClaim(ClaimEntity claimEntity);
 
     ClaimEntity toClaimEntity(ClaimInput claimInput);

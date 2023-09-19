@@ -1196,6 +1196,14 @@ components:
           type: "integer"
           format: "int64"
           description: "ID of the user who has made the claim"
+        restaurant:
+          type: "integer"
+          format: "int64"
+          description: "ID of the restaurant the claim relates to"
+        claimId:
+          type: "integer"
+          format: "int64"
+          description: "ID of the claim"
 
     ClaimInput:
       type: "object"
