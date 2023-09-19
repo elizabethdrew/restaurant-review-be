@@ -69,7 +69,8 @@ public class ReviewServiceImpl implements ReviewService {
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         // Check if the user is trying to review their own restaurant
-        if (currentRestaurant.getOwner().getId().equals(currentUserId)) {
+        UserEntity restaurantOwner = currentRestaurant.getOwner();
+        if (restaurantOwner != null && restaurantOwner.getId().equals(currentUserId)) {
             throw new UserOwnsRestaurantException("Owners cannot review their own restaurants.");
         }
 
