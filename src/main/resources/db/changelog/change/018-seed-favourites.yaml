@@ -1,0 +1,65 @@
+databaseChangeLog:
+  - changeSet:
+      id: 18
+      author: elizabeth_drew
+      changes:
+        - insert:
+            tableName: favourites
+            columns:
+              - column:
+                  name: user_id
+                  value: 1
+              - column:
+                  name: restaurant_id
+                  value: 1
+              - column:
+                  name: created_at
+                  valueDate: "2023-09-20T12:00:00.000"
+        - insert:
+            tableName: favourites
+            columns:
+              - column:
+                  name: user_id
+                  value: 2
+              - column:
+                  name: restaurant_id
+                  value: 1
+              - column:
+                  name: created_at
+                  valueDate: "2023-09-20T12:00:00.000"
+        - insert:
+            tableName: favourites
+            columns:
+              - column:
+                  name: user_id
+                  value: 2
+              - column:
+                  name: restaurant_id
+                  value: 3
+              - column:
+                  name: created_at
+                  valueDate: "2023-09-20T12:00:00.000"
+        - insert:
+            tableName: favourites
+            columns:
+              - column:
+                  name: user_id
+                  value: 1
+              - column:
+                  name: restaurant_id
+                  value: 5
+              - column:
+                  name: created_at
+                  valueDate: "2023-09-20T12:00:00.000"
+        - insert:
+            tableName: favourites
+            columns:
+              - column:
+                  name: user_id
+                  value: 1
+              - column:
+                  name: restaurant_id
+                  value: 14
+              - column:
+                  name: created_at
+                  valueDate: "2023-09-20T12:00:00.000"

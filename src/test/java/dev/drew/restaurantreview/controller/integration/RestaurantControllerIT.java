@@ -14,11 +14,47 @@ public class RestaurantControllerIT extends GlobalTestContainer {
 
     @Test
     void testGetAllRestaurants() throws Exception {
-
         when().request("GET", "/api/v1/restaurants")
                 .then()
                 .statusCode(200)
-                .body("[0].name", equalTo("Gastronomic Guildhall"));
+                .body("[0].name", equalTo("Gastronomic Guildhall"))
+                .body("is_favourite", hasItem(false))
+                .body("is_favourite", not(hasItem(true)));
+    }
+
+    @Test
+    void testGetAllRestaurants_loggedIn() throws Exception {
+        String token = authorisationAdmin();
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .when().request("GET", "/api/v1/restaurants")
+                .then()
+                .statusCode(200)
+                .body("[0].name", equalTo("Gastronomic Guildhall"))
+                .body("is_favourite", hasItem(false))
+                .body("is_favourite", hasItem(true));
+    }
+
+    @Test
+    void testGetAllRestaurants_withFave_notLoggedIn() throws Exception {
+        given().queryParam("favouritesOnly", true)
+                .when().request("GET", "/api/v1/restaurants")
+                .then()
+                .statusCode(200)
+                .body("is_favourite", hasItem(false))
+                .body("is_favourite", not(hasItem(true)));
+    }
+
+    @Test
+    void testGetAllRestaurants_withFave_LoggedIn() throws Exception {
+        String token = authorisationAdmin();
+        given().queryParam("favouritesOnly", true)
+                .header("Authorization", "Bearer "+ token)
+                .when().request("GET", "/api/v1/restaurants")
+                .then()
+                .statusCode(200)
+                .body("is_favourite", not(hasItem(false)))
+                .body("is_favourite", hasItem(true));
     }
 
     @Test
@@ -293,6 +329,49 @@ public class RestaurantControllerIT extends GlobalTestContainer {
                 .then()
                 .statusCode(200)
                 .body("name", is("Gastronomic Guildhall"));
+    }
+
+    @Test
+    void testGetRestaurantById_notLoggedIn() throws Exception {
+        Integer resId = 1;
+        when().request("GET", "/api/v1/restaurants/" +resId)
+                .then()
+                .statusCode(200)
+                .body("is_favourite", is(false));
+    }
+
+    @Test
+    void testGetRestaurantById_LoggedIn() throws Exception {
+        Integer resId = 1;
+        String token = authorisationAdmin();
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .when().request("GET", "/api/v1/restaurants/" +resId)
+                .then()
+                .statusCode(200)
+                .body("is_favourite", is(true));
+    }
+
+    @Test
+    void testFavouriteRestaurant() throws Exception {
+        Integer resId = 10;
+        String token = authorisationAdmin();
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .when().request("POST", "/api/v1/restaurants/" + resId + "/favourite")
+                .then()
+                .statusCode(200);
+    }
+
+    @Test
+    void testUnFavouriteRestaurant() throws Exception {
+        Integer resId = 1;
+        String token = authorisationAdmin();
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .when().request("POST", "/api/v1/restaurants/" + resId + "/favourite")
+                .then()
+                .statusCode(204);
     }
 
     @Test

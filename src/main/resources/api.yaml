@@ -1296,6 +1296,9 @@ components:
         owner_id:
           type: integer
           format: int64
+        user_id:
+          type: integer
+          format: int64
 
     RestaurantInput:
       type: object
