@@ -22,6 +22,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final JpaUserDetailsService jpaUserDetailsService;
+    private final JwtBlacklistRepository jwtBlacklistRepository;
 
     // Filter incoming requests and extract JWT token from the Authorization header
     @Override
@@ -44,6 +45,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // Extract the JWT token and username
         jwtToken = authHeader.substring(7);
         username = jwtService.extractUsername(jwtToken);
+
+        if (jwtBlacklistRepository.findByToken(jwtToken).isPresent()) {
+            // Reject the request or handle it accordingly
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token is blacklisted");
+            return;
+        }
 
         // If the username is not null and there is no existing authentication, validate the token and set the authentication
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){

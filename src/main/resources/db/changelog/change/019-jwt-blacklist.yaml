@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: 19
+      author: elizabeth_drew
+      changes:
+        - createTable:
+            tableName: blacklisted_tokens
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: token
+                  type: varchar(500)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: true
+                    foreignKeyName: fk_blacklistedtokens_user
+                    references: users(id) # Assuming the user table is named "users".
+              - column:
+                  name: expiration
+                  type: timestamp
+                  constraints:
+                    nullable: false

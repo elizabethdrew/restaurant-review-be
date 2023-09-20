@@ -466,6 +466,8 @@ paths:
     post:
       summary: Authenticate a user and generate a JWT token
       description: Authenticate a user with provided credentials and return a JWT token for further authenticated requests.
+      tags:
+        - Authentication
       requestBody:
         required: true
         content:
@@ -505,6 +507,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  /api/v1/logout:
+    post:
+      tags:
+        - Authentication
+      summary: Logout the currently authenticated user by blacklisting the token.
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+          required: true
+          description: JWT token for the authenticated user.
+      responses:
+        '200':
+          description: Logged out successfully.
+        '400':
+          description: Token is already blacklisted.
+        '401':
+          description: Unauthorized (token missing or invalid).
+        '500':
+          description: Server error.
 
   /api/v1/users/{userId}:
     get:
