@@ -173,7 +173,7 @@ paths:
       security: []
       summary: Get a restaurant by ID
       operationId: getRestaurantById
-      description: Returns a single restaurant by ID.
+      description: Returns a single restaurant by ID. Note to see if the the user has favourited the restaurant, the JWT token must be provided for authentication. Otherwise, the endpoint can be accessed without authentication.
       tags:
         - Restaurants
       parameters:
@@ -1099,6 +1099,9 @@ components:
           type: integer
           format: int64
         is_deleted:
+          type: boolean
+          default: false
+        is_favourite:
           type: boolean
           default: false
 

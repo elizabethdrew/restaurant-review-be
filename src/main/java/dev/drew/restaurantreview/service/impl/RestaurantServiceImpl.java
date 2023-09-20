@@ -146,7 +146,17 @@ public class RestaurantServiceImpl implements RestaurantService {
                         .and(RestaurantSpecification.isNotDeleted())
         ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
 
-        return restaurantMapper.toRestaurant(restaurantEntity);
+        boolean isFavourited = false;
+
+        if (getCurrentUser() != null) {
+            Optional<FavouriteEntity> favourite = favouriteRepository.findByRestaurantAndUser(restaurantEntity, getCurrentUser());
+            isFavourited = favourite.isPresent();
+        }
+
+        Restaurant restaurant = restaurantMapper.toRestaurant(restaurantEntity);
+        restaurant.setIsFavourite(isFavourited);
+
+        return restaurant;
     }
 
 

@@ -25,6 +25,15 @@ public class SecurityUtils {
         return null;
     }
 
+    public static UserEntity getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
+            SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
+            return securityUser.getUserEntity();
+        }
+        return null;
+    }
+
     public static boolean isAdmin() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
