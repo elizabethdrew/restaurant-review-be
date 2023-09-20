@@ -24,8 +24,8 @@ public class RestaurantSpecification {
         return (root, query, criteriaBuilder) -> ratings == null || ratings.isEmpty() ? null : root.get("rating").in(ratings);
     }
 
-    public static Specification<RestaurantEntity> hasUserId(Long userId) {
-        return (root, query, criteriaBuilder) -> userId == null ? null : criteriaBuilder.equal(root.get("user").get("id"), userId);
+    public static Specification<RestaurantEntity> hasOwnerId(Long ownerId) {
+        return (root, query, criteriaBuilder) -> ownerId == null ? null : criteriaBuilder.equal(root.get("owner").get("id"), ownerId);
     }
 
     public static Specification<RestaurantEntity> isNotDeleted() {

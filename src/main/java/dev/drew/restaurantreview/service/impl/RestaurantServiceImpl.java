@@ -14,7 +14,6 @@ import org.openapitools.model.ClaimInput;
 import org.openapitools.model.ClaimStatus;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -120,7 +119,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     public List<Restaurant> getAllRestaurants(
             List<String> city,
             List<Integer> rating,
-            Long userId,
+            Long ownerId,
             List<Integer> price_range,
             List<String> cuisine,
             Boolean favouritesOnly,
@@ -129,7 +128,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         Specification<RestaurantEntity> specs = Specification.where(RestaurantSpecification.isNotDeleted())
                 .and(RestaurantSpecification.hasCity(city))
                 .and(RestaurantSpecification.hasRating(rating))
-                .and(RestaurantSpecification.hasUserId(userId))
+                .and(RestaurantSpecification.hasOwnerId(ownerId))
                 .and(RestaurantSpecification.hasPriceRange(price_range))
                 .and(RestaurantSpecification.hasCuisine(cuisine));
 

@@ -53,12 +53,12 @@ public class RestaurantController implements RestaurantsApi {
     public ResponseEntity<List<Restaurant>> getAllRestaurants(
             @Valid @RequestParam(value = "city", required = false) List<String> city,
             @Valid @RequestParam(value = "rating", required = false) List<Integer> rating,
-            @Valid @RequestParam(value = "user_id", required = false) Long userId,
+            @Valid @RequestParam(value = "owner_id", required = false) Long ownerId,
             @Valid @RequestParam(value = "price_range", required = false) List<Integer> price_range,
             @Valid @RequestParam(value = "cuisine", required = false) List<String> cuisine,
             @Valid @RequestParam(value = "favouritesOnly", required = false, defaultValue = "false") Boolean favouritesOnly,
             @ParameterObject Pageable pageable) {
-        List<Restaurant> restaurants = restaurantService.getAllRestaurants(city, rating, userId, price_range, cuisine, favouritesOnly, pageable);
+        List<Restaurant> restaurants = restaurantService.getAllRestaurants(city, rating, ownerId, price_range, cuisine, favouritesOnly, pageable);
         return ResponseEntity.ok(restaurants);
     }
 
