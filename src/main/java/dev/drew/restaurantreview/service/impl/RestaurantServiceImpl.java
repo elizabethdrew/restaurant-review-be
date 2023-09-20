@@ -135,7 +135,18 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         Page<RestaurantEntity> filteredEntities = restaurantRepository.findAll(specs, pageable);
 
-        return filteredEntities.stream().map(restaurantMapper::toRestaurant).collect(Collectors.toList());
+        UserEntity currentUser = getCurrentUser();
+
+        return filteredEntities.stream()
+                .map(entity -> {
+                    Restaurant restaurant = restaurantMapper.toRestaurant(entity);
+                    if (currentUser != null) {
+                        Optional<FavouriteEntity> favourite = favouriteRepository.findByRestaurantAndUser(entity, currentUser);
+                        restaurant.setIsFavourite(favourite.isPresent());
+                    }
+                    return restaurant;
+                })
+        .collect(Collectors.toList());
     }
 
 
