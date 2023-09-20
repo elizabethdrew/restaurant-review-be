@@ -9,13 +9,19 @@ import dev.drew.restaurantreview.repository.ReviewRepository;
 import dev.drew.restaurantreview.repository.specification.RestaurantSpecification;
 import dev.drew.restaurantreview.repository.specification.ReviewSpecification;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
 
-
+@Service
 public class HelperUtils {
 
-    private RestaurantRepository restaurantRepository;
+    private final RestaurantRepository restaurantRepository;
 
-    private ReviewRepository reviewRepository;
+    private final ReviewRepository reviewRepository;
+
+    public HelperUtils(RestaurantRepository restaurantRepository, ReviewRepository reviewRepository) {
+        this.restaurantRepository = restaurantRepository;
+        this.reviewRepository = reviewRepository;
+    }
 
     public RestaurantEntity getRestaurantHelper(Integer restaurantId) throws RestaurantNotFoundException {
 

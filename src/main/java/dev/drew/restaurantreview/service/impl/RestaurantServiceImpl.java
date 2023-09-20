@@ -9,7 +9,6 @@ import dev.drew.restaurantreview.repository.specification.RestaurantSpecificatio
 import dev.drew.restaurantreview.service.RestaurantService;
 import dev.drew.restaurantreview.util.HelperUtils;
 import dev.drew.restaurantreview.util.interfaces.EntityOwnerIdProvider;
-import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.openapitools.model.ClaimInput;
@@ -46,10 +45,11 @@ public class RestaurantServiceImpl implements RestaurantService {
     private CuisineRepository cuisineRepository;
     private FavouriteRepository favouriteRepository;
 
-    private HelperUtils helperUtils;
+
+    private final HelperUtils helperUtils;
 
     // Constructor with required dependencies
-    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper, ReviewRepository reviewRepository, ClaimRepository claimRepository, ClaimMapper claimMapper, UserRepository userRepository, CuisineRepository cuisineRepository, FavouriteRepository favouriteRepository) {
+    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper, ReviewRepository reviewRepository, ClaimRepository claimRepository, ClaimMapper claimMapper, UserRepository userRepository, CuisineRepository cuisineRepository, FavouriteRepository favouriteRepository, HelperUtils helperUtils) {
         this.restaurantRepository = restaurantRepository;
         this.restaurantMapper = restaurantMapper;
         this.reviewRepository = reviewRepository;
@@ -58,6 +58,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         this.userRepository = userRepository;
         this.cuisineRepository = cuisineRepository;
         this.favouriteRepository = favouriteRepository;
+        this.helperUtils = helperUtils;
     }
 
     public void validateRestaurantInput(RestaurantInput restaurantInput) {

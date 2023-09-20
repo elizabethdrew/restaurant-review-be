@@ -42,14 +42,15 @@ public class ReviewServiceImpl implements ReviewService {
     private final EntityUserIdProvider<ReviewEntity> reviewUserIdProvider = ReviewEntity::getUserId;
     private UserRepository userRepository;
 
-    private HelperUtils helperUtils;
+    private final HelperUtils helperUtils;
 
-    public ReviewServiceImpl(ReviewRepository reviewRepository, ReviewMapper reviewMapper, RestaurantMapper restaurantMapper, RestaurantRepository restaurantRepository, UserRepository userRepository) {
+    public ReviewServiceImpl(ReviewRepository reviewRepository, ReviewMapper reviewMapper, RestaurantMapper restaurantMapper, RestaurantRepository restaurantRepository, UserRepository userRepository, HelperUtils helperUtils) {
         this.reviewRepository = reviewRepository;
         this.reviewMapper = reviewMapper;
         this.restaurantMapper = restaurantMapper;
         this.restaurantRepository = restaurantRepository;
         this.userRepository = userRepository;
+        this.helperUtils = helperUtils;
     }
 
     // Add a new review to the database
