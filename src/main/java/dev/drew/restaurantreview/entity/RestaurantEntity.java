@@ -63,10 +63,14 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")
+    private UserEntity owner;
+
     public RestaurantEntity() {
     }
 
-    public RestaurantEntity(Long id, String name, String city, UserEntity user, Integer priceRange, Double latitude, Double longitude, List<CuisineEntity> cuisines, Integer rating, OffsetDateTime createdAt, Boolean isDeleted) {
+    public RestaurantEntity(Long id, String name, String city, UserEntity user, Integer priceRange, Double latitude, Double longitude, List<CuisineEntity> cuisines, Integer rating, OffsetDateTime createdAt, Boolean isDeleted, UserEntity owner) {
         this.id = id;
         this.name = name;
         this.city = city;
@@ -78,6 +82,7 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
         this.rating = rating;
         this.createdAt = createdAt;
         this.isDeleted = isDeleted;
+        this.owner = owner;
     }
 
     public Long getId() {
@@ -168,17 +173,25 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
         this.longitude = longitude;
     }
 
+    public UserEntity getOwner() {
+        return owner;
+    }
+
+    public void setOwner(UserEntity owner) {
+        this.owner = owner;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof RestaurantEntity that)) return false;
         if (!super.equals(o)) return false;
-        return Objects.equals(getId(), that.getId()) && Objects.equals(getName(), that.getName()) && Objects.equals(getCity(), that.getCity()) && Objects.equals(getPriceRange(), that.getPriceRange()) && Objects.equals(getLatitude(), that.getLatitude()) && Objects.equals(getLongitude(), that.getLongitude()) && Objects.equals(getCuisines(), that.getCuisines()) && Objects.equals(getUser(), that.getUser()) && Objects.equals(getRating(), that.getRating()) && Objects.equals(getCreatedAt(), that.getCreatedAt()) && Objects.equals(getIsDeleted(), that.getIsDeleted());
+        return Objects.equals(getId(), that.getId()) && Objects.equals(getName(), that.getName()) && Objects.equals(getCity(), that.getCity()) && Objects.equals(getPriceRange(), that.getPriceRange()) && Objects.equals(getLatitude(), that.getLatitude()) && Objects.equals(getLongitude(), that.getLongitude()) && Objects.equals(getCuisines(), that.getCuisines()) && Objects.equals(getUser(), that.getUser()) && Objects.equals(getRating(), that.getRating()) && Objects.equals(getCreatedAt(), that.getCreatedAt()) && Objects.equals(getIsDeleted(), that.getIsDeleted() && Objects.equals(getOwner(), that.getOwner()));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getId(), getName(), getCity(), getPriceRange(), getLatitude(), getLongitude(), getCuisines(), getUser(), getRating(), getCreatedAt(), getIsDeleted());
+        return Objects.hash(super.hashCode(), getId(), getName(), getCity(), getPriceRange(), getLatitude(), getLongitude(), getCuisines(), getUser(), getRating(), getCreatedAt(), getIsDeleted(), getOwner());
     }
 
     @Override
@@ -194,6 +207,7 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
                 ", rating=" + rating +
                 ", createdAt=" + createdAt +
                 ", isDeleted=" + isDeleted +
+                ", owner=" + owner +
                 '}';
     }
 }

@@ -52,6 +52,64 @@
 			"response": []
 		},
 		{
+			"name": "Restaurants Search",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const response = pm.response.json();",
+							"const restaurant = response[0];",
+							"console.log(restaurant.id)",
+							"",
+							"pm.test(\"Restaurant Found\", () => {",
+							"    pm.expect(restaurant).to.be.an('object');",
+							"});",
+							"",
+							"// If a restaurant found, add id to global variable",
+							"if (restaurant) {",
+							"    pm.globals.set(\"restaurantId\", restaurant.id);",
+							"}",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{baseUrl}}/search?query=bristol",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"search"
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "bristol"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get All Restaurants - Paginate",
 			"event": [
 				{
@@ -346,6 +404,179 @@
 			"response": []
 		},
 		{
+			"name": "Admin - Get All Pending Claims",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const response = pm.response.json();",
+							"const restaurant = response[0];",
+							"console.log(restaurant.id)",
+							"",
+							"pm.test(\"Restaurant Found\", () => {",
+							"    pm.expect(restaurant).to.be.an('object');",
+							"});",
+							"",
+							"// If a restaurant found, add id to global variable",
+							"if (restaurant) {",
+							"    pm.globals.set(\"restaurantId\", restaurant.id);",
+							"}",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/reviews",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"reviews"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin - Accept Pending Claim",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const response = pm.response.json();",
+							"const restaurant = response[0];",
+							"console.log(restaurant.id)",
+							"",
+							"pm.test(\"Restaurant Found\", () => {",
+							"    pm.expect(restaurant).to.be.an('object');",
+							"});",
+							"",
+							"// If a restaurant found, add id to global variable",
+							"if (restaurant) {",
+							"    pm.globals.set(\"restaurantId\", restaurant.id);",
+							"}",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/admin/claims/:claimId/accept",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"admin",
+						"claims",
+						":claimId",
+						"accept"
+					],
+					"variable": [
+						{
+							"key": "claimId",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin - Reject Pending Claim",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const response = pm.response.json();",
+							"const restaurant = response[0];",
+							"console.log(restaurant.id)",
+							"",
+							"pm.test(\"Restaurant Found\", () => {",
+							"    pm.expect(restaurant).to.be.an('object');",
+							"});",
+							"",
+							"// If a restaurant found, add id to global variable",
+							"if (restaurant) {",
+							"    pm.globals.set(\"restaurantId\", restaurant.id);",
+							"}",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/admin/claims/:claimId/reject",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"admin",
+						"claims",
+						":claimId",
+						"reject"
+					],
+					"variable": [
+						{
+							"key": "claimId",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get All Reviews - Paginate",
 			"event": [
 				{
@@ -582,6 +813,111 @@
 					"path": [
 						"restaurants",
 						":restaurantId"
+					],
+					"variable": [
+						{
+							"key": "restaurantId",
+							"value": "14"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Restaurant Claim",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/restaurants/:restaurantId/claim",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"restaurants",
+						":restaurantId",
+						"claim"
+					],
+					"variable": [
+						{
+							"key": "restaurantId",
+							"value": "13"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Restaurant Claim",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"reason\": \"I own this restaurant\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/restaurants/:restaurantId/claim",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"restaurants",
+						":restaurantId",
+						"claim"
 					],
 					"variable": [
 						{
@@ -1240,7 +1576,7 @@
 			"response": []
 		},
 		{
-			"name": "Get Authentication",
+			"name": "Get Authentication - Admin",
 			"event": [
 				{
 					"listen": "test",
@@ -1262,6 +1598,47 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Authentication - Reviewer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"token\", jsonData.token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"reviewer\",\n    \"password\": \"reviewer123\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"

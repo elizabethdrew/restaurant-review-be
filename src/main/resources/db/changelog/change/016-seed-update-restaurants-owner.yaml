@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - changeSet:
+      id: 16
+      author: elizabeth_drew
+      context: seed
+      changes:
+        - update:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: owner_id
+                  value: "2"
+            where: id=2
+        - update:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: owner_id
+                  value: "2"
+            where: id=5
+        - update:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: owner_id
+                  value: "1"
+            where: id=8
+        - update:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: owner_id
+                  value: "1"
+            where: id=11

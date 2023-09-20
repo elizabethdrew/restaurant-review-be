@@ -14,7 +14,7 @@ public interface RestaurantMapper {
 
     // Method to convert a RestaurantEntity object to a Restaurant object
     @Mapping(source = "user.id", target = "userId")
-//    @Mapping(source = "cuisines", target = "cuisines")
+    @Mapping(source = "owner.id", target = "ownerId")
     Restaurant toRestaurant(RestaurantEntity restaurantEntity);
 
     // Method to convert a RestaurantInput object to a RestaurantEntity object

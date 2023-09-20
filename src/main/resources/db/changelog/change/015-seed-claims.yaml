@@ -1,0 +1,258 @@
+databaseChangeLog:
+  - changeSet:
+      id: 15
+      author: elizabeth_drew
+      context: seed
+      changes:
+        - insert:
+            tableName: restaurant_claim
+            columns:
+              - column:
+                  name: restaurant_id
+                  value: 1
+              - column:
+                  name: claimant_id
+                  value: 1
+              - column:
+                  name: status
+                  value: "PENDING"
+              - column:
+                  name: reason
+                  value: "It's Mine"
+              - column:
+                  name: created_at
+                  valueDate: "2023-06-06 12:00:00"
+              - column:
+                  name: updated_at
+                  valueDate: "2023-06-06 12:00:00"
+        - insert:
+            tableName: restaurant_claim
+            columns:
+              - column:
+                  name: restaurant_id
+                  value: 2
+              - column:
+                  name: claimant_id
+                  value: 2
+              - column:
+                  name: status
+                  value: "ACCEPTED"
+              - column:
+                  name: reason
+                  value: "It's Mine"
+              - column:
+                  name: created_at
+                  valueDate: "2023-06-06 12:00:00"
+              - column:
+                  name: updated_at
+                  valueDate: "2023-06-06 12:00:00"
+        - insert:
+            tableName: restaurant_claim
+            columns:
+              - column:
+                  name: restaurant_id
+                  value: 3
+              - column:
+                  name: claimant_id
+                  value: 1
+              - column:
+                  name: status
+                  value: "REJECTED"
+              - column:
+                  name: reason
+                  value: "I'm not really the owner, but I'd like to be"
+              - column:
+                  name: created_at
+                  valueDate: "2023-06-06 12:00:00"
+              - column:
+                  name: updated_at
+                  valueDate: "2023-06-06 12:00:00"
+        - insert:
+            tableName: restaurant_claim
+            columns:
+              - column:
+                  name: restaurant_id
+                  value: 4
+              - column:
+                  name: claimant_id
+                  value: 1
+              - column:
+                  name: status
+                  value: "PENDING"
+              - column:
+                  name: reason
+                  value: "I'm not really the owner, but I'd like to be"
+              - column:
+                  name: created_at
+                  valueDate: "2023-06-06 12:00:00"
+              - column:
+                  name: updated_at
+                  valueDate: "2023-06-06 12:00:00"
+        - insert:
+            tableName: restaurant_claim
+            columns:
+              - column:
+                  name: restaurant_id
+                  value: 5
+              - column:
+                  name: claimant_id
+                  value: 2
+              - column:
+                  name: status
+                  value: "ACCEPTED"
+              - column:
+                  name: reason
+                  value: "It's Mine"
+              - column:
+                  name: created_at
+                  valueDate: "2023-06-06 12:00:00"
+              - column:
+                  name: updated_at
+                  valueDate: "2023-06-06 12:00:00"
+        - insert:
+            tableName: restaurant_claim
+            columns:
+              - column:
+                  name: restaurant_id
+                  value: 6
+              - column:
+                  name: claimant_id
+                  value: 1
+              - column:
+                  name: status
+                  value: "REJECTED"
+              - column:
+                  name: reason
+                  value: "I'm not really the owner, but I'd like to be"
+              - column:
+                  name: created_at
+                  valueDate: "2023-06-06 12:00:00"
+              - column:
+                  name: updated_at
+                  valueDate: "2023-06-06 12:00:00"
+        - insert:
+            tableName: restaurant_claim
+            columns:
+              - column:
+                  name: restaurant_id
+                  value: 7
+              - column:
+                  name: claimant_id
+                  value: 1
+              - column:
+                  name: status
+                  value: "PENDING"
+              - column:
+                  name: reason
+                  value: "It's Mine"
+              - column:
+                  name: created_at
+                  valueDate: "2023-06-06 12:00:00"
+              - column:
+                  name: updated_at
+                  valueDate: "2023-06-06 12:00:00"
+        - insert:
+            tableName: restaurant_claim
+            columns:
+              - column:
+                  name: restaurant_id
+                  value: 8
+              - column:
+                  name: claimant_id
+                  value: 1
+              - column:
+                  name: status
+                  value: "ACCEPTED"
+              - column:
+                  name: reason
+                  value: "It's Mine"
+              - column:
+                  name: created_at
+                  valueDate: "2023-06-06 12:00:00"
+              - column:
+                  name: updated_at
+                  valueDate: "2023-06-06 12:00:00"
+        - insert:
+            tableName: restaurant_claim
+            columns:
+              - column:
+                  name: restaurant_id
+                  value: 9
+              - column:
+                  name: claimant_id
+                  value: 1
+              - column:
+                  name: status
+                  value: "REJECTED"
+              - column:
+                  name: reason
+                  value: "I'm not really the owner, but I'd like to be"
+              - column:
+                  name: created_at
+                  valueDate: "2023-06-06 12:00:00"
+              - column:
+                  name: updated_at
+                  valueDate: "2023-06-06 12:00:00"
+        - insert:
+            tableName: restaurant_claim
+            columns:
+              - column:
+                  name: restaurant_id
+                  value: 10
+              - column:
+                  name: claimant_id
+                  value: 1
+              - column:
+                  name: status
+                  value: "PENDING"
+              - column:
+                  name: reason
+                  value: "I'm not really the owner, but I'd like to be"
+              - column:
+                  name: created_at
+                  valueDate: "2023-06-06 12:00:00"
+              - column:
+                  name: updated_at
+                  valueDate: "2023-06-06 12:00:00"
+        - insert:
+            tableName: restaurant_claim
+            columns:
+              - column:
+                  name: restaurant_id
+                  value: 11
+              - column:
+                  name: claimant_id
+                  value: 1
+              - column:
+                  name: status
+                  value: "ACCEPTED"
+              - column:
+                  name: reason
+                  value: "It's Mine"
+              - column:
+                  name: created_at
+                  valueDate: "2023-06-06 12:00:00"
+              - column:
+                  name: updated_at
+                  valueDate: "2023-06-06 12:00:00"
+        - insert:
+            tableName: restaurant_claim
+            columns:
+              - column:
+                  name: restaurant_id
+                  value: 12
+              - column:
+                  name: claimant_id
+                  value: 1
+              - column:
+                  name: status
+                  value: "REJECTED"
+              - column:
+                  name: reason
+                  value: "I'm not really the owner, but I'd like to be"
+              - column:
+                  name: created_at
+                  valueDate: "2023-06-06 12:00:00"
+              - column:
+                  name: updated_at
+                  valueDate: "2023-06-06 12:00:00"

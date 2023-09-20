@@ -290,6 +290,92 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /api/v1/restaurants/{restaurantId}/claim:
+    get:
+      security:
+        - basicAuth: []
+      summary: Get a restaurant claim status for current user
+      operationId: getRestaurantClaimStatus
+      description: Returns the status of a claim for restaurant by current user
+      tags:
+        - Restaurants
+      parameters:
+        - name: restaurantId
+          in: path
+          description: The ID of the restaurant to retrieve.
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClaimStatus'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      security:
+        - basicAuth: [ ]
+      summary: Submit a restaurant claim status for current user
+      operationId: createRestaurantClaim
+      description: Create a claim for restaurant by current user
+      tags:
+        - Restaurants
+      parameters:
+        - name: restaurantId
+          in: path
+          description: The ID of the restaurant to retrieve.
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      requestBody:
+        description: The restaurant to add.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClaimInput'
+      responses:
+        '201':
+          description: Status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClaimStatus'
+        '401':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /api/v1/users:
     post:
       summary: Add a new user
@@ -566,7 +652,7 @@ paths:
       operationId: addNewReview
       tags:
         - Reviews
-      description: Adds a new review to the database.
+      description: Adds a new review to the database. User cannot review a restaurant more than once within a year. Owner of restaurant cannot review their own restaurant.
       security:
         - basicAuth: [ ]
       requestBody:
@@ -847,6 +933,122 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /api/v1/admin/claims/pending:
+    get:
+      summary: Get all pending claims for restaurant ownership
+      operationId: getPendingClaims
+      tags:
+        - Admin
+      security:
+        - basicAuth: [ ]
+      responses:
+        '200':
+          description: List of all pending claims
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClaimStatus'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/v1/admin/claims/{claimId}/accept:
+    post:
+      summary: Admin accepts a claim
+      description: Admin accepts a claim for restaurant ownership
+      operationId: acceptClaim
+      tags:
+        - Admin
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - name: claimId
+          in: path
+          description: ID of the claim to be accepted
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Claim accepted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClaimStatus'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/v1/admin/claims/{claimId}/reject:
+    post:
+      summary: Admin rejects a claim
+      description: Admin rejects a claim for restaurant ownership
+      operationId: rejectClaim
+      tags:
+        - Admin
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - name: claimId
+          in: path
+          description: ID of the claim to be rejected
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Claim rejected successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClaimStatus'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 
 components:
 
@@ -1047,6 +1249,9 @@ components:
         is_deleted:
           type: boolean
           default: false
+        owner_id:
+          type: integer
+          format: int64
 
     RestaurantInput:
       type: object
@@ -1099,3 +1304,32 @@ components:
       required:
         - code
         - message
+
+    ClaimStatus:
+      type: "object"
+      properties:
+        status:
+          type: "string"
+          description: "The claim status (e.g., pending, accepted, denied)"
+        claimant:
+          type: "integer"
+          format: "int64"
+          description: "ID of the user who has made the claim"
+        restaurant:
+          type: "integer"
+          format: "int64"
+          description: "ID of the restaurant the claim relates to"
+        claimId:
+          type: "integer"
+          format: "int64"
+          description: "ID of the claim"
+        reason:
+          type: "string"
+          description: "Reason or explanation provided by the user for the claim"
+
+    ClaimInput:
+      type: "object"
+      properties:
+        reason:
+          type: "string"
+          description: "Reason or explanation provided by the user for the claim"
