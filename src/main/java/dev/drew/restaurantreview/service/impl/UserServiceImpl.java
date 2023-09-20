@@ -14,7 +14,7 @@ import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 
 import java.time.OffsetDateTime;
 
-import static dev.drew.restaurantreview.util.SecurityUtils.isAdminOrOwner;
+import static dev.drew.restaurantreview.util.SecurityUtils.isAdminOrCreator;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findByIdAndIsDeletedFalse(userId.longValue())
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
-        if (!isAdminOrOwner(userEntity, userEntityUserIdProvider)) {
+        if (!isAdminOrCreator(userEntity, userEntityUserIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission view this profile");
         }
 
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findByIdAndIsDeletedFalse(userId.longValue())
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
-        if (!isAdminOrOwner(userEntity, userEntityUserIdProvider)) {
+        if (!isAdminOrCreator(userEntity, userEntityUserIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to update this profile");
         }
 
@@ -95,7 +95,7 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findByIdAndIsDeletedFalse(userId.longValue())
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
-        if (!isAdminOrOwner(userEntity, userEntityUserIdProvider)) {
+        if (!isAdminOrCreator(userEntity, userEntityUserIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to update this profile");
         }
 

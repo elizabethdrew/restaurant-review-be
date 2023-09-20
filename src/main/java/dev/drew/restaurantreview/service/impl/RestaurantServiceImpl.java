@@ -7,6 +7,7 @@ import dev.drew.restaurantreview.mapper.RestaurantMapper;
 import dev.drew.restaurantreview.repository.*;
 import dev.drew.restaurantreview.repository.specification.RestaurantSpecification;
 import dev.drew.restaurantreview.service.RestaurantService;
+import dev.drew.restaurantreview.util.interfaces.EntityOwnerIdProvider;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +40,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final ClaimRepository claimRepository;
     private final RestaurantMapper restaurantMapper;
     private final ClaimMapper claimMapper;
-    private final EntityUserIdProvider<RestaurantEntity> restaurantUserIdProvider = RestaurantEntity::getUserId;
+    private final EntityOwnerIdProvider<RestaurantEntity> restaurantOwnerIdProvider = RestaurantEntity::getOwnerId;
     private UserRepository userRepository;
     private CuisineRepository cuisineRepository;
     private FavouriteRepository favouriteRepository;
@@ -187,7 +188,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
 
         // Check if the current user is an admin or the owner of the restaurant
-        if (!isAdminOrOwner(restaurantEntity, restaurantUserIdProvider)) {
+        if (!isAdminOrOwner(restaurantEntity, restaurantOwnerIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to update this restaurant");
         }
 
@@ -220,7 +221,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
 
 
-        if (!isAdminOrOwner(restaurantEntity, restaurantUserIdProvider)) {
+        if (!isAdminOrOwner(restaurantEntity, restaurantOwnerIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to delete this restaurant");
         }
 

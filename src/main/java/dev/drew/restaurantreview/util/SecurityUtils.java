@@ -2,6 +2,7 @@ package dev.drew.restaurantreview.util;
 
 import dev.drew.restaurantreview.model.SecurityUser;
 import dev.drew.restaurantreview.entity.UserEntity;
+import dev.drew.restaurantreview.util.interfaces.EntityOwnerIdProvider;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,7 +41,11 @@ public class SecurityUtils {
         return securityUser.hasRole("ROLE_ADMIN");
     }
 
-    public static <T> boolean isAdminOrOwner(T entity, EntityUserIdProvider<T> userIdProvider) {
+    public static <T> boolean isAdminOrOwner(T entity, EntityOwnerIdProvider<T> ownerIdProvider) {
+        return isAdmin() || getCurrentUserId().equals(ownerIdProvider.getOwnerId(entity));
+    }
+
+    public static <T> boolean isAdminOrCreator(T entity, EntityUserIdProvider<T> userIdProvider) {
         return isAdmin() || getCurrentUserId().equals(userIdProvider.getUserId(entity));
     }
 }

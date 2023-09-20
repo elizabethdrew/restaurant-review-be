@@ -14,7 +14,6 @@ import dev.drew.restaurantreview.repository.specification.ReviewSpecification;
 import dev.drew.restaurantreview.service.ReviewService;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import lombok.extern.slf4j.Slf4j;
-import org.openapitools.model.Restaurant;
 import org.openapitools.model.Review;
 import org.openapitools.model.ReviewInput;
 import org.springframework.data.domain.Page;
@@ -27,8 +26,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static dev.drew.restaurantreview.util.SecurityUtils.getCurrentUserId;
-import static dev.drew.restaurantreview.util.SecurityUtils.isAdminOrOwner;
+import static dev.drew.restaurantreview.util.SecurityUtils.*;
 
 @Slf4j
 @Service
@@ -141,7 +139,7 @@ public class ReviewServiceImpl implements ReviewService {
         ).orElseThrow(() -> new ReviewNotFoundException("Review with id " + reviewId + " not found"));
 
         // Check if the current user is an admin or the owner of the restaurant
-        if (!isAdminOrOwner(reviewEntity, reviewUserIdProvider)) {
+        if (!isAdminOrCreator(reviewEntity, reviewUserIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to update this review");
         }
 
@@ -169,7 +167,7 @@ public class ReviewServiceImpl implements ReviewService {
         ).orElseThrow(() -> new ReviewNotFoundException("Review with id " + reviewId + " not found"));
 
         // Check if the current user is an admin or the owner of the restaurant
-        if (!isAdminOrOwner(reviewEntity, reviewUserIdProvider)) {
+        if (!isAdminOrCreator(reviewEntity, reviewUserIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to delete this review");
         }
 

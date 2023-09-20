@@ -13,7 +13,6 @@ import org.openapitools.model.RestaurantInput;
 public interface RestaurantMapper {
 
     // Method to convert a RestaurantEntity object to a Restaurant object
-    @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "owner.id", target = "ownerId")
     Restaurant toRestaurant(RestaurantEntity restaurantEntity);
 
