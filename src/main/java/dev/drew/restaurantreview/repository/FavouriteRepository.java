@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface FavouriteRepository extends JpaRepository<FavouriteEntity, Long> {
 
     Optional<FavouriteEntity> findByRestaurantAndUser(RestaurantEntity restaurant, UserEntity user);
+
+    Long countByRestaurant(RestaurantEntity restaurantEntity);
 }

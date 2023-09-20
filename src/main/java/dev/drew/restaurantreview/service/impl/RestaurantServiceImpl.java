@@ -144,6 +144,8 @@ public class RestaurantServiceImpl implements RestaurantService {
         return filteredEntities.stream()
                 .map(entity -> {
                     Restaurant restaurant = restaurantMapper.toRestaurant(entity);
+                    Long favouritesCount = favouriteRepository.countByRestaurant(entity);
+                    restaurant.setTotalFavourites(favouritesCount);
                     if (currentUser != null) {
                         Optional<FavouriteEntity> favourite = favouriteRepository.findByRestaurantAndUser(entity, currentUser);
                         restaurant.setIsFavourite(favourite.isPresent());
@@ -162,6 +164,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
 
         boolean isFavourited = false;
+        Long favouritesCount = favouriteRepository.countByRestaurant(restaurantEntity);
 
         if (getCurrentUser() != null) {
             Optional<FavouriteEntity> favourite = favouriteRepository.findByRestaurantAndUser(restaurantEntity, getCurrentUser());
@@ -170,6 +173,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         Restaurant restaurant = restaurantMapper.toRestaurant(restaurantEntity);
         restaurant.setIsFavourite(isFavourited);
+        restaurant.setTotalFavourites(favouritesCount);
 
         return restaurant;
     }

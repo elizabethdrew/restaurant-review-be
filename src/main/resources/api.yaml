@@ -1293,6 +1293,9 @@ components:
         is_favourite:
           type: boolean
           default: false
+        total_favourites:
+          type: integer
+          format: int64
         owner_id:
           type: integer
           format: int64
