@@ -1,27 +1,27 @@
 package dev.drew.restaurantreview.service.impl;
 
-import dev.drew.restaurantreview.entity.CuisineEntity;
-import dev.drew.restaurantreview.entity.FavouriteEntity;
-import dev.drew.restaurantreview.entity.RestaurantEntity;
-import dev.drew.restaurantreview.entity.UserEntity;
+import dev.drew.restaurantreview.entity.*;
 import dev.drew.restaurantreview.exception.*;
+import dev.drew.restaurantreview.mapper.ClaimMapper;
 import dev.drew.restaurantreview.mapper.RestaurantMapper;
 import dev.drew.restaurantreview.repository.*;
 import dev.drew.restaurantreview.repository.specification.RestaurantSpecification;
 import dev.drew.restaurantreview.service.RestaurantService;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import jakarta.transaction.Transactional;
-import jdk.swing.interop.SwingInterOpUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.openapitools.model.ClaimInput;
+import org.openapitools.model.ClaimStatus;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLOutput;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -36,21 +36,25 @@ public class RestaurantServiceImpl implements RestaurantService {
     // Instance variables for the RestaurantRepository, ReviewRepository, RestaurantMapper, and EntityUserIdProvider
     private final RestaurantRepository restaurantRepository;
     private final ReviewRepository reviewRepository;
+
+    private final ClaimRepository claimRepository;
     private final RestaurantMapper restaurantMapper;
+    private final ClaimMapper claimMapper;
     private final EntityUserIdProvider<RestaurantEntity> restaurantUserIdProvider = RestaurantEntity::getUserId;
     private UserRepository userRepository;
     private CuisineRepository cuisineRepository;
-
-    @Autowired
     private FavouriteRepository favouriteRepository;
 
     // Constructor with required dependencies
-    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper, ReviewRepository reviewRepository, UserRepository userRepository, CuisineRepository cuisineRepository) {
+    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper, ReviewRepository reviewRepository, ClaimRepository claimRepository, ClaimMapper claimMapper, UserRepository userRepository, CuisineRepository cuisineRepository, FavouriteRepository favouriteRepository) {
         this.restaurantRepository = restaurantRepository;
         this.restaurantMapper = restaurantMapper;
         this.reviewRepository = reviewRepository;
+        this.claimRepository = claimRepository;
+        this.claimMapper = claimMapper;
         this.userRepository = userRepository;
         this.cuisineRepository = cuisineRepository;
+        this.favouriteRepository = favouriteRepository;
     }
 
     public void validateRestaurantInput(RestaurantInput restaurantInput) {
@@ -263,5 +267,67 @@ public class RestaurantServiceImpl implements RestaurantService {
         }
 
     }
+
+    public ClaimStatus getClaimStatus(Integer restaurantId) {
+
+        // Use a Specification to find a non-deleted restaurant by its ID
+        RestaurantEntity restaurantEntity = restaurantRepository.findOne(
+                Specification.where(RestaurantSpecification.hasId(restaurantId.longValue()))
+                        .and(RestaurantSpecification.isNotDeleted())
+        ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
+
+        // Fetch the current user entity
+        Long currentUserId = getCurrentUserId();
+        UserEntity currentUser = userRepository.findById(currentUserId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        // Fetch the claim for current user and restaurant
+        ClaimEntity claimEntity = claimRepository.findByRestaurantAndClaimant(restaurantEntity, currentUser)
+                .orElseThrow(() -> new ClaimNotFoundException("Claim not found"));
+
+        // Return the claim status
+        return claimMapper.toClaim(claimEntity);
+    }
+
+    @Transactional
+    public ResponseEntity<ClaimStatus> createClaim(Integer restaurantId, ClaimInput claimInput) {
+
+        // Use a Specification to find a non-deleted restaurant by its ID
+        RestaurantEntity restaurantEntity = restaurantRepository.findOne(
+                Specification.where(RestaurantSpecification.hasId(restaurantId.longValue()))
+                        .and(RestaurantSpecification.isNotDeleted())
+        ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
+
+        // Check if restaurant already has owner
+        if (restaurantEntity.getOwner() != null) {
+            throw new RestaurantOwnedException("Restaurant with id " + restaurantId + " is already owned");
+        }
+
+        // Fetch the current user entity
+        Long currentUserId = getCurrentUserId();
+        UserEntity currentUser = userRepository.findById(currentUserId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        // Check if claim already exists for user and restaurant - return current status if it does
+        Optional<ClaimEntity> claimEntity = claimRepository.findByRestaurantAndClaimant(restaurantEntity, currentUser);
+        if (claimEntity.isPresent()) {
+            return ResponseEntity.ok(claimMapper.toClaim(claimEntity.get())); // Returning 200 OK here
+        }
+
+        // Convert the input data to a ClaimEntity object
+        ClaimEntity claim = claimMapper.toClaimEntity(claimInput);
+        claim.setCreatedAt(OffsetDateTime.now().toLocalDateTime());
+        claim.setRestaurant(restaurantEntity);
+        claim.setClaimant(currentUser);
+        claim.setStatus(ClaimEntity.ClaimStatus.PENDING);
+        claim.setUpdatedAt(OffsetDateTime.now().toLocalDateTime());
+
+        // Save the new claim to the database
+        ClaimEntity savedClaim = claimRepository.save(claim);
+
+        // Return the response
+        return ResponseEntity.status(HttpStatus.CREATED).body(claimMapper.toClaim(savedClaim));
+    }
+
 
 }

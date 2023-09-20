@@ -5,6 +5,7 @@ import dev.drew.restaurantreview.entity.ReviewEntity;
 import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.ReviewNotFoundException;
+import dev.drew.restaurantreview.exception.UserOwnsRestaurantException;
 import dev.drew.restaurantreview.mapper.ReviewMapper;
 import dev.drew.restaurantreview.model.SecurityUser;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
@@ -115,6 +116,39 @@ public class ReviewServiceTest {
         assertEquals(input.getRestaurantId(), response.getRestaurantId());
         assertEquals(input.getRating(), response.getRating());
         assertEquals(input.getComment(), response.getComment());
+    }
+
+    @Test
+    void testAddNewReview_UserIsOwner() {
+
+        // Prepare input data and expected response
+        ReviewInput input = new ReviewInput().restaurantId(1L).rating(5).comment("Great Food");
+
+        RestaurantEntity restaurantEntity = new RestaurantEntity();
+        restaurantEntity.setId(1L);
+        restaurantEntity.setName("Restaurant 1");
+        restaurantEntity.setUser(securityUser.getUserEntity());
+        restaurantEntity.setOwner(securityUser.getUserEntity());
+
+        // Mock the repository and mapper calls
+        when(restaurantRepository.findOne(any(Specification.class))).thenReturn(Optional.of(restaurantEntity));
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(securityUser.getUserEntity()));
+
+        // Expect an exception to be thrown
+        Exception exception = assertThrows(UserOwnsRestaurantException.class, () -> {
+            // Call the service method
+            reviewServiceImpl.addNewReview(input);
+        });
+
+        // Verify the message of the exception
+        assertEquals("Owners cannot review their own restaurants.", exception.getMessage());
+
+        // Verify the mock interactions
+        verify(restaurantRepository).findOne(any(Specification.class));
+        verify(userRepository).findById(anyLong());
+        verify(reviewMapper, times(0)).toReviewEntity(any(ReviewInput.class));
+        verify(reviewRepository, times(0)).save(any(ReviewEntity.class));
+        verify(reviewMapper, times(0)).toReview(any(ReviewEntity.class));
     }
 
     @Test

@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 14
+      author: elizabeth_drew
+      context: standard
+      changes:
+        - addColumn:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: owner_id
+                  type: bigint
+                  constraints:
+                    nullable: true
+                    foreignKeyName: fk_restaurant_owner_id
+                    references: users(id)

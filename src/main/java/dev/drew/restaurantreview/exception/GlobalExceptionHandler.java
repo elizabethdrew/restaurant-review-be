@@ -118,4 +118,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleGeneralException(Exception e) {
         return generateErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected Error", e);
     }
+
+    @ExceptionHandler(ClaimNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleClaimNotFoundException(ClaimNotFoundException e) {
+        return generateErrorResponse(HttpStatus.NOT_FOUND, "Claim not found", e);
+    }
+
+    @ExceptionHandler(RestaurantOwnedException.class)
+    public ResponseEntity<ErrorResponse> handleRestaurantOwnedException(RestaurantOwnedException e) {
+        return generateErrorResponse(HttpStatus.BAD_REQUEST, "Restaurant Owned", e);
+    }
 }

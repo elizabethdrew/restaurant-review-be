@@ -4,12 +4,14 @@ import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.RestaurantNotFoundException;
 import dev.drew.restaurantreview.service.RestaurantService;
 import java.util.List;
+
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.openapitools.api.RestaurantsApi;
+import org.openapitools.model.ClaimInput;
+import org.openapitools.model.ClaimStatus;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
 import org.springdoc.core.annotations.ParameterObject;
@@ -36,9 +38,7 @@ public class RestaurantController implements RestaurantsApi {
      * @param restaurantInput input data for the new restaurant
      * @return response entity containing the new restaurant data
      */
-    @SecurityRequirement(
-            name = "Bearer Authentication"
-    )
+    @SecurityRequirement(name = "Bearer Authentication")
     @Override
     @PostMapping
     public ResponseEntity<Restaurant> addNewRestaurant(
@@ -46,6 +46,7 @@ public class RestaurantController implements RestaurantsApi {
         Restaurant restaurant = restaurantService.addNewRestaurant(restaurantInput);
         return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
     }
+
 
     @GetMapping
     @PreAuthorize("permitAll()")
@@ -69,9 +70,20 @@ public class RestaurantController implements RestaurantsApi {
         return ResponseEntity.ok(restaurant);
     }
 
-    @SecurityRequirement(
-            name = "Bearer Authentication"
-    )
+    @SecurityRequirement(name = "Bearer Authentication")
+    @GetMapping("/{restaurantId}/claim")
+    public ResponseEntity<ClaimStatus> getRestaurantClaimStatus(@PathVariable("restaurantId") Integer restaurantId) {
+        ClaimStatus status = restaurantService.getClaimStatus(restaurantId);
+        return ResponseEntity.ok(status);
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PostMapping("/{restaurantId}/claim")
+    public ResponseEntity<ClaimStatus> createRestaurantClaim(@PathVariable Integer restaurantId, ClaimInput claimInput) {
+        return restaurantService.createClaim(restaurantId, claimInput);
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
     @PutMapping("/{restaurantId}")
     public ResponseEntity<Restaurant> updateRestaurantById(
             @Min(1) @PathVariable Integer restaurantId,
@@ -81,9 +93,7 @@ public class RestaurantController implements RestaurantsApi {
         return ResponseEntity.ok(updatedRestaurant);
     }
 
-    @SecurityRequirement(
-            name = "Bearer Authentication"
-    )
+    @SecurityRequirement(name = "Bearer Authentication")
     @DeleteMapping("/{restaurantId}")
     public ResponseEntity<Void> deleteRestaurantById(
             @Min(1) @PathVariable Integer restaurantId) {
