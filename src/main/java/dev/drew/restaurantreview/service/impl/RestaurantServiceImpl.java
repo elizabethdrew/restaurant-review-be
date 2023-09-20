@@ -11,6 +11,7 @@ import dev.drew.restaurantreview.repository.specification.RestaurantSpecificatio
 import dev.drew.restaurantreview.service.RestaurantService;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import jakarta.transaction.Transactional;
+import jdk.swing.interop.SwingInterOpUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLOutput;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -111,16 +113,27 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
 
-    public List<Restaurant> getAllRestaurants(List<String> city, List<Integer> rating, Long userId, List<Integer> price_range, List<String> cuisine, Pageable pageable) {
-        Page<RestaurantEntity> filteredEntities = restaurantRepository.findAll(
-                Specification.where(RestaurantSpecification.isNotDeleted())
-                        .and(RestaurantSpecification.hasCity(city))
-                        .and(RestaurantSpecification.hasRating(rating))
-                        .and(RestaurantSpecification.hasUserId(userId))
-                        .and(RestaurantSpecification.hasPriceRange(price_range))
-                        .and(RestaurantSpecification.hasCuisine(cuisine)),
-                pageable
-        );
+    public List<Restaurant> getAllRestaurants(
+            List<String> city,
+            List<Integer> rating,
+            Long userId,
+            List<Integer> price_range,
+            List<String> cuisine,
+            Boolean favouritesOnly,
+            Pageable pageable) {
+
+        Specification<RestaurantEntity> specs = Specification.where(RestaurantSpecification.isNotDeleted())
+                .and(RestaurantSpecification.hasCity(city))
+                .and(RestaurantSpecification.hasRating(rating))
+                .and(RestaurantSpecification.hasUserId(userId))
+                .and(RestaurantSpecification.hasPriceRange(price_range))
+                .and(RestaurantSpecification.hasCuisine(cuisine));
+
+        if (favouritesOnly && getCurrentUserId() != null) {
+            specs = specs.and(RestaurantSpecification.isFavouritedByUser(getCurrentUserId()));
+        }
+
+        Page<RestaurantEntity> filteredEntities = restaurantRepository.findAll(specs, pageable);
 
         return filteredEntities.stream().map(restaurantMapper::toRestaurant).collect(Collectors.toList());
     }

@@ -52,7 +52,7 @@ paths:
       operationId: getAllRestaurants
       tags:
         - Restaurants
-      description: Returns a list of all restaurants.
+      description: Retrieves a list of all restaurants. Note If the favouritesOnly parameter is set to true, the JWT token must be provided for authentication. Otherwise, the endpoint can be accessed without authentication.
       x-spring-paginated: true
       parameters:
         - name: city
@@ -98,6 +98,13 @@ paths:
             type: array
             items:
               type: string
+        - name: favouritesOnly
+          in: query
+          description: If set to true, returns only favourite restaurants. Requires authentication to be provided.
+          required: false
+          schema:
+            type: boolean
+            default: false
       responses:
         '200':
           description: Success
