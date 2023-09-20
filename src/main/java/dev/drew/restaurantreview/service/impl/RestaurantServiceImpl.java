@@ -7,6 +7,7 @@ import dev.drew.restaurantreview.mapper.RestaurantMapper;
 import dev.drew.restaurantreview.repository.*;
 import dev.drew.restaurantreview.repository.specification.RestaurantSpecification;
 import dev.drew.restaurantreview.service.RestaurantService;
+import dev.drew.restaurantreview.util.HelperUtils;
 import dev.drew.restaurantreview.util.interfaces.EntityOwnerIdProvider;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import jakarta.transaction.Transactional;
@@ -44,6 +45,8 @@ public class RestaurantServiceImpl implements RestaurantService {
     private UserRepository userRepository;
     private CuisineRepository cuisineRepository;
     private FavouriteRepository favouriteRepository;
+
+    private HelperUtils helperUtils;
 
     // Constructor with required dependencies
     public RestaurantServiceImpl(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper, ReviewRepository reviewRepository, ClaimRepository claimRepository, ClaimMapper claimMapper, UserRepository userRepository, CuisineRepository cuisineRepository, FavouriteRepository favouriteRepository) {
@@ -158,7 +161,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     public Restaurant getRestaurantById(Integer restaurantId) throws RestaurantNotFoundException {
 
-        RestaurantEntity restaurantEntity = getRestaurantHelper(restaurantId);
+        RestaurantEntity restaurantEntity = helperUtils.getRestaurantHelper(restaurantId);
 
         boolean isFavourited = false;
         Long favouritesCount = favouriteRepository.countByRestaurant(restaurantEntity);
@@ -181,7 +184,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         validateRestaurantInput(restaurantInput);
 
-        RestaurantEntity restaurantEntity = getRestaurantHelper(restaurantId);
+        RestaurantEntity restaurantEntity = helperUtils.getRestaurantHelper(restaurantId);
 
         // Check if the current user is an admin or the owner of the restaurant
         if (!isAdminOrOwner(restaurantEntity, restaurantOwnerIdProvider)) {
@@ -210,7 +213,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     public void deleteRestaurantById(Integer restaurantId) {
 
-        RestaurantEntity restaurantEntity = getRestaurantHelper(restaurantId);
+        RestaurantEntity restaurantEntity = helperUtils.getRestaurantHelper(restaurantId);
 
         if (!isAdminOrOwner(restaurantEntity, restaurantOwnerIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to delete this restaurant");
@@ -230,7 +233,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Transactional
     public boolean toggleFavourite(Integer restaurantId) {
 
-        RestaurantEntity restaurantEntity = getRestaurantHelper(restaurantId);
+        RestaurantEntity restaurantEntity = helperUtils.getRestaurantHelper(restaurantId);
 
         // Fetch the current user entity
         Long currentUserId = getCurrentUserId();
@@ -257,7 +260,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     public ClaimStatus getClaimStatus(Integer restaurantId) {
 
-        RestaurantEntity restaurantEntity = getRestaurantHelper(restaurantId);
+        RestaurantEntity restaurantEntity = helperUtils.getRestaurantHelper(restaurantId);
 
         // Fetch the current user entity
         Long currentUserId = getCurrentUserId();
@@ -275,7 +278,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Transactional
     public ResponseEntity<ClaimStatus> createClaim(Integer restaurantId, ClaimInput claimInput) {
 
-        RestaurantEntity restaurantEntity = getRestaurantHelper(restaurantId);
+        RestaurantEntity restaurantEntity = helperUtils.getRestaurantHelper(restaurantId);
 
         // Check if restaurant already has owner
         if (restaurantEntity.getOwner() != null) {
@@ -306,17 +309,6 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         // Return the response
         return ResponseEntity.status(HttpStatus.CREATED).body(claimMapper.toClaim(savedClaim));
-    }
-
-    public RestaurantEntity getRestaurantHelper(Integer restaurantId) throws RestaurantNotFoundException {
-
-        RestaurantEntity restaurantEntity = restaurantRepository.findOne(
-                Specification.where(RestaurantSpecification.hasId(restaurantId.longValue()))
-                        .and(RestaurantSpecification.isNotDeleted())
-        ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
-
-        return restaurantEntity;
-
     }
 
 
