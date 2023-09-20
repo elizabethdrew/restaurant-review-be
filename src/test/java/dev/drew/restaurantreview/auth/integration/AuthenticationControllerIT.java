@@ -53,4 +53,22 @@ public class AuthenticationControllerIT extends GlobalTestContainer {
                 .then()
                 .statusCode(400);
     }
+
+    @Test
+    void testLogout_loggedInUser() throws Exception {
+        String token = authorisationAdmin();
+        given().log().all()
+                .header("Authorization", "Bearer "+ token)
+                .when().request("POST", "api/v1/logout")
+                .then()
+                .statusCode(200);
+    }
+
+    @Test
+    void testLogout_notLoggedInUser() throws Exception {
+        given().log().all()
+                .when().request("POST", "api/v1/logout")
+                .then()
+                .statusCode(403);
+    }
 }
