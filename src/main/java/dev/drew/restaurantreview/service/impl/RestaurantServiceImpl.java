@@ -157,11 +157,8 @@ public class RestaurantServiceImpl implements RestaurantService {
 
 
     public Restaurant getRestaurantById(Integer restaurantId) throws RestaurantNotFoundException {
-        // Use a Specification to find a non-deleted restaurant by its ID
-        RestaurantEntity restaurantEntity = restaurantRepository.findOne(
-                Specification.where(RestaurantSpecification.hasId(restaurantId.longValue()))
-                        .and(RestaurantSpecification.isNotDeleted())
-        ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
+
+        RestaurantEntity restaurantEntity = getRestaurantHelper(restaurantId);
 
         boolean isFavourited = false;
         Long favouritesCount = favouriteRepository.countByRestaurant(restaurantEntity);
@@ -184,12 +181,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         validateRestaurantInput(restaurantInput);
 
-        // Use a Specification to find a non-deleted restaurant by its ID
-        RestaurantEntity restaurantEntity = restaurantRepository.findOne(
-                Specification.where(RestaurantSpecification.hasId(restaurantId.longValue()))
-                        .and(RestaurantSpecification.isNotDeleted())
-        ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
-
+        RestaurantEntity restaurantEntity = getRestaurantHelper(restaurantId);
 
         // Check if the current user is an admin or the owner of the restaurant
         if (!isAdminOrOwner(restaurantEntity, restaurantOwnerIdProvider)) {
@@ -218,12 +210,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     public void deleteRestaurantById(Integer restaurantId) {
 
-        // Use a Specification to find a non-deleted restaurant by its ID
-        RestaurantEntity restaurantEntity = restaurantRepository.findOne(
-                Specification.where(RestaurantSpecification.hasId(restaurantId.longValue()))
-                        .and(RestaurantSpecification.isNotDeleted())
-        ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
-
+        RestaurantEntity restaurantEntity = getRestaurantHelper(restaurantId);
 
         if (!isAdminOrOwner(restaurantEntity, restaurantOwnerIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to delete this restaurant");
@@ -243,11 +230,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Transactional
     public boolean toggleFavourite(Integer restaurantId) {
 
-        // Use a Specification to find a non-deleted restaurant by its ID
-        RestaurantEntity restaurantEntity = restaurantRepository.findOne(
-                Specification.where(RestaurantSpecification.hasId(restaurantId.longValue()))
-                        .and(RestaurantSpecification.isNotDeleted())
-        ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
+        RestaurantEntity restaurantEntity = getRestaurantHelper(restaurantId);
 
         // Fetch the current user entity
         Long currentUserId = getCurrentUserId();
@@ -274,11 +257,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     public ClaimStatus getClaimStatus(Integer restaurantId) {
 
-        // Use a Specification to find a non-deleted restaurant by its ID
-        RestaurantEntity restaurantEntity = restaurantRepository.findOne(
-                Specification.where(RestaurantSpecification.hasId(restaurantId.longValue()))
-                        .and(RestaurantSpecification.isNotDeleted())
-        ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
+        RestaurantEntity restaurantEntity = getRestaurantHelper(restaurantId);
 
         // Fetch the current user entity
         Long currentUserId = getCurrentUserId();
@@ -296,11 +275,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Transactional
     public ResponseEntity<ClaimStatus> createClaim(Integer restaurantId, ClaimInput claimInput) {
 
-        // Use a Specification to find a non-deleted restaurant by its ID
-        RestaurantEntity restaurantEntity = restaurantRepository.findOne(
-                Specification.where(RestaurantSpecification.hasId(restaurantId.longValue()))
-                        .and(RestaurantSpecification.isNotDeleted())
-        ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
+        RestaurantEntity restaurantEntity = getRestaurantHelper(restaurantId);
 
         // Check if restaurant already has owner
         if (restaurantEntity.getOwner() != null) {
@@ -315,7 +290,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         // Check if claim already exists for user and restaurant - return current status if it does
         Optional<ClaimEntity> claimEntity = claimRepository.findByRestaurantAndClaimant(restaurantEntity, currentUser);
         if (claimEntity.isPresent()) {
-            return ResponseEntity.ok(claimMapper.toClaim(claimEntity.get())); // Returning 200 OK here
+            return ResponseEntity.ok(claimMapper.toClaim(claimEntity.get()));
         }
 
         // Convert the input data to a ClaimEntity object
@@ -331,6 +306,17 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         // Return the response
         return ResponseEntity.status(HttpStatus.CREATED).body(claimMapper.toClaim(savedClaim));
+    }
+
+    public RestaurantEntity getRestaurantHelper(Integer restaurantId) throws RestaurantNotFoundException {
+
+        RestaurantEntity restaurantEntity = restaurantRepository.findOne(
+                Specification.where(RestaurantSpecification.hasId(restaurantId.longValue()))
+                        .and(RestaurantSpecification.isNotDeleted())
+        ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
+
+        return restaurantEntity;
+
     }
 
 
