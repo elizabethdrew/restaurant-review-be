@@ -4,6 +4,7 @@ import dev.drew.restaurantreview.entity.AccountRequestEntity;
 import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.InvalidInputException;
 import dev.drew.restaurantreview.exception.UserNotFoundException;
+import dev.drew.restaurantreview.repository.AccountRequestRepository;
 import dev.drew.restaurantreview.service.UserService;
 import dev.drew.restaurantreview.util.SecurityUtils;
 import jakarta.transaction.Transactional;
@@ -24,14 +25,17 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
+    private final AccountRequestRepository accountRequestRepository;
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder;
 
     // Implement EntityUserIdProvider for UserEntity
     private final EntityUserIdProvider<UserEntity> userEntityUserIdProvider = UserEntity::getId;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, BCryptPasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, AccountRequestRepository accountRequestRepository, UserMapper userMapper, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.accountRequestRepository = accountRequestRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
     }
@@ -62,11 +66,13 @@ public class UserServiceImpl implements UserService {
 
         // Check if user is requesting admin permissions
         if(userInput.getRole() == UserInput.RoleEnum.ADMIN) {
+            System.out.println("Make Pending Admin");
             AccountRequestEntity newRequest = new AccountRequestEntity();
             newRequest.setUser(savedUser);
             newRequest.setStatus(AccountRequestEntity.Status.PENDING);
             newRequest.setCreatedAt(OffsetDateTime.now().toLocalDateTime());
             newRequest.setUpdatedAt(OffsetDateTime.now().toLocalDateTime());
+            accountRequestRepository.save(newRequest);
         }
 
         User savedApiUser = userMapper.toUser(savedUser);
@@ -147,6 +153,7 @@ public class UserServiceImpl implements UserService {
             newRequest.setStatus(AccountRequestEntity.Status.PENDING);
             newRequest.setCreatedAt(OffsetDateTime.now().toLocalDateTime());
             newRequest.setUpdatedAt(OffsetDateTime.now().toLocalDateTime());
+            accountRequestRepository.save(newRequest);
         }
 
         // Check if new password is provided

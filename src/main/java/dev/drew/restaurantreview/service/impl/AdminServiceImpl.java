@@ -115,6 +115,8 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<AdminStatus> getPendingAdminAccounts() {
 
+        System.out.println("Getting Pending Admins");
+
         // Check if the current user is an admin
         if (!SecurityUtils.isAdmin()) {
             throw new InsufficientPermissionException("User does not have permission to view admin page");
