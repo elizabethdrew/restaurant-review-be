@@ -4,6 +4,7 @@ import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.InvalidInputException;
 import dev.drew.restaurantreview.exception.UserNotFoundException;
 import dev.drew.restaurantreview.service.UserService;
+import dev.drew.restaurantreview.util.SecurityUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.mapper.UserMapper;
@@ -16,8 +17,6 @@ import org.passay.*;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import static dev.drew.restaurantreview.util.SecurityUtils.isAdminOrCreator;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -87,7 +86,7 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findByIdAndIsDeletedFalse(userId.longValue())
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
-        if (!isAdminOrCreator(userEntity, userEntityUserIdProvider)) {
+        if (!SecurityUtils.isAdminOrCreator(userEntity, userEntityUserIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission view this profile");
         }
 
@@ -101,7 +100,7 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findByIdAndIsDeletedFalse(userId.longValue())
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
-        if (!isAdminOrCreator(userEntity, userEntityUserIdProvider)) {
+        if (!SecurityUtils.isAdminOrCreator(userEntity, userEntityUserIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to update this profile");
         }
 
@@ -119,7 +118,7 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findByIdAndIsDeletedFalse(userId.longValue())
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
-        if (!isAdminOrCreator(userEntity, userEntityUserIdProvider)) {
+        if (!SecurityUtils.isAdminOrCreator(userEntity, userEntityUserIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to update this profile");
         }
 
