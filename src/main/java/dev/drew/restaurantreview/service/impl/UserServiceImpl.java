@@ -1,10 +1,12 @@
 package dev.drew.restaurantreview.service.impl;
 
+import dev.drew.restaurantreview.entity.AccountRequestEntity;
 import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.InvalidInputException;
 import dev.drew.restaurantreview.exception.UserNotFoundException;
 import dev.drew.restaurantreview.service.UserService;
 import dev.drew.restaurantreview.util.SecurityUtils;
+import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.mapper.UserMapper;
@@ -34,7 +36,7 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-
+    @Transactional
     public User addNewUser(UserInput userInput) {
 
         // Check if username already exists
@@ -50,11 +52,22 @@ public class UserServiceImpl implements UserService {
         // Validate Password
         validatePassword(userInput.getPassword());
 
+        // Create New User
         UserEntity user = userMapper.toUserEntity(userInput);
         user.setCreatedAt(OffsetDateTime.now());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(userInput.getPassword()));
+        user.setRole(User.RoleEnum.REVIEWER);
 
         UserEntity savedUser = userRepository.save(user);
+
+        // Check if user is requesting admin permissions
+        if(userInput.getRole() == UserInput.RoleEnum.ADMIN) {
+            AccountRequestEntity newRequest = new AccountRequestEntity();
+            newRequest.setUser(savedUser);
+            newRequest.setStatus(AccountRequestEntity.Status.PENDING);
+            newRequest.setCreatedAt(OffsetDateTime.now().toLocalDateTime());
+            newRequest.setUpdatedAt(OffsetDateTime.now().toLocalDateTime());
+        }
 
         User savedApiUser = userMapper.toUser(savedUser);
 
@@ -125,6 +138,16 @@ public class UserServiceImpl implements UserService {
         UserEntity updatedEntity = userMapper.toUserEntity(userInput);
         updatedEntity.setId(userEntity.getId());
         updatedEntity.setCreatedAt(userEntity.getCreatedAt());
+        updatedEntity.setRole(userEntity.getRole());
+
+        // Check if user is requesting admin permissions
+        if(userInput.getRole() == UserInput.RoleEnum.ADMIN && userEntity.getRole() != User.RoleEnum.ADMIN) {
+            AccountRequestEntity newRequest = new AccountRequestEntity();
+            newRequest.setUser(userEntity);
+            newRequest.setStatus(AccountRequestEntity.Status.PENDING);
+            newRequest.setCreatedAt(OffsetDateTime.now().toLocalDateTime());
+            newRequest.setUpdatedAt(OffsetDateTime.now().toLocalDateTime());
+        }
 
         // Check if new password is provided
         if(userInput.getPassword() != null) {
