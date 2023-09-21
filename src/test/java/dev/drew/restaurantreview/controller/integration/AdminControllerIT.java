@@ -93,4 +93,25 @@ public class AdminControllerIT extends GlobalTestContainer {
                 .then()
                 .statusCode(404);
     }
+
+    @Test
+    void testGetPendingAdminRequests() throws Exception {
+        String token = authorisationAdmin();
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .when().request("GET", "/api/v1/admin/users/pending")
+                .then()
+                .statusCode(200)
+                .body("status.flatten()", hasItem("PENDING"))
+                .body("status.flatten()", not(hasItem("ACCEPTED")))
+                .body("status.flatten()", not(hasItem("REJECTED")));
+    }
+
+    @Test
+    void testGetPendingAdminRequests_unauthorised() throws Exception {
+        given().log().all().contentType(ContentType.JSON)
+                .when().request("GET", "/api/v1/admin/users/pending")
+                .then()
+                .statusCode(403);
+    }
 }

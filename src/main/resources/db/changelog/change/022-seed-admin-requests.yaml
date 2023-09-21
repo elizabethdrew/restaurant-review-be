@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 21
+      author: elizabeth_drew
+      context: seed
+      changes:
+        - insert:
+            tableName: admin_account_requests
+            columns:
+              - column:
+                  name: user_id
+                  valueNumeric: 3
+              - column:
+                  name: status
+                  value: "PENDING"
+              - column:
+                  name: created_at
+                  valueDate: "2023-09-19T00:00:00"
+              - column:
+                  name: updated_at
+                  valueDate: "2023-09-19T00:00:00"
+        - insert:
+            tableName: admin_account_requests
+            columns:
+              - column:
+                  name: user_id
+                  valueNumeric: 4
+              - column:
+                  name: status
+                  value: "PENDING"
+              - column:
+                  name: created_at
+                  valueDate: "2023-09-19T00:00:00"
+              - column:
+                  name: updated_at
+                  valueDate: "2023-09-19T00:00:00"
