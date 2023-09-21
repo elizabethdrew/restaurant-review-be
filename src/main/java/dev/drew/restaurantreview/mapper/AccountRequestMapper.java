@@ -8,7 +8,7 @@ import org.openapitools.model.AdminStatus;
 @Mapper(componentModel = "spring")
 public interface AccountRequestMapper {
 
-    @Mapping(source = "user.id", target = "user_Id")
+    @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "id", target = "requestId")
     AdminStatus toAdminStatus(AccountRequestEntity accountRequestEntity);
 }

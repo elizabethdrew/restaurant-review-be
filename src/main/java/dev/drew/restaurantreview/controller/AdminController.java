@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/admin/claims")
+@RequestMapping("/api/v1/admin")
 public class AdminController implements AdminApi {
 
     @Autowired
     private AdminService adminService;
 
-    @GetMapping("/pending")
+    @GetMapping("/claims/pending")
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<List<ClaimStatus>> getPendingClaims() {
         List<ClaimStatus> pendingClaims = adminService.getPendingClaims();
@@ -26,14 +26,14 @@ public class AdminController implements AdminApi {
     }
 
     @SecurityRequirement(name = "Bearer Authentication")
-    @PostMapping("/{claimId}/accept")
+    @PostMapping("/claims/{claimId}/accept")
     public ResponseEntity<ClaimStatus> acceptClaim(@PathVariable("claimId") Long claimId) {
         ClaimStatus claimStatus = adminService.acceptClaim(claimId);
         return ResponseEntity.ok(claimStatus);
     }
 
     @SecurityRequirement(name = "Bearer Authentication")
-    @PostMapping("/{claimId}/reject")
+    @PostMapping("/claims/{claimId}/reject")
     public ResponseEntity<ClaimStatus> rejectClaim(@PathVariable("claimId") Long claimId) {
         ClaimStatus claimStatus = adminService.rejectClaim(claimId);
         return ResponseEntity.ok(claimStatus);

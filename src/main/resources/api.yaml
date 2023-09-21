@@ -1633,7 +1633,7 @@ components:
           type: integer
           format: int64
           description: ID of the restaurant the claim relates to
-        claimId:
+        claim_id:
           type: integer
           format: int64
           description: ID of the claim
@@ -1654,19 +1654,11 @@ components:
         status:
           type: string
           description: The claim status (e.g., pending, accepted, rejected)
-        user_Id:
+        user_id:
           type: integer
           format: int64
           description: ID of the user who has made the claim
-        requestId:
+        request_id:
           type: integer
           format: int64
           description: ID of the request
-        created_at:
-          type: string
-          format: date-time
-          description: The date and time the request was created.
-        updated_at:
-          type: string
-          format: date-time
-          description: The date and time the request was updated.
