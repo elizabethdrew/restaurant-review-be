@@ -8,8 +8,8 @@ import dev.drew.restaurantreview.repository.*;
 import dev.drew.restaurantreview.repository.specification.RestaurantSpecification;
 import dev.drew.restaurantreview.service.RestaurantService;
 import dev.drew.restaurantreview.util.HelperUtils;
+import dev.drew.restaurantreview.util.SecurityUtils;
 import dev.drew.restaurantreview.util.interfaces.EntityOwnerIdProvider;
-import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.openapitools.model.ClaimInput;
@@ -28,8 +28,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static dev.drew.restaurantreview.util.SecurityUtils.*;
-
 @Slf4j
 @Service
 public class RestaurantServiceImpl implements RestaurantService {
@@ -46,10 +44,11 @@ public class RestaurantServiceImpl implements RestaurantService {
     private CuisineRepository cuisineRepository;
     private FavouriteRepository favouriteRepository;
 
-    private HelperUtils helperUtils;
+
+    private final HelperUtils helperUtils;
 
     // Constructor with required dependencies
-    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper, ReviewRepository reviewRepository, ClaimRepository claimRepository, ClaimMapper claimMapper, UserRepository userRepository, CuisineRepository cuisineRepository, FavouriteRepository favouriteRepository) {
+    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper, ReviewRepository reviewRepository, ClaimRepository claimRepository, ClaimMapper claimMapper, UserRepository userRepository, CuisineRepository cuisineRepository, FavouriteRepository favouriteRepository, HelperUtils helperUtils) {
         this.restaurantRepository = restaurantRepository;
         this.restaurantMapper = restaurantMapper;
         this.reviewRepository = reviewRepository;
@@ -58,6 +57,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         this.userRepository = userRepository;
         this.cuisineRepository = cuisineRepository;
         this.favouriteRepository = favouriteRepository;
+        this.helperUtils = helperUtils;
     }
 
     public void validateRestaurantInput(RestaurantInput restaurantInput) {
@@ -92,9 +92,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurant.setRestaurantCuisines(cuisines);
 
         // Fetch the current user entity
-        Long currentUserId = getCurrentUserId();
-        UserEntity currentUser = userRepository.findById(currentUserId)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        UserEntity currentUser = SecurityUtils.getCurrentUser();
 
         // Set the current user to the restaurant
         restaurant.setUser(currentUser);
@@ -136,13 +134,17 @@ public class RestaurantServiceImpl implements RestaurantService {
                 .and(RestaurantSpecification.hasPriceRange(price_range))
                 .and(RestaurantSpecification.hasCuisine(cuisine));
 
-        if (favouritesOnly && getCurrentUserId() != null) {
-            specs = specs.and(RestaurantSpecification.isFavouritedByUser(getCurrentUserId()));
+        // Fetch the current user entity
+        UserEntity currentUser = SecurityUtils.getCurrentUser();
+
+        if (currentUser != null) {
+            Long currentUserId = currentUser.getId();
+            if (favouritesOnly && currentUserId != null) {
+                specs = specs.and(RestaurantSpecification.isFavouritedByUser(currentUserId));
+            }
         }
 
         Page<RestaurantEntity> filteredEntities = restaurantRepository.findAll(specs, pageable);
-
-        UserEntity currentUser = getCurrentUser();
 
         return filteredEntities.stream()
                 .map(entity -> {
@@ -166,8 +168,11 @@ public class RestaurantServiceImpl implements RestaurantService {
         boolean isFavourited = false;
         Long favouritesCount = favouriteRepository.countByRestaurant(restaurantEntity);
 
-        if (getCurrentUser() != null) {
-            Optional<FavouriteEntity> favourite = favouriteRepository.findByRestaurantAndUser(restaurantEntity, getCurrentUser());
+        // Fetch the current user entity
+        UserEntity currentUser = SecurityUtils.getCurrentUser();
+
+        if (currentUser != null) {
+            Optional<FavouriteEntity> favourite = favouriteRepository.findByRestaurantAndUser(restaurantEntity, currentUser);
             isFavourited = favourite.isPresent();
         }
 
@@ -187,7 +192,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         RestaurantEntity restaurantEntity = helperUtils.getRestaurantHelper(restaurantId);
 
         // Check if the current user is an admin or the owner of the restaurant
-        if (!isAdminOrOwner(restaurantEntity, restaurantOwnerIdProvider)) {
+        if (!SecurityUtils.isAdminOrOwner(restaurantEntity, restaurantOwnerIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to update this restaurant");
         }
 
@@ -200,11 +205,10 @@ public class RestaurantServiceImpl implements RestaurantService {
         updatedEntity.setCreatedAt(restaurantEntity.getCreatedAt());
         updatedEntity.setUser(restaurantEntity.getUser());
         updatedEntity.setRating(restaurantEntity.getRating());
-        updatedEntity.setRestaurantCuisines(restaurantEntity.getRestaurantCuisines()); // why isn't this saving???
+        updatedEntity.setRestaurantCuisines(restaurantEntity.getRestaurantCuisines());
 
         // Save the updated restaurant to the database
         RestaurantEntity savedRestaurant = restaurantRepository.save(updatedEntity);
-
 
         // Convert the saved RestaurantEntity object to a Restaurant object
         return restaurantMapper.toRestaurant(savedRestaurant);
@@ -215,16 +219,12 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         RestaurantEntity restaurantEntity = helperUtils.getRestaurantHelper(restaurantId);
 
-        if (!isAdminOrOwner(restaurantEntity, restaurantOwnerIdProvider)) {
+        if (!SecurityUtils.isAdminOrOwner(restaurantEntity, restaurantOwnerIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to delete this restaurant");
         }
 
-        System.out.println(restaurantEntity);
-
         // Instead of deleting, we mark the restaurant as deleted
         restaurantEntity.setIsDeleted(true);
-
-        System.out.println(restaurantEntity);
 
         restaurantRepository.save(restaurantEntity);
     }
@@ -236,9 +236,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         RestaurantEntity restaurantEntity = helperUtils.getRestaurantHelper(restaurantId);
 
         // Fetch the current user entity
-        Long currentUserId = getCurrentUserId();
-        UserEntity currentUser = userRepository.findById(currentUserId)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        UserEntity currentUser = SecurityUtils.getCurrentUser();
 
         // Check if the user has already favourited this restaurant
         Optional<FavouriteEntity> favouriteOpt = favouriteRepository.findByRestaurantAndUser(restaurantEntity, currentUser);
@@ -263,9 +261,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         RestaurantEntity restaurantEntity = helperUtils.getRestaurantHelper(restaurantId);
 
         // Fetch the current user entity
-        Long currentUserId = getCurrentUserId();
-        UserEntity currentUser = userRepository.findById(currentUserId)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        UserEntity currentUser = SecurityUtils.getCurrentUser();
 
         // Fetch the claim for current user and restaurant
         ClaimEntity claimEntity = claimRepository.findByRestaurantAndClaimant(restaurantEntity, currentUser)
@@ -286,9 +282,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         }
 
         // Fetch the current user entity
-        Long currentUserId = getCurrentUserId();
-        UserEntity currentUser = userRepository.findById(currentUserId)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        UserEntity currentUser = SecurityUtils.getCurrentUser();
 
         // Check if claim already exists for user and restaurant - return current status if it does
         Optional<ClaimEntity> claimEntity = claimRepository.findByRestaurantAndClaimant(restaurantEntity, currentUser);

@@ -4,6 +4,7 @@ import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.InvalidInputException;
 import dev.drew.restaurantreview.exception.UserNotFoundException;
 import dev.drew.restaurantreview.service.UserService;
+import dev.drew.restaurantreview.util.SecurityUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.mapper.UserMapper;
@@ -11,10 +12,11 @@ import dev.drew.restaurantreview.repository.UserRepository;
 import org.openapitools.model.*;
 import org.springframework.stereotype.Service;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
+import org.passay.*;
 
 import java.time.OffsetDateTime;
-
-import static dev.drew.restaurantreview.util.SecurityUtils.isAdminOrCreator;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -45,6 +47,9 @@ public class UserServiceImpl implements UserService {
             throw new InvalidInputException("Email already in use.");
         }
 
+        // Validate Password
+        validatePassword(userInput.getPassword());
+
         UserEntity user = userMapper.toUserEntity(userInput);
         user.setCreatedAt(OffsetDateTime.now());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -56,6 +61,24 @@ public class UserServiceImpl implements UserService {
         return savedApiUser;
     }
 
+    private void validatePassword(String password) {
+        // Define rules
+        List<Rule> rules = new ArrayList<>();
+        rules.add(new LengthRule(8, 100)); // password length between 8 and 100
+        rules.add(new CharacterRule(EnglishCharacterData.UpperCase, 1)); // at least 1 uppercase character
+        rules.add(new CharacterRule(EnglishCharacterData.LowerCase, 1)); // at least 1 lowercase character
+        rules.add(new CharacterRule(EnglishCharacterData.Digit, 1)); // at least 1 digit
+        rules.add(new CharacterRule(EnglishCharacterData.Special, 1)); // at least 1 special character
+
+        PasswordValidator validator = new PasswordValidator(rules);
+        RuleResult result = validator.validate(new PasswordData(password));
+
+        if (!result.isValid()) {
+            String message = String.join(", ", validator.getMessages(result));
+            throw new InvalidInputException("Invalid password: " + message);
+        }
+    }
+
 
 
     public User getUserById(Integer userId) {
@@ -63,7 +86,7 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findByIdAndIsDeletedFalse(userId.longValue())
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
-        if (!isAdminOrCreator(userEntity, userEntityUserIdProvider)) {
+        if (!SecurityUtils.isAdminOrCreator(userEntity, userEntityUserIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission view this profile");
         }
 
@@ -77,7 +100,7 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findByIdAndIsDeletedFalse(userId.longValue())
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
-        if (!isAdminOrCreator(userEntity, userEntityUserIdProvider)) {
+        if (!SecurityUtils.isAdminOrCreator(userEntity, userEntityUserIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to update this profile");
         }
 
@@ -95,7 +118,7 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findByIdAndIsDeletedFalse(userId.longValue())
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
-        if (!isAdminOrCreator(userEntity, userEntityUserIdProvider)) {
+        if (!SecurityUtils.isAdminOrCreator(userEntity, userEntityUserIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to update this profile");
         }
 

@@ -7,6 +7,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -14,6 +15,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    private ResponseEntity<ErrorResponse> generateErrorResponse(HttpStatus status, Exception e) {
+        log.warn(String.valueOf(e));
+        ErrorResponse error = new ErrorResponse();
+        error.setCode(status.value());
+        error.setMessage(e.getMessage());
+        return new ResponseEntity<>(error, status);
+    }
 
     private ResponseEntity<ErrorResponse> generateErrorResponse(HttpStatus status, String message, Exception e) {
         log.warn(message, e);
@@ -76,7 +85,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidInputException.class)
     public ResponseEntity<ErrorResponse> handleInvalidInputException(InvalidInputException e) {
-        return generateErrorResponse(HttpStatus.BAD_REQUEST, "Invalid Input", e);
+        return generateErrorResponse(HttpStatus.BAD_REQUEST, e);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        return generateErrorResponse(HttpStatus.BAD_REQUEST, "Must be a well-formed email address", e);
     }
 
     @ExceptionHandler(ReviewNotFoundException.class)
