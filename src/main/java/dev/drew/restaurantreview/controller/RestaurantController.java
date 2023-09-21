@@ -105,9 +105,9 @@ public class RestaurantController implements RestaurantsApi {
     @PostMapping("/{restaurantId}/favourite")
     public ResponseEntity<Restaurant> favouriteRestaurant(@PathVariable Integer restaurantId) {
 
-        boolean favouriteAdded = restaurantService.toggleFavourite(restaurantId);
+        boolean toggleFavourite = restaurantService.toggleFavourite(restaurantId);
 
-        if(favouriteAdded) {
+        if(toggleFavourite) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.noContent().build();
