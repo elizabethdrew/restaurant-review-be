@@ -1223,6 +1223,138 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /api/v1/admin/users/pending:
+    get:
+      summary: Get all pending user requests for admin account
+      operationId: getPendingAdminAccounts
+      tags:
+        - Admin
+      security:
+        - basicAuth: [ ]
+      responses:
+        '200':
+          description: List of all pending admin requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AdminStatus'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient Permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/v1/admin/users/{requestId}/accept:
+    post:
+      description: Admin accepts a user request for admin account
+      operationId: acceptAdminAccount
+      tags:
+        - Admin
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - name: requestId
+          in: path
+          description: ID of the request to be accepted
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Admin account accepted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminStatus'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient Permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/v1/admin/users/{requestId}/reject:
+    post:
+      description: Admin rejects an admin account request
+      operationId: rejectAdminAccount
+      tags:
+        - Admin
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - name: requestId
+          in: path
+          description: ID of the request to be rejected
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Admin account rejected successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminStatus'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient Permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 
 components:
 
@@ -1492,7 +1624,7 @@ components:
       properties:
         status:
           type: string
-          description: The claim status (e.g., pending, accepted, denied)
+          description: The claim status (e.g., pending, accepted, rejected)
         claimant:
           type: integer
           format: int64
@@ -1515,3 +1647,26 @@ components:
         reason:
           type: string
           description: Reason or explanation provided by the user for the claim
+
+    AdminStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The claim status (e.g., pending, accepted, rejected)
+        user_id:
+          type: integer
+          format: int64
+          description: ID of the user who has made the claim
+        requestId:
+          type: integer
+          format: int64
+          description: ID of the request
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time the request was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time the request was updated.
