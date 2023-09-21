@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: 17
+      author: elizabeth_drew
+      changes:
+        - createTable:
+            tableName: favourites
+            columns:
+              - column:
+                  name: favourite_id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_favourites_user
+                    references: users(id)
+              - column:
+                  name: restaurant_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_favourites_restaurant
+                    references: restaurant(id)
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: favourites
+            columnNames: user_id, restaurant_id
+            constraintName: uk_favourites_user_restaurant

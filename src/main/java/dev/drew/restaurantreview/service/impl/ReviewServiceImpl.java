@@ -9,12 +9,11 @@ import dev.drew.restaurantreview.mapper.ReviewMapper;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
 import dev.drew.restaurantreview.repository.ReviewRepository;
 import dev.drew.restaurantreview.repository.UserRepository;
-import dev.drew.restaurantreview.repository.specification.RestaurantSpecification;
 import dev.drew.restaurantreview.repository.specification.ReviewSpecification;
 import dev.drew.restaurantreview.service.ReviewService;
+import dev.drew.restaurantreview.util.HelperUtils;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import lombok.extern.slf4j.Slf4j;
-import org.openapitools.model.Restaurant;
 import org.openapitools.model.Review;
 import org.openapitools.model.ReviewInput;
 import org.springframework.data.domain.Page;
@@ -27,8 +26,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static dev.drew.restaurantreview.util.SecurityUtils.getCurrentUserId;
-import static dev.drew.restaurantreview.util.SecurityUtils.isAdminOrOwner;
+import static dev.drew.restaurantreview.util.SecurityUtils.*;
 
 @Slf4j
 @Service
@@ -44,6 +42,8 @@ public class ReviewServiceImpl implements ReviewService {
     private final EntityUserIdProvider<ReviewEntity> reviewUserIdProvider = ReviewEntity::getUserId;
     private UserRepository userRepository;
 
+    private HelperUtils helperUtils;
+
     public ReviewServiceImpl(ReviewRepository reviewRepository, ReviewMapper reviewMapper, RestaurantMapper restaurantMapper, RestaurantRepository restaurantRepository, UserRepository userRepository) {
         this.reviewRepository = reviewRepository;
         this.reviewMapper = reviewMapper;
@@ -56,12 +56,8 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public Review addNewReview(ReviewInput reviewInput) {
 
-        // Use a Specification to find a non-deleted restaurant by its ID
-        Long restaurantId = reviewInput.getRestaurantId();
-        RestaurantEntity currentRestaurant = restaurantRepository.findOne(
-                Specification.where(RestaurantSpecification.hasId(restaurantId))
-                        .and(RestaurantSpecification.isNotDeleted())
-        ).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
+        Integer restaurantId = Math.toIntExact(reviewInput.getRestaurantId());
+        RestaurantEntity restaurantEntity = helperUtils.getRestaurantHelper(restaurantId);
 
         // Fetch the current user entity
         Long currentUserId = getCurrentUserId();
@@ -69,7 +65,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         // Check if the user is trying to review their own restaurant
-        UserEntity restaurantOwner = currentRestaurant.getOwner();
+        UserEntity restaurantOwner = restaurantEntity.getOwner();
         if (restaurantOwner != null && restaurantOwner.getId().equals(currentUserId)) {
             throw new UserOwnsRestaurantException("Owners cannot review their own restaurants.");
         }
@@ -95,7 +91,7 @@ public class ReviewServiceImpl implements ReviewService {
         review.setCreatedAt(OffsetDateTime.now());
 
         // Set the restaurant and user entities
-        review.setRestaurant(currentRestaurant);
+        review.setRestaurant(restaurantEntity);
         review.setUser(currentUser);
 
         ReviewEntity savedReview = reviewRepository.save(review);
@@ -122,10 +118,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     public Review getReviewById(Integer reviewId) throws ReviewNotFoundException {
 
-        ReviewEntity reviewEntity = reviewRepository.findOne(
-                Specification.where(ReviewSpecification.hasId(Long.valueOf(reviewId)))
-                        .and(ReviewSpecification.isNotDeleted())
-        ).orElseThrow(() -> new ReviewNotFoundException("Review with id " + reviewId + " not found"));
+        ReviewEntity reviewEntity = helperUtils.getReviewHelper(reviewId);
 
         return reviewMapper.toReview(reviewEntity);
     }
@@ -134,14 +127,10 @@ public class ReviewServiceImpl implements ReviewService {
     public Review updateReviewById(Integer reviewId, ReviewInput reviewInput)
             throws ReviewNotFoundException, InsufficientPermissionException {
 
-        // Use a Specification to find a non-deleted restaurant by its ID
-        ReviewEntity reviewEntity = reviewRepository.findOne(
-                Specification.where(ReviewSpecification.hasId(Long.valueOf(reviewId)))
-                        .and(ReviewSpecification.isNotDeleted())
-        ).orElseThrow(() -> new ReviewNotFoundException("Review with id " + reviewId + " not found"));
+        ReviewEntity reviewEntity = helperUtils.getReviewHelper(reviewId);
 
         // Check if the current user is an admin or the owner of the restaurant
-        if (!isAdminOrOwner(reviewEntity, reviewUserIdProvider)) {
+        if (!isAdminOrCreator(reviewEntity, reviewUserIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to update this review");
         }
 
@@ -162,14 +151,10 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public void deleteReviewById(Integer reviewId) {
 
-        // Use a Specification to find a non-deleted restaurant by its ID
-        ReviewEntity reviewEntity = reviewRepository.findOne(
-                Specification.where(ReviewSpecification.hasId(Long.valueOf(reviewId)))
-                        .and(ReviewSpecification.isNotDeleted())
-        ).orElseThrow(() -> new ReviewNotFoundException("Review with id " + reviewId + " not found"));
+        ReviewEntity reviewEntity = helperUtils.getReviewHelper(reviewId);
 
         // Check if the current user is an admin or the owner of the restaurant
-        if (!isAdminOrOwner(reviewEntity, reviewUserIdProvider)) {
+        if (!isAdminOrCreator(reviewEntity, reviewUserIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to delete this review");
         }
 

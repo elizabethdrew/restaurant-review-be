@@ -52,7 +52,7 @@ paths:
       operationId: getAllRestaurants
       tags:
         - Restaurants
-      description: Returns a list of all restaurants.
+      description: Retrieves a list of all restaurants. Note If the favouritesOnly parameter is set to true, the JWT token must be provided for authentication. Otherwise, the endpoint can be accessed without authentication.
       x-spring-paginated: true
       parameters:
         - name: city
@@ -98,6 +98,13 @@ paths:
             type: array
             items:
               type: string
+        - name: favouritesOnly
+          in: query
+          description: If set to true, returns only favourite restaurants. Requires authentication to be provided.
+          required: false
+          schema:
+            type: boolean
+            default: false
       responses:
         '200':
           description: Success
@@ -166,7 +173,7 @@ paths:
       security: []
       summary: Get a restaurant by ID
       operationId: getRestaurantById
-      description: Returns a single restaurant by ID.
+      description: Returns a single restaurant by ID. Note to see if the the user has favourited the restaurant, the JWT token must be provided for authentication. Otherwise, the endpoint can be accessed without authentication.
       tags:
         - Restaurants
       parameters:
@@ -289,6 +296,43 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  /api/v1/restaurants/{restaurantId}/favourite:
+    post:
+      summary: Add or remove a restaurant from the user's favourites.
+      description: Mark or unmark a restaurant as a favourite for the authenticated user.
+      operationId: toggleFavourite
+      tags:
+        - Favourites
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - name: restaurantId
+          in: path
+          required: true
+          description: ID of the restaurant to be marked or unmarked as favourite.
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Restaurant added to favourites successfully.
+        '204':
+          description: Restaurant removed from favourites successfully.
+        '400':
+          description: Invalid input or request parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: User is not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Restaurant not found.
 
   /api/v1/restaurants/{restaurantId}/claim:
     get:
@@ -1243,13 +1287,19 @@ components:
           type: string
           format: date-time
           description: The date and time the restaurant was created.
-        user_id:
-          type: integer
-          format: int64
         is_deleted:
           type: boolean
           default: false
+        is_favourite:
+          type: boolean
+          default: false
+        total_favourites:
+          type: integer
+          format: int64
         owner_id:
+          type: integer
+          format: int64
+        user_id:
           type: integer
           format: int64
 
@@ -1306,30 +1356,30 @@ components:
         - message
 
     ClaimStatus:
-      type: "object"
+      type: object
       properties:
         status:
-          type: "string"
-          description: "The claim status (e.g., pending, accepted, denied)"
+          type: string
+          description: The claim status (e.g., pending, accepted, denied)
         claimant:
-          type: "integer"
-          format: "int64"
-          description: "ID of the user who has made the claim"
+          type: integer
+          format: int64
+          description: ID of the user who has made the claim
         restaurant:
-          type: "integer"
-          format: "int64"
-          description: "ID of the restaurant the claim relates to"
+          type: integer
+          format: int64
+          description: ID of the restaurant the claim relates to
         claimId:
-          type: "integer"
-          format: "int64"
-          description: "ID of the claim"
+          type: integer
+          format: int64
+          description: ID of the claim
         reason:
-          type: "string"
-          description: "Reason or explanation provided by the user for the claim"
+          type: string
+          description: Reason or explanation provided by the user for the claim
 
     ClaimInput:
-      type: "object"
+      type: object
       properties:
         reason:
-          type: "string"
-          description: "Reason or explanation provided by the user for the claim"
+          type: string
+          description: Reason or explanation provided by the user for the claim

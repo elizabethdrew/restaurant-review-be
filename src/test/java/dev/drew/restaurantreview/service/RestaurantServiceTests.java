@@ -1,11 +1,13 @@
 package dev.drew.restaurantreview.service;
 
 import dev.drew.restaurantreview.entity.CuisineEntity;
+import dev.drew.restaurantreview.entity.FavouriteEntity;
 import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.exception.*;
 
 import dev.drew.restaurantreview.mapper.RestaurantMapper;
 import dev.drew.restaurantreview.repository.CuisineRepository;
+import dev.drew.restaurantreview.repository.FavouriteRepository;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
 import dev.drew.restaurantreview.repository.UserRepository;
 
@@ -61,6 +63,9 @@ class RestaurantServiceTests {
 
     @Mock
     private CuisineRepository cuisineRepository;
+
+    @Mock
+    private FavouriteRepository favouriteRepository;
 
     @BeforeEach
     void setUp() {
@@ -161,17 +166,38 @@ class RestaurantServiceTests {
 
         Page<RestaurantEntity> page = new PageImpl<>(restaurantEntities);
 
+        // Mocking favourites check
+        FavouriteEntity favourite = new FavouriteEntity();
+        when(favouriteRepository.findByRestaurantAndUser(any(RestaurantEntity.class), any(UserEntity.class)))
+                .thenReturn(Optional.of(favourite));
+
         // Mock the repository call
         when(restaurantRepository.findAll(
                 any(Specification.class),
                 any(Pageable.class)
         )).thenReturn(page);
 
+        // Mocking Restaurant transformation
+        Restaurant restaurant1 = new Restaurant();
+        restaurant1.setId(1L);
+        restaurant1.setName("Restaurant 1");
+        restaurant1.setIsFavourite(true); // Since we are returning a favourite
+
+        Restaurant restaurant2 = new Restaurant();
+        restaurant2.setId(2L);
+        restaurant2.setName("Restaurant 2");
+        restaurant2.setIsFavourite(true); // Since we are returning a favourite
+
+        when(restaurantMapper.toRestaurant(restaurantEntity1)).thenReturn(restaurant1);
+        when(restaurantMapper.toRestaurant(restaurantEntity2)).thenReturn(restaurant2);
+
         // Call the service method
-        List<Restaurant> response = restaurantServiceImpl.getAllRestaurants(null, null, null, null, null, PageRequest.of(0, 20));
+        List<Restaurant> response = restaurantServiceImpl.getAllRestaurants(null, null, null, null, null, false, PageRequest.of(0, 20));
 
         // Verify the response status and data
         assertEquals(2, response.size());
+        assertTrue(response.get(0).getIsFavourite()); // Verify favourite status
+        assertTrue(response.get(1).getIsFavourite()); // Verify favourite status
     }
 
     @Test

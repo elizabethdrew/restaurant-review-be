@@ -68,7 +68,7 @@ class RestaurantControllerTest {
         );
 
         Pageable pageable = PageRequest.of(0, 20); // Corresponds to the default size we set
-        when(restaurantService.getAllRestaurants(null, null, null, null, null, pageable)).thenReturn(restaurants);
+        when(restaurantService.getAllRestaurants(null, null, null, null, null, false, pageable)).thenReturn(restaurants);
 
         mockMvc.perform(get("/api/v1/restaurants")
                         .contentType(MediaType.APPLICATION_JSON))

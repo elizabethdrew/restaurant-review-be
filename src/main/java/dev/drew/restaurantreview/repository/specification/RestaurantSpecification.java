@@ -1,8 +1,11 @@
 package dev.drew.restaurantreview.repository.specification;
 
 import dev.drew.restaurantreview.entity.CuisineEntity;
+import dev.drew.restaurantreview.entity.FavouriteEntity;
 import dev.drew.restaurantreview.entity.RestaurantEntity;
 import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
@@ -21,8 +24,8 @@ public class RestaurantSpecification {
         return (root, query, criteriaBuilder) -> ratings == null || ratings.isEmpty() ? null : root.get("rating").in(ratings);
     }
 
-    public static Specification<RestaurantEntity> hasUserId(Long userId) {
-        return (root, query, criteriaBuilder) -> userId == null ? null : criteriaBuilder.equal(root.get("user").get("id"), userId);
+    public static Specification<RestaurantEntity> hasOwnerId(Long ownerId) {
+        return (root, query, criteriaBuilder) -> ownerId == null ? null : criteriaBuilder.equal(root.get("owner").get("id"), ownerId);
     }
 
     public static Specification<RestaurantEntity> isNotDeleted() {
@@ -48,6 +51,18 @@ public class RestaurantSpecification {
 
             // Use the 'name' attribute of CuisineEntity for the filtering
             return cuisineJoin.get("name").in(cuisines);
+        };
+    }
+
+    public static Specification<RestaurantEntity> isFavouritedByUser(Long userId) {
+        return (root, query, criteriaBuilder) -> {
+            Subquery<FavouriteEntity> favouriteSubquery = query.subquery(FavouriteEntity.class);
+            Root<FavouriteEntity> favouriteRoot = favouriteSubquery.from(FavouriteEntity.class);
+            favouriteSubquery.select(favouriteRoot)
+                    .where(criteriaBuilder.equal(favouriteRoot.get("user").get("id"), userId),
+                            criteriaBuilder.equal(favouriteRoot.get("restaurant").get("id"), root.get("id")));
+
+            return criteriaBuilder.exists(favouriteSubquery);
         };
     }
 
