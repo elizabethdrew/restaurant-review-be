@@ -3,6 +3,7 @@ package dev.drew.restaurantreview.controller;
 import dev.drew.restaurantreview.service.AdminService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.openapitools.api.AdminApi;
+import org.openapitools.model.AdminStatus;
 import org.openapitools.model.ClaimStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -36,5 +37,26 @@ public class AdminController implements AdminApi {
     public ResponseEntity<ClaimStatus> rejectClaim(@PathVariable("claimId") Long claimId) {
         ClaimStatus claimStatus = adminService.rejectClaim(claimId);
         return ResponseEntity.ok(claimStatus);
+    }
+
+    @GetMapping("/users/pending")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<List<AdminStatus>> getPendingAdminAccounts() {
+        List<AdminStatus> pendingAdminAccounts = adminService.getPendingAdminAccounts();
+        return ResponseEntity.ok(pendingAdminAccounts);
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PostMapping("/users/{requestId}/accept")
+    public ResponseEntity<AdminStatus> acceptAdminAccount(Long requestId) {
+        AdminStatus adminStatus = adminService.acceptAdminAccount(requestId);
+        return ResponseEntity.ok(adminStatus);
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PostMapping("/users/{requestId}/reject")
+    public ResponseEntity<AdminStatus> rejectAdminAccount(Long requestId) {
+        AdminStatus adminStatus = adminService.rejectAdminAccount(requestId);
+        return ResponseEntity.ok(adminStatus);
     }
 }

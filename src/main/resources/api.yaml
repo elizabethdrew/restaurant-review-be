@@ -1654,7 +1654,7 @@ components:
         status:
           type: string
           description: The claim status (e.g., pending, accepted, rejected)
-        user_id:
+        user_Id:
           type: integer
           format: int64
           description: ID of the user who has made the claim
