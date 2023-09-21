@@ -38,7 +38,7 @@ class UserControllerTest {
         userInput = new UserInput();
         userInput.setEmail("test@test.com");
         userInput.setUsername("testUser");
-        userInput.setPassword("password");
+        userInput.setPassword("Password123!");
         userInput.setName("Test User");
 
         user = new User();
