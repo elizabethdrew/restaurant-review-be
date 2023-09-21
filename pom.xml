@@ -223,6 +223,11 @@
 			<artifactId>hibernate-search-backend-lucene</artifactId>
 			<version>6.1.7.Final</version>
 		</dependency>
+		<dependency>
+			<groupId>org.passay</groupId>
+			<artifactId>passay</artifactId>
+			<version>1.6.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>

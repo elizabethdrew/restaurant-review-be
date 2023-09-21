@@ -465,7 +465,7 @@ paths:
       summary: Add a new user
       tags:
         - User
-      description: Adds a new user to the database.
+      description: Adds a new user to the database. Valid passwords should contain 8 to 100 characters, at least one uppercase, lowercase, digit and special character.
       operationId: addUser
       security:
         - basicAuth: []
