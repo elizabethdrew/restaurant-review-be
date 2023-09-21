@@ -15,6 +15,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    private ResponseEntity<ErrorResponse> generateErrorResponse(HttpStatus status, Exception e) {
+        log.warn(String.valueOf(e));
+        ErrorResponse error = new ErrorResponse();
+        error.setCode(status.value());
+        error.setMessage(e.getMessage());
+        return new ResponseEntity<>(error, status);
+    }
+
     private ResponseEntity<ErrorResponse> generateErrorResponse(HttpStatus status, String message, Exception e) {
         log.warn(message, e);
         ErrorResponse error = new ErrorResponse();
@@ -76,7 +84,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidInputException.class)
     public ResponseEntity<ErrorResponse> handleInvalidInputException(InvalidInputException e) {
-        return generateErrorResponse(HttpStatus.BAD_REQUEST, "Invalid Input", e);
+        return generateErrorResponse(HttpStatus.BAD_REQUEST, e);
     }
 
     @ExceptionHandler(ReviewNotFoundException.class)
