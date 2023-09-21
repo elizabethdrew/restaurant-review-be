@@ -136,10 +136,12 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         // Fetch the current user entity
         UserEntity currentUser = SecurityUtils.getCurrentUser();
-        Long currentUserId = currentUser.getId();
 
-        if (favouritesOnly && currentUserId != null) {
-            specs = specs.and(RestaurantSpecification.isFavouritedByUser(currentUserId));
+        if (currentUser != null) {
+            Long currentUserId = currentUser.getId();
+            if (favouritesOnly && currentUserId != null) {
+                specs = specs.and(RestaurantSpecification.isFavouritedByUser(currentUserId));
+            }
         }
 
         Page<RestaurantEntity> filteredEntities = restaurantRepository.findAll(specs, pageable);
