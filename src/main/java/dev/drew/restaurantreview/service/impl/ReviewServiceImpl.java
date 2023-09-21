@@ -12,6 +12,7 @@ import dev.drew.restaurantreview.repository.UserRepository;
 import dev.drew.restaurantreview.repository.specification.ReviewSpecification;
 import dev.drew.restaurantreview.service.ReviewService;
 import dev.drew.restaurantreview.util.HelperUtils;
+import dev.drew.restaurantreview.util.SecurityUtils;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.openapitools.model.Review;
@@ -25,8 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static dev.drew.restaurantreview.util.SecurityUtils.*;
 
 @Slf4j
 @Service
@@ -61,9 +60,8 @@ public class ReviewServiceImpl implements ReviewService {
         RestaurantEntity restaurantEntity = helperUtils.getRestaurantHelper(restaurantId);
 
         // Fetch the current user entity
-        Long currentUserId = getCurrentUserId();
-        UserEntity currentUser = userRepository.findById(currentUserId)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        UserEntity currentUser = SecurityUtils.getCurrentUser();
+        Long currentUserId = currentUser.getId();
 
         // Check if the user is trying to review their own restaurant
         UserEntity restaurantOwner = restaurantEntity.getOwner();
@@ -131,7 +129,7 @@ public class ReviewServiceImpl implements ReviewService {
         ReviewEntity reviewEntity = helperUtils.getReviewHelper(reviewId);
 
         // Check if the current user is an admin or the owner of the restaurant
-        if (!isAdminOrCreator(reviewEntity, reviewUserIdProvider)) {
+        if (!SecurityUtils.isAdminOrCreator(reviewEntity, reviewUserIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to update this review");
         }
 
@@ -155,7 +153,7 @@ public class ReviewServiceImpl implements ReviewService {
         ReviewEntity reviewEntity = helperUtils.getReviewHelper(reviewId);
 
         // Check if the current user is an admin or the owner of the restaurant
-        if (!isAdminOrCreator(reviewEntity, reviewUserIdProvider)) {
+        if (!SecurityUtils.isAdminOrCreator(reviewEntity, reviewUserIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to delete this review");
         }
 
