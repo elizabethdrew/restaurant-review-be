@@ -142,12 +142,11 @@ public class ReviewServiceImpl implements ReviewService {
             reviewEntity.setUpdatedAt(OffsetDateTime.now());
 
             ReviewEntity savedReview = reviewRepository.save(reviewEntity);
-            Review savedApiReview = reviewMapper.toReview(savedReview);
 
             // Update the restaurant rating
             updateRestaurantRating(savedReview.getRestaurant().getId());
 
-            return savedApiReview;
+            return reviewMapper.toReview(savedReview);
     }
 
     @Transactional

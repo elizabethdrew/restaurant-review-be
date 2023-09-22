@@ -39,9 +39,8 @@ public class CuisineServiceImpl implements CuisineService {
         }
         CuisineEntity cuisine = new CuisineEntity();
         cuisine.setName(name);
-        CuisineEntity savedCuisine = cuisineRepository.save(cuisine);
 
-        return savedCuisine;
+        return cuisineRepository.save(cuisine);
     }
 
     @Override
