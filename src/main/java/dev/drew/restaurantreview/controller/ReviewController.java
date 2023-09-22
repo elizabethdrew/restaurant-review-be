@@ -88,7 +88,7 @@ public class ReviewController implements ReviewsApi {
     @Override
     @PostMapping("/{reviewId}/reply")
     public ResponseEntity<Review> addReviewReply(
-            @PathVariable Integer reviewId,
+            @Min(1) @PathVariable Integer reviewId,
             @RequestBody @Valid UpdateReviewReplyRequest updateReviewReplyRequest)
             throws ReviewNotFoundException, InsufficientPermissionException {
         Review updatedReview = reviewService.addReviewReply(reviewId, updateReviewReplyRequest);
@@ -99,7 +99,7 @@ public class ReviewController implements ReviewsApi {
     @Override
     @PutMapping("/{reviewId}/reply")
     public ResponseEntity<Review> updateReviewReply(
-            @PathVariable Integer reviewId,
+            @Min(1) @PathVariable Integer reviewId,
             @RequestBody @Valid UpdateReviewReplyRequest updateReviewReplyRequest)
             throws ReviewNotFoundException, InsufficientPermissionException {
         Review updatedReview = reviewService.updateReviewReply(reviewId, updateReviewReplyRequest);
@@ -110,7 +110,7 @@ public class ReviewController implements ReviewsApi {
     @Override
     @DeleteMapping("/{reviewId}/reply")
     public ResponseEntity<Review> deleteReviewReply(
-            @PathVariable Integer reviewId)
+            @Min(1) @PathVariable Integer reviewId)
             throws ReviewNotFoundException, InsufficientPermissionException {
         Review updatedReview = reviewService.deleteReviewReply(reviewId);
         return ResponseEntity.ok(updatedReview);
