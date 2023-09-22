@@ -8,14 +8,15 @@ import dev.drew.restaurantreview.repository.AccountRequestRepository;
 import dev.drew.restaurantreview.service.UserService;
 import dev.drew.restaurantreview.util.SecurityUtils;
 import jakarta.transaction.Transactional;
+import org.openapitools.model.User;
+import org.openapitools.model.UserInput;
+import org.passay.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.mapper.UserMapper;
 import dev.drew.restaurantreview.repository.UserRepository;
-import org.openapitools.model.*;
 import org.springframework.stereotype.Service;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
-import org.passay.*;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -75,9 +76,7 @@ public class UserServiceImpl implements UserService {
             accountRequestRepository.save(newRequest);
         }
 
-        User savedApiUser = userMapper.toUser(savedUser);
-
-        return savedApiUser;
+        return userMapper.toUser(savedUser);
     }
 
     private void validatePassword(String password) {
@@ -166,8 +165,7 @@ public class UserServiceImpl implements UserService {
         }
 
         UserEntity savedUser = userRepository.save(updatedEntity);
-        User savedApiUser = userMapper.toUser(savedUser);
+        return userMapper.toUser(savedUser);
 
-        return savedApiUser;
     }
 }
