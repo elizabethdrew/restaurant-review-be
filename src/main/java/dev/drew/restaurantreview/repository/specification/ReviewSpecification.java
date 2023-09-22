@@ -1,5 +1,6 @@
 package dev.drew.restaurantreview.repository.specification;
 
+import dev.drew.restaurantreview.entity.RestaurantEntity;
 import org.springframework.data.jpa.domain.Specification;
 import dev.drew.restaurantreview.entity.ReviewEntity;
 

@@ -3,10 +3,7 @@ package dev.drew.restaurantreview.service.impl;
 import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.entity.ReviewEntity;
 import dev.drew.restaurantreview.entity.UserEntity;
-import dev.drew.restaurantreview.exception.DuplicateReviewException;
-import dev.drew.restaurantreview.exception.InsufficientPermissionException;
-import dev.drew.restaurantreview.exception.ReviewNotFoundException;
-import dev.drew.restaurantreview.exception.UserOwnsRestaurantException;
+import dev.drew.restaurantreview.exception.*;
 import dev.drew.restaurantreview.mapper.RestaurantMapper;
 import dev.drew.restaurantreview.mapper.ReviewMapper;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
@@ -20,6 +17,7 @@ import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.openapitools.model.Review;
 import org.openapitools.model.ReviewInput;
+import org.openapitools.model.UpdateReviewReplyRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -142,11 +140,12 @@ public class ReviewServiceImpl implements ReviewService {
             reviewEntity.setUpdatedAt(OffsetDateTime.now());
 
             ReviewEntity savedReview = reviewRepository.save(reviewEntity);
+            Review savedApiReview = reviewMapper.toReview(savedReview);
 
             // Update the restaurant rating
             updateRestaurantRating(savedReview.getRestaurant().getId());
 
-            return reviewMapper.toReview(savedReview);
+            return savedApiReview;
     }
 
     @Transactional
@@ -169,6 +168,7 @@ public class ReviewServiceImpl implements ReviewService {
         // Update restaurant rating
         updateRestaurantRating(restaurantId);
     }
+
 
     public void updateRestaurantRating(Long restaurantId) {
 
@@ -193,5 +193,20 @@ public class ReviewServiceImpl implements ReviewService {
                 restaurantRepository.save(restaurantEntity);
             }
         }
+    }
+
+    @Override
+    public Review addReviewReply(Integer reviewId, UpdateReviewReplyRequest updateReviewReplyRequest) {
+        return null;
+    }
+
+    @Override
+    public Review updateReviewReply(Integer reviewId, UpdateReviewReplyRequest updateReviewReplyRequest) {
+        return null;
+    }
+
+    @Override
+    public Review deleteReviewReply(Integer reviewId) {
+        return null;
     }
 }

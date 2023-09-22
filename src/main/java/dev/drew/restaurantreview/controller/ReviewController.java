@@ -4,24 +4,19 @@ import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.ReviewNotFoundException;
 import dev.drew.restaurantreview.service.ReviewService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.openapitools.api.ReviewsApi;
 import org.openapitools.model.Review;
 import org.openapitools.model.ReviewInput;
+import org.openapitools.model.UpdateReviewReplyRequest;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -46,17 +41,6 @@ public class ReviewController implements ReviewsApi {
         Review review = reviewService.addNewReview(reviewInput);
         return new ResponseEntity<>(review, HttpStatus.CREATED);
     }
-
-
-    @SecurityRequirement(name = "Bearer Authentication")
-    @Override
-    @DeleteMapping("/{reviewId}")
-    public ResponseEntity<Void> deleteReviewById(
-            @Min(1)  @PathVariable Integer reviewId) {
-        reviewService.deleteReviewById(reviewId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
 
     @Override
     @GetMapping
@@ -88,6 +72,47 @@ public class ReviewController implements ReviewsApi {
             @RequestBody @Valid ReviewInput reviewInput)
             throws ReviewNotFoundException, InsufficientPermissionException {
         Review updatedReview = reviewService.updateReviewById(reviewId, reviewInput);
+        return ResponseEntity.ok(updatedReview);
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Override
+    @DeleteMapping("/{reviewId}")
+    public ResponseEntity<Void> deleteReviewById(
+            @Min(1)  @PathVariable Integer reviewId) {
+        reviewService.deleteReviewById(reviewId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Override
+    @PostMapping("/{reviewId}/reply")
+    public ResponseEntity<Review> addReviewReply(
+            @PathVariable Integer reviewId,
+            @RequestBody @Valid UpdateReviewReplyRequest updateReviewReplyRequest)
+            throws ReviewNotFoundException, InsufficientPermissionException {
+        Review updatedReview = reviewService.addReviewReply(reviewId, updateReviewReplyRequest);
+        return ResponseEntity.ok(updatedReview);
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Override
+    @PutMapping("/{reviewId}/reply")
+    public ResponseEntity<Review> updateReviewReply(
+            @PathVariable Integer reviewId,
+            @RequestBody @Valid UpdateReviewReplyRequest updateReviewReplyRequest)
+            throws ReviewNotFoundException, InsufficientPermissionException {
+        Review updatedReview = reviewService.updateReviewReply(reviewId, updateReviewReplyRequest);
+        return ResponseEntity.ok(updatedReview);
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Override
+    @DeleteMapping("/{reviewId}/reply")
+    public ResponseEntity<Review> deleteReviewReply(
+            @PathVariable Integer reviewId)
+            throws ReviewNotFoundException, InsufficientPermissionException {
+        Review updatedReview = reviewService.deleteReviewReply(reviewId);
         return ResponseEntity.ok(updatedReview);
     }
 }
