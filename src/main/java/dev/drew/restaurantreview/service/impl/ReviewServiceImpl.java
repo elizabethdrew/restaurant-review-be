@@ -3,7 +3,10 @@ package dev.drew.restaurantreview.service.impl;
 import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.entity.ReviewEntity;
 import dev.drew.restaurantreview.entity.UserEntity;
-import dev.drew.restaurantreview.exception.*;
+import dev.drew.restaurantreview.exception.DuplicateReviewException;
+import dev.drew.restaurantreview.exception.InsufficientPermissionException;
+import dev.drew.restaurantreview.exception.ReviewNotFoundException;
+import dev.drew.restaurantreview.exception.UserOwnsRestaurantException;
 import dev.drew.restaurantreview.mapper.RestaurantMapper;
 import dev.drew.restaurantreview.mapper.ReviewMapper;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
@@ -139,12 +142,11 @@ public class ReviewServiceImpl implements ReviewService {
             reviewEntity.setUpdatedAt(OffsetDateTime.now());
 
             ReviewEntity savedReview = reviewRepository.save(reviewEntity);
-            Review savedApiReview = reviewMapper.toReview(savedReview);
 
             // Update the restaurant rating
             updateRestaurantRating(savedReview.getRestaurant().getId());
 
-            return savedApiReview;
+            return reviewMapper.toReview(savedReview);
     }
 
     @Transactional

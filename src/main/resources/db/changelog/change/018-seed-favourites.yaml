@@ -2,6 +2,7 @@ databaseChangeLog:
   - changeSet:
       id: 18
       author: elizabeth_drew
+      context: seed
       changes:
         - insert:
             tableName: favourites

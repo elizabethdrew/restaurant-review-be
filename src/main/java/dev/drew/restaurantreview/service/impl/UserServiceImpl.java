@@ -1,18 +1,28 @@
 package dev.drew.restaurantreview.service.impl;
 
+import dev.drew.restaurantreview.entity.AccountRequestEntity;
 import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.InvalidInputException;
 import dev.drew.restaurantreview.exception.UserNotFoundException;
+import dev.drew.restaurantreview.repository.AccountRequestRepository;
 import dev.drew.restaurantreview.service.UserService;
 import dev.drew.restaurantreview.util.SecurityUtils;
+import jakarta.transaction.Transactional;
+import org.openapitools.model.User;
+import org.openapitools.model.UserInput;
+import org.passay.CharacterRule;
+import org.passay.EnglishCharacterData;
+import org.passay.LengthRule;
+import org.passay.PasswordData;
+import org.passay.PasswordValidator;
+import org.passay.Rule;
+import org.passay.RuleResult;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.mapper.UserMapper;
 import dev.drew.restaurantreview.repository.UserRepository;
-import org.openapitools.model.*;
 import org.springframework.stereotype.Service;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
-import org.passay.*;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -22,19 +32,22 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
+    private final AccountRequestRepository accountRequestRepository;
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder;
 
     // Implement EntityUserIdProvider for UserEntity
     private final EntityUserIdProvider<UserEntity> userEntityUserIdProvider = UserEntity::getId;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, BCryptPasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, AccountRequestRepository accountRequestRepository, UserMapper userMapper, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.accountRequestRepository = accountRequestRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
     }
 
-
+    @Transactional
     public User addNewUser(UserInput userInput) {
 
         // Check if username already exists
@@ -50,15 +63,26 @@ public class UserServiceImpl implements UserService {
         // Validate Password
         validatePassword(userInput.getPassword());
 
+        // Create New User
         UserEntity user = userMapper.toUserEntity(userInput);
         user.setCreatedAt(OffsetDateTime.now());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(userInput.getPassword()));
+        user.setRole(User.RoleEnum.REVIEWER);
 
         UserEntity savedUser = userRepository.save(user);
 
-        User savedApiUser = userMapper.toUser(savedUser);
+        // Check if user is requesting admin permissions
+        if(userInput.getRole() == UserInput.RoleEnum.ADMIN) {
+            System.out.println("Make Pending Admin");
+            AccountRequestEntity newRequest = new AccountRequestEntity();
+            newRequest.setUser(savedUser);
+            newRequest.setStatus(AccountRequestEntity.Status.PENDING);
+            newRequest.setCreatedAt(OffsetDateTime.now().toLocalDateTime());
+            newRequest.setUpdatedAt(OffsetDateTime.now().toLocalDateTime());
+            accountRequestRepository.save(newRequest);
+        }
 
-        return savedApiUser;
+        return userMapper.toUser(savedUser);
     }
 
     private void validatePassword(String password) {
@@ -125,6 +149,17 @@ public class UserServiceImpl implements UserService {
         UserEntity updatedEntity = userMapper.toUserEntity(userInput);
         updatedEntity.setId(userEntity.getId());
         updatedEntity.setCreatedAt(userEntity.getCreatedAt());
+        updatedEntity.setRole(userEntity.getRole());
+
+        // Check if user is requesting admin permissions
+        if(userInput.getRole() == UserInput.RoleEnum.ADMIN && userEntity.getRole() != User.RoleEnum.ADMIN) {
+            AccountRequestEntity newRequest = new AccountRequestEntity();
+            newRequest.setUser(userEntity);
+            newRequest.setStatus(AccountRequestEntity.Status.PENDING);
+            newRequest.setCreatedAt(OffsetDateTime.now().toLocalDateTime());
+            newRequest.setUpdatedAt(OffsetDateTime.now().toLocalDateTime());
+            accountRequestRepository.save(newRequest);
+        }
 
         // Check if new password is provided
         if(userInput.getPassword() != null) {
@@ -136,8 +171,7 @@ public class UserServiceImpl implements UserService {
         }
 
         UserEntity savedUser = userRepository.save(updatedEntity);
-        User savedApiUser = userMapper.toUser(savedUser);
+        return userMapper.toUser(savedUser);
 
-        return savedApiUser;
     }
 }

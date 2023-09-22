@@ -14,7 +14,7 @@ public class UserControllerIT extends GlobalTestContainer {
         String body = "{\"name\": \"badmin\", \n" +
                 "    \"email\": \"badmin@email.com\",\n" +
                 "    \"username\": \"badmin\",\n" +
-                "    \"password\": \"password\",\n" +
+                "    \"password\": \"Password123!\",\n" +
                 "    \"role\": \"ADMIN\"\n" +
                 "    }";
 
@@ -27,7 +27,7 @@ public class UserControllerIT extends GlobalTestContainer {
                         "name", is("badmin"),
                         "id", notNullValue(),
                         "username", is("badmin"),
-                        "role", is("ADMIN")
+                        "role", is("REVIEWER")
                 );
     }
 
@@ -36,7 +36,7 @@ public class UserControllerIT extends GlobalTestContainer {
         String body = "{\"name\": \"admin person\", \n" +
                 "    \"email\": \"admin1@email.com\",\n" +
                 "    \"username\": \"admin\",\n" +
-                "    \"password\": \"password\",\n" +
+                "    \"password\": \"Password123!\",\n" +
                 "    \"role\": \"ADMIN\"\n" +
                 "    }";
 
@@ -52,7 +52,39 @@ public class UserControllerIT extends GlobalTestContainer {
         String body = "{\"name\": \"another admin\", \n" +
                 "    \"email\": \"admin@example.com\",\n" +
                 "    \"username\": \"admin1\",\n" +
-                "    \"password\": \"password\",\n" +
+                "    \"password\": \"Password123!\",\n" +
+                "    \"role\": \"ADMIN\"\n" +
+                "    }";
+
+        given().log().all().contentType(ContentType.JSON)
+                .body(body)
+                .when().request("POST", "/api/v1/users")
+                .then()
+                .statusCode(400);
+    }
+
+    @Test
+    void testAddUser_invalidEmail() throws Exception {
+        String body = "{\"name\": \"another admin\", \n" +
+                "    \"email\": \"adminexample.com\",\n" +
+                "    \"username\": \"admin1\",\n" +
+                "    \"password\": \"Password123!\",\n" +
+                "    \"role\": \"ADMIN\"\n" +
+                "    }";
+
+        given().log().all().contentType(ContentType.JSON)
+                .body(body)
+                .when().request("POST", "/api/v1/users")
+                .then()
+                .statusCode(400);
+    }
+
+    @Test
+    void testAddUser_invalidPassword() throws Exception {
+        String body = "{\"name\": \"another admin\", \n" +
+                "    \"email\": \"admin@example.com\",\n" +
+                "    \"username\": \"admin1\",\n" +
+                "    \"password\": \"notpassword\",\n" +
                 "    \"role\": \"ADMIN\"\n" +
                 "    }";
 
@@ -103,7 +135,7 @@ public class UserControllerIT extends GlobalTestContainer {
         String body = "{\"name\": \"updated rev\", \n" +
                 "    \"email\": \"up@email.com\",\n" +
                 "    \"username\": \"revupdate\",\n" +
-                "    \"password\": \"password\",\n" +
+                "    \"password\": \"Password123!\",\n" +
                 "    \"role\": \"REVIEWER\"\n" +
                 "    }";
 
