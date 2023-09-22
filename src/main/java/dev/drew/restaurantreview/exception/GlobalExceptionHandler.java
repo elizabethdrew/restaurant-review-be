@@ -142,4 +142,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleRestaurantOwnedException(RestaurantOwnedException e) {
         return generateErrorResponse(HttpStatus.BAD_REQUEST, "Restaurant Owned", e);
     }
+
+    @ExceptionHandler(NotRestaurantOwnerException.class)
+    public ResponseEntity<ErrorResponse> handleNotRestaurantOwnerException(NotRestaurantOwnerException e) {
+        return generateErrorResponse(HttpStatus.UNAUTHORIZED, "Not Restaurant Owner", e);
+    }
 }

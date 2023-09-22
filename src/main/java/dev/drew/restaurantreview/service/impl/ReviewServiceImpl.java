@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -197,16 +198,41 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Review addReviewReply(Integer reviewId, UpdateReviewReplyRequest updateReviewReplyRequest) {
-        return null;
+
+        return reviewReplyHelper(reviewId, updateReviewReplyRequest.getReply());
     }
 
     @Override
     public Review updateReviewReply(Integer reviewId, UpdateReviewReplyRequest updateReviewReplyRequest) {
-        return null;
+        return reviewReplyHelper(reviewId, updateReviewReplyRequest.getReply());
     }
 
     @Override
     public Review deleteReviewReply(Integer reviewId) {
-        return null;
+
+        return reviewReplyHelper(reviewId, null);
+    }
+
+    public Review reviewReplyHelper(Integer reviewId, String reply) {
+
+        ReviewEntity reviewEntity = helperUtils.getReviewHelper(reviewId);
+
+        // Fetch the current user entity
+        UserEntity currentUser = SecurityUtils.getCurrentUser();
+        Long currentUserId = currentUser.getId();
+
+        // Check if the user is trying to review their own restaurant
+        Optional<UserEntity> restaurantOwner = Optional.ofNullable(reviewEntity.getRestaurant().getOwner());
+        if (!restaurantOwner.isPresent() || !restaurantOwner.get().getId().equals(currentUserId)) {
+            throw new NotRestaurantOwnerException("Only restaurant owners can reply to reviews");
+        }
+
+        // Manually set the updated properties from the ReviewInput object
+        reviewEntity.setReply(reply);
+        reviewEntity.setReplyDate(OffsetDateTime.now());
+        ReviewEntity savedReview = reviewRepository.save(reviewEntity);
+
+        return reviewMapper.toReview(savedReview);
+
     }
 }

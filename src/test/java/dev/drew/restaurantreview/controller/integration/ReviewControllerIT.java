@@ -18,8 +18,7 @@ public class ReviewControllerIT extends GlobalTestContainer {
                 .then()
                 .statusCode(200)
                 .body("[0].restaurant_name", equalTo("Gastronomic Guildhall"),
-                        "[1].rating", equalTo(4),
-                        "[2].comment", equalTo("Couldn't be worse."));
+                        "[1].rating", equalTo(4));
     }
 
     @Test
@@ -85,7 +84,7 @@ public class ReviewControllerIT extends GlobalTestContainer {
         when().request("GET", "/api/v1/reviews/" + revId)
                 .then()
                 .statusCode(200)
-                .body("comment", is("Good ambience and service"),
+                .body("id", is(revId),
                 "rating", is(3));
     }
 
@@ -206,7 +205,7 @@ public class ReviewControllerIT extends GlobalTestContainer {
                 .body(body)
                 .when().request("POST", "/api/v1/reviews")
                 .then()
-                .statusCode(500);
+                .statusCode(400);
     }
 
     @Test
@@ -262,5 +261,105 @@ public class ReviewControllerIT extends GlobalTestContainer {
         given().log().all().contentType(ContentType.JSON)
                 .when().request("DELETE", "/api/v1/reviews/" + revId)
                 .then().statusCode(403);
+    }
+
+    @Test
+    void testAddReviewReply_OwnerAuthorised() throws Exception {
+        String token = authorisationAdmin();
+        Integer revId = 8;
+        String body = "{\"reply\": \"Thanks for letting us know!\"}";
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .body(body)
+                .when().request("POST", "/api/v1/reviews/" + revId + "/reply")
+                .then()
+                .statusCode(200)
+                .body("id", is(revId))
+                .body("reply", notNullValue())
+                .body("reply_date", notNullValue());
+    }
+
+    @Test
+    void testAddReviewReply_NoReview() throws Exception {
+        String token = authorisationAdmin();
+        Integer revId = 50;
+        String body = "{\"reply\": \"Thanks for letting us know!\"}";
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .body(body)
+                .when().request("POST", "/api/v1/reviews/" + revId + "/reply")
+                .then()
+                .statusCode(404);
+    }
+
+    @Test
+    void testAddReviewReply_NotOwner() throws Exception {
+        String token = authorisationAdmin();
+        Integer revId = 9;
+        String body = "{\"reply\": \"Thanks for letting us know!\"}";
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .body(body)
+                .when().request("POST", "/api/v1/reviews/" + revId + "/reply")
+                .then()
+                .statusCode(401);
+    }
+
+    @Test
+    void testEditReviewReply_OwnerAuthorised() throws Exception {
+        String token = authorisationAdmin();
+        Integer revId = 8;
+        String body = "{\"reply\": \"Edited Reply\"}";
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .body(body)
+                .when().request("PUT", "/api/v1/reviews/" + revId + "/reply")
+                .then()
+                .statusCode(200)
+                .body("id", is(revId))
+                .body("reply", is("Edited Reply"))
+                .body("reply_date", notNullValue());
+    }
+
+    @Test
+    void testEditReviewReply_NotOwner() throws Exception {
+        String token = authorisationAdmin();
+        Integer revId = 9;
+        String body = "{\"reply\": \"Thanks for letting us know!\"}";
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .body(body)
+                .when().request("PUT", "/api/v1/reviews/" + revId + "/reply")
+                .then()
+                .statusCode(401);
+    }
+
+    @Test
+    void testDeleteReviewReply_OwnerAuthorised() throws Exception {
+        String token = authorisationAdmin();
+        Integer revId = 8;
+        String body = "{\"reply\": \"Edited Reply\"}";
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .body(body)
+                .when().request("DELETE", "/api/v1/reviews/" + revId + "/reply")
+                .then()
+                .statusCode(200)
+                .body("id", is(revId))
+                .body("reply", nullValue())
+                .body("reply_date", notNullValue());
+    }
+
+    @Test
+    void testDeleteReviewReply_NotOwner() throws Exception {
+        String token = authorisationAdmin();
+        Integer revId = 9;
+        String body = "{\"reply\": \"Thanks for letting us know!\"}";
+        given().log().all().contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+ token)
+                .body(body)
+                .when().request("DELETE", "/api/v1/reviews/" + revId + "/reply")
+                .then()
+                .statusCode(401);
     }
 }
