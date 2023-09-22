@@ -967,6 +967,169 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /api/v1/reviews/{reviewId}/reply:
+    post:
+      summary: Create a review reply
+      operationId: addReviewReply
+      tags:
+        - Reviews
+      description: Adds a review reply from the restaurant owner using the review ID
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - name: reviewId
+          in: path
+          description: The ID of the review to update.
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      requestBody:
+        description: The review reply data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reply:
+                  type: string
+      responses:
+        '200':
+          description: Added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+        '400':
+          description: Invalid Input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient Permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Update a review reply
+      operationId: updateReviewReply
+      tags:
+        - Reviews
+      description: Updates a review reply from the restaurant owner using the review ID
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - name: reviewId
+          in: path
+          description: The ID of the review to update.
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      requestBody:
+        description: The review reply data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reply:
+                  type: string
+      responses:
+        '200':
+          description: Added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+        '400':
+          description: Invalid Input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient Permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete a review reply
+      operationId: deleteReviewReply
+      tags:
+        - Reviews
+      description: Deletes a review reply from the restaurant owner using the review ID
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - name: reviewId
+          in: path
+          description: The ID of the review to update.
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+        '400':
+          description: Invalid Input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient Permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /api/v1/cuisines:
     get:
       summary: Get all cuisines
@@ -1433,6 +1596,11 @@ components:
         is_deleted:
           type: boolean
           default: false
+        reply:
+          type: string
+        reply_date:
+          type: string
+          format: date-time
 
     ReviewInput:
       type: object
