@@ -1,8 +1,10 @@
 package dev.drew.restaurantreview.mapper;
 
 import dev.drew.restaurantreview.entity.ReviewEntity;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.openapitools.model.Review;
 import org.openapitools.model.ReviewInput;
 

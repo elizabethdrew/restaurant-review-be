@@ -1,6 +1,7 @@
 package dev.drew.restaurantreview.controller;
 
 import jakarta.validation.Valid;
+import org.openapitools.api.SearchApi;
 import org.openapitools.model.Restaurant;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;

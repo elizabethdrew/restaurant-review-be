@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: 23
+      author: elizabeth_drew
+      context: standard
+      changes:
+        - addColumn:
+            tableName: review
+            columns:
+              - column:
+                  name: reply
+                  type: text
+              - column:
+                  name: reply_date
+                  type: datetime
+        - modifyDataType:
+            tableName: review
+            columnName: comment
+            newDataType: text

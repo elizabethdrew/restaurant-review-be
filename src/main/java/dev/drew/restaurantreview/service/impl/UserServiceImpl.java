@@ -8,21 +8,14 @@ import dev.drew.restaurantreview.repository.AccountRequestRepository;
 import dev.drew.restaurantreview.service.UserService;
 import dev.drew.restaurantreview.util.SecurityUtils;
 import jakarta.transaction.Transactional;
-import org.openapitools.model.User;
-import org.openapitools.model.UserInput;
-import org.passay.CharacterRule;
-import org.passay.EnglishCharacterData;
-import org.passay.LengthRule;
-import org.passay.PasswordData;
-import org.passay.PasswordValidator;
-import org.passay.Rule;
-import org.passay.RuleResult;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.mapper.UserMapper;
 import dev.drew.restaurantreview.repository.UserRepository;
+import org.openapitools.model.*;
 import org.springframework.stereotype.Service;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
+import org.passay.*;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -82,7 +75,9 @@ public class UserServiceImpl implements UserService {
             accountRequestRepository.save(newRequest);
         }
 
-        return userMapper.toUser(savedUser);
+        User savedApiUser = userMapper.toUser(savedUser);
+
+        return savedApiUser;
     }
 
     private void validatePassword(String password) {
@@ -171,7 +166,8 @@ public class UserServiceImpl implements UserService {
         }
 
         UserEntity savedUser = userRepository.save(updatedEntity);
-        return userMapper.toUser(savedUser);
+        User savedApiUser = userMapper.toUser(savedUser);
 
+        return savedApiUser;
     }
 }

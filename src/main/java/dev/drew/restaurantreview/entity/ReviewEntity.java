@@ -1,14 +1,6 @@
 package dev.drew.restaurantreview.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -55,6 +47,33 @@ public class ReviewEntity extends org.openapitools.model.Review {
 
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;
+
+    @Column(name = "reply")
+    private String reply;
+
+    @Override
+    public String getReply() {
+        return reply;
+    }
+
+    @Override
+    public void setReply(String reply) {
+        this.reply = reply;
+    }
+
+    @Override
+    public OffsetDateTime getReplyDate() {
+        return replyDate;
+    }
+
+    @Override
+    public void setReplyDate(OffsetDateTime replyDate) {
+        this.replyDate = replyDate;
+    }
+
+    @Column(name = "reply_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private OffsetDateTime replyDate;
 
     @Override
     public Long getId() {
@@ -127,13 +146,14 @@ public class ReviewEntity extends org.openapitools.model.Review {
         if (this == o) return true;
         if (!(o instanceof ReviewEntity that)) return false;
         if (!super.equals(o)) return false;
-        return Objects.equals(getId(), that.getId()) && Objects.equals(getRestaurant(), that.getRestaurant()) && Objects.equals(getUser(), that.getUser()) && Objects.equals(getRating(), that.getRating()) && Objects.equals(getComment(), that.getComment()) && Objects.equals(getCreatedAt(), that.getCreatedAt()) && Objects.equals(getUpdatedAt(), that.getUpdatedAt()) && Objects.equals(getIsDeleted(), that.getIsDeleted());
+        return Objects.equals(getId(), that.getId()) && Objects.equals(getRestaurant(), that.getRestaurant()) && Objects.equals(getUser(), that.getUser()) && Objects.equals(getRating(), that.getRating()) && Objects.equals(getComment(), that.getComment()) && Objects.equals(getCreatedAt(), that.getCreatedAt()) && Objects.equals(getUpdatedAt(), that.getUpdatedAt()) && Objects.equals(getIsDeleted(), that.getIsDeleted()) && Objects.equals(getReply(), that.getReply()) && Objects.equals(getReplyDate(), that.getReplyDate());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getId(), getRestaurant(), getUser(), getRating(), getComment(), getCreatedAt(), getUpdatedAt(), getIsDeleted());
+        return Objects.hash(super.hashCode(), getId(), getRestaurant(), getUser(), getRating(), getComment(), getCreatedAt(), getUpdatedAt(), getIsDeleted(), getReply(), getReplyDate());
     }
+
 
     @Override
     public String toString() {
@@ -146,7 +166,8 @@ public class ReviewEntity extends org.openapitools.model.Review {
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 ", isDeleted=" + isDeleted +
+                ", reply='" + reply + '\'' +
+                ", replyDate=" + replyDate +
                 '}';
     }
-
 }

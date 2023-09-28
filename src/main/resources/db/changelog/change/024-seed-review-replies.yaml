@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: 24
+      author: elizabeth_drew
+      context: seed
+      changes:
+        - update:
+            tableName: review
+            columns:
+              - column:
+                  name: comment
+                  value: "A delightful surprise in the heart of the city! Each dish at Gastronomic Guildhall showcases culinary artistry. The flavors transported me. A must-visit for serious food lovers."
+            where: id=1
+        - update:
+            tableName: review
+            columns:
+              - column:
+                  name: comment
+                  value: "From the moment you step in, Epicurean Empire takes you on a mesmerizing culinary journey. Every dish, carefully curated, reflects a fusion of tradition and innovation. The ambience complements the cuisine, creating an unforgettable dining experience. Exceptional service too. It's more than just a meal; it's a story on a plate."
+              - column:
+                  name: reply
+                  value: "Thank you for taking the time to leave this review!"
+              - column:
+                  name: reply_date
+                  valueDate: "2023-09-19T00:00:00"
+            where: id=2
+        - update:
+            tableName: review
+            columns:
+              - column:
+                  name: comment
+                  value: "Cardinal Cravings is not just a restaurant; it's an experience. From the warm, inviting entrance to the attentive staff awaiting inside, every moment is tailored to make diners feel special. Each dish presented is a testament to the chef's commitment to quality, flavor, and presentation. The menu boasts a diverse range of options, each tantalizingly described, and the actual dish surpasses expectations. The wine list is impeccable, with pairings that enhance the meal's flavors. As the evening winds down, the dessert selection is the pièce de résistance, ensuring you'll leave with a lasting memory of a culinary adventure."
+            where: id=3
+        - update:
+            tableName: review
+            columns:
+              - column:
+                  name: reply
+                  value: "Thank you for taking the time to leave this review!"
+              - column:
+                  name: reply_date
+                  valueDate: "2023-09-19T00:00:00"
+            where: id=8
