@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -36,17 +38,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwtToken;
         final String username;
 
+        log.info("Starting Authentication Process...");
+
         // If the Authorization header is missing or does not start with "Bearer ", proceed with the filter chain
         if(authHeader == null || !authHeader.startsWith("Bearer ")) {
+            log.info("BAD");
             filterChain.doFilter(request, response);
             return;
         }
 
         // Extract the JWT token and username
         jwtToken = authHeader.substring(7);
+        log.info("JWT Extracted");
         username = jwtService.extractUsername(jwtToken);
+        log.info("Username Extracted");
 
         if (jwtBlacklistRepository.findByToken(jwtToken).isPresent()) {
+            log.info("JWT Blacklisted - Log In Again");
             // Reject the request or handle it accordingly
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("Token is blacklisted");
@@ -55,9 +63,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // If the username is not null and there is no existing authentication, validate the token and set the authentication
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
+
+            log.info("Validating Username...");
             UserDetails userDetails = jpaUserDetailsService.loadUserByUsername(username);
 
+            log.info("Validating Token...");
             if (jwtService.isTokenValid(jwtToken, userDetails)) {
+
+                log.info("Token Valid");
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,

@@ -156,6 +156,8 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         Page<RestaurantEntity> filteredEntities = restaurantRepository.findAll(specs, pageable);
 
+        log.info("Restaurants Incoming!");
+
         return filteredEntities.stream()
                 .map(entity -> {
                     Restaurant restaurant = restaurantMapper.toRestaurant(entity);
