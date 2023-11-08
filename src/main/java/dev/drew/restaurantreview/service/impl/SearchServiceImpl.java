@@ -5,6 +5,7 @@ import dev.drew.restaurantreview.exception.NoResultsFoundException;
 import dev.drew.restaurantreview.mapper.RestaurantMapper;
 import dev.drew.restaurantreview.service.SearchService;
 import jakarta.persistence.EntityManager;
+import lombok.extern.slf4j.Slf4j;
 import org.openapitools.model.Restaurant;
 import org.hibernate.search.mapper.orm.Search;
 import org.hibernate.search.mapper.orm.session.SearchSession;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class SearchServiceImpl implements SearchService {
 
@@ -35,6 +37,8 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public List<Restaurant> searchRestaurant(String query, Pageable pageable) {
+        log.info("Staring: Search Restaurants");
+        log.info("Setting Search Session");
         SearchSession searchSession = Search.session(entityManager);
 
         SearchResult<RestaurantEntity> result = searchSession.search(RestaurantEntity.class)
@@ -49,9 +53,10 @@ public class SearchServiceImpl implements SearchService {
                 .collect(Collectors.toList());
 
         if (restaurants.isEmpty()) {
+            log.info("No Results");
             throw new NoResultsFoundException("No restaurants found for the given query: " + query);
         }
-
+        log.info("Restaurants Incoming!");
         return restaurants;
     }
 
