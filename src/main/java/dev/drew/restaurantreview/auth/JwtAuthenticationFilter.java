@@ -38,11 +38,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwtToken;
         final String username;
 
-        log.info("Starting Authentication Process...");
+        log.info("Looking For Authorization Header");
 
         // If the Authorization header is missing or does not start with "Bearer ", proceed with the filter chain
         if(authHeader == null || !authHeader.startsWith("Bearer ")) {
-            log.info("BAD");
+            log.info("Authorization Header Not Found");
             filterChain.doFilter(request, response);
             return;
         }
