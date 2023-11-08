@@ -6,6 +6,7 @@ import dev.drew.restaurantreview.exception.UserNotFoundException;
 import dev.drew.restaurantreview.model.SecurityUser;
 import dev.drew.restaurantreview.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -13,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -25,6 +27,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        log.info("Starting Authentication...");
         try {
             // Authenticate the user with the provided username and password
             authenticationManager.authenticate(
@@ -34,14 +37,19 @@ public class AuthenticationService {
                     )
             );
         } catch (BadCredentialsException e) {
+            log.info("Invalid Credentials");
             throw new InvalidCredentialsException("Invalid Credentials");
         } catch (Exception e) {
+            log.info("Authentication Failed");
             throw new AuthenticationFailedException("Authentication Failed");
         }
 
         // Retrieve the user from the repository
+        log.info("Searching For User");
         var user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        log.info("Generating JWT");
 
         // Create a SecurityUser instance for generating the JWT token
         SecurityUser securityUser = new SecurityUser(user);
@@ -53,6 +61,7 @@ public class AuthenticationService {
         var expirationTime = JwtService.extractExpiration(jwtToken);
 
         // Build and return the AuthenticationResponse
+        log.info("Returning JWT, Expiration Time and User Id");
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .userId(securityUser.getId())

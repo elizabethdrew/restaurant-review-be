@@ -58,6 +58,9 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public Review addNewReview(ReviewInput reviewInput) {
 
+        log.info("Starting: Add New Review");
+
+        log.info("Getting Restaurant");
         Integer restaurantId = Math.toIntExact(reviewInput.getRestaurantId());
         RestaurantEntity restaurantEntity = helperUtils.getRestaurantHelper(restaurantId);
 
@@ -66,12 +69,16 @@ public class ReviewServiceImpl implements ReviewService {
         Long currentUserId = currentUser.getId();
 
         // Check if the user is trying to review their own restaurant
+        log.info("Checking If User Owns Restaurant");
         UserEntity restaurantOwner = restaurantEntity.getOwner();
         if (restaurantOwner != null && restaurantOwner.getId().equals(currentUserId)) {
+            log.info("User Owns Restaurant");
             throw new UserOwnsRestaurantException("Owners cannot review their own restaurants.");
         }
+        log.info("User Doesn't Own Restaurant");
 
         // Check if the user has already reviewed the restaurant within the last year
+        log.info("Has User Reviewed This Year Already?");
         OffsetDateTime oneYearAgo = OffsetDateTime.now().minusYears(1);
 
         Specification<ReviewEntity> spec = Specification
@@ -84,10 +91,14 @@ public class ReviewServiceImpl implements ReviewService {
 
         if (!existingReviews.isEmpty()) {
             // Return error response if a review within the last year exists
+            log.info("User Has Already Reviewed The Restaurant This Year ");
             throw new DuplicateReviewException("User already reviewed");
         }
 
+        log.info("User Hasn't Reviewed Restaurant Already");
+
         // Add the new review
+        log.info("Creating The Review");
         ReviewEntity review = reviewMapper.toReviewEntity(reviewInput);
         review.setCreatedAt(OffsetDateTime.now());
 
@@ -96,6 +107,7 @@ public class ReviewServiceImpl implements ReviewService {
         review.setUser(currentUser);
 
         ReviewEntity savedReview = reviewRepository.save(review);
+        log.info("Review Saved");
 
         // Update the restaurant rating
         updateRestaurantRating(savedReview.getRestaurant().getId());
@@ -105,6 +117,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public List<Review> getAllReviews(Long restaurantId, Long userId, List<Integer> rating, Pageable pageable) {
+        log.info("Starting: Get All Reviews");
+
         Page<ReviewEntity> filteredEntities = reviewRepository.findAll(
             Specification.where(ReviewSpecification.hasRestaurantId(restaurantId))
                 .and(ReviewSpecification.hasUserId(userId))
@@ -113,11 +127,14 @@ public class ReviewServiceImpl implements ReviewService {
                 pageable
         );
 
+        log.info("Reviews Incoming!");
         return filteredEntities.stream().map(reviewMapper::toReview).collect(Collectors.toList());
     }
 
 
     public Review getReviewById(Integer reviewId) throws ReviewNotFoundException {
+
+        log.info("Starting: Get Review By ID");
 
         ReviewEntity reviewEntity = helperUtils.getReviewHelper(reviewId);
 
@@ -128,19 +145,24 @@ public class ReviewServiceImpl implements ReviewService {
     public Review updateReviewById(Integer reviewId, ReviewInput reviewInput)
             throws ReviewNotFoundException, InsufficientPermissionException {
 
+        log.info("Starting: Update Review");
+
         ReviewEntity reviewEntity = helperUtils.getReviewHelper(reviewId);
 
         // Check if the current user is an admin or the owner of the restaurant
         if (!SecurityUtils.isAdminOrCreator(reviewEntity, reviewUserIdProvider)) {
+            log.info("Only Admins Or The Original Reviewer Can Update Review");
             throw new InsufficientPermissionException("User does not have permission to update this review");
         }
 
             // Manually set the updated properties from the ReviewInput object
+            log.info("Updating Review");
             reviewEntity.setRating(reviewInput.getRating());
             reviewEntity.setComment(reviewInput.getComment());
             reviewEntity.setUpdatedAt(OffsetDateTime.now());
 
             ReviewEntity savedReview = reviewRepository.save(reviewEntity);
+            log.info("Review Saved");
             Review savedApiReview = reviewMapper.toReview(savedReview);
 
             // Update the restaurant rating
@@ -152,10 +174,13 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public void deleteReviewById(Integer reviewId) {
 
+        log.info("Starting: Delete Review");
+
         ReviewEntity reviewEntity = helperUtils.getReviewHelper(reviewId);
 
         // Check if the current user is an admin or the owner of the restaurant
         if (!SecurityUtils.isAdminOrCreator(reviewEntity, reviewUserIdProvider)) {
+            log.info("Only Admins Or The Original Reviewer Can Delete Review");
             throw new InsufficientPermissionException("User does not have permission to delete this review");
         }
 
@@ -163,8 +188,10 @@ public class ReviewServiceImpl implements ReviewService {
         Long restaurantId = reviewEntity.getRestaurant().getId();
 
         // Mark Review as deleted
+        log.info("Marking Review Deleted");
         reviewEntity.setIsDeleted(true);
         reviewRepository.save(reviewEntity);
+        log.info("Review Updated");
 
         // Update restaurant rating
         updateRestaurantRating(restaurantId);
@@ -173,6 +200,9 @@ public class ReviewServiceImpl implements ReviewService {
 
     public void updateRestaurantRating(Long restaurantId) {
 
+        log.info("Starting: Update Restaurant Average Rating");
+
+        log.info("Finding Reviews For Restaurant");
         Specification<ReviewEntity> spec = Specification
                 .where(ReviewSpecification.hasRestaurantId(restaurantId))
                 .and(ReviewSpecification.isNotDeleted());
@@ -180,6 +210,7 @@ public class ReviewServiceImpl implements ReviewService {
         List<ReviewEntity> reviews = reviewRepository.findAll(spec);
 
         if (!reviews.isEmpty()) {
+            log.info("Calculating Rating Average");
             double averageRating = reviews.stream()
                     .mapToDouble(ReviewEntity::getRating)
                     .average()
@@ -188,10 +219,13 @@ public class ReviewServiceImpl implements ReviewService {
             // Round the average rating to the nearest integer
             int roundedAverageRating = (int) Math.round(averageRating);
 
+            log.info("Finding Restaurant");
             RestaurantEntity restaurantEntity = restaurantRepository.findById(restaurantId).orElse(null);
             if (restaurantEntity != null) {
+                log.info("Updating Restaurant Rating");
                 restaurantEntity.setRating(roundedAverageRating);
                 restaurantRepository.save(restaurantEntity);
+                log.info("Restaurant Rating Updated");
             }
         }
     }
@@ -199,17 +233,20 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public Review addReviewReply(Integer reviewId, UpdateReviewReplyRequest updateReviewReplyRequest) {
 
+        log.info("Starting: Add Review Reply");
+
         return reviewReplyHelper(reviewId, updateReviewReplyRequest.getReply());
     }
 
     @Override
     public Review updateReviewReply(Integer reviewId, UpdateReviewReplyRequest updateReviewReplyRequest) {
+        log.info("Starting: Update Review Reply");
         return reviewReplyHelper(reviewId, updateReviewReplyRequest.getReply());
     }
 
     @Override
     public Review deleteReviewReply(Integer reviewId) {
-
+        log.info("Starting: Delete Review Reply");
         return reviewReplyHelper(reviewId, null);
     }
 
@@ -222,16 +259,20 @@ public class ReviewServiceImpl implements ReviewService {
         Long currentUserId = currentUser.getId();
 
         // Check if the user is trying to review their own restaurant
+        log.info("Checking User Owns Restaurant");
         Optional<UserEntity> restaurantOwner = Optional.ofNullable(reviewEntity.getRestaurant().getOwner());
         if (!restaurantOwner.isPresent() || !restaurantOwner.get().getId().equals(currentUserId)) {
+            log.info("User Does Not Own Restaurant");
             throw new NotRestaurantOwnerException("Only restaurant owners can reply to reviews");
         }
+        log.info("User Owns Restaurant");
 
         // Manually set the updated properties from the ReviewInput object
+        log.info("Updating Review Reply");
         reviewEntity.setReply(reply);
         reviewEntity.setReplyDate(OffsetDateTime.now());
         ReviewEntity savedReview = reviewRepository.save(reviewEntity);
-
+        log.info("Review Reply Saved");
         return reviewMapper.toReview(savedReview);
 
     }

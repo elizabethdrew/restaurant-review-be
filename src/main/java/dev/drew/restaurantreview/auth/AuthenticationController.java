@@ -2,6 +2,7 @@ package dev.drew.restaurantreview.auth;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class AuthenticationController {
@@ -19,6 +21,7 @@ public class AuthenticationController {
 
     @PostMapping("api/v1/login")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+        log.info("Starting User Login...");
         AuthenticationResponse response = service.authenticate(request);
         return ResponseEntity.ok(response);
     }
