@@ -37,7 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
         final String jwtToken;
         final String username;
-
+        log.info("New Request Received...");
         log.info("Looking For Authorization Header");
 
         // If the Authorization header is missing or does not start with "Bearer ", proceed with the filter chain
