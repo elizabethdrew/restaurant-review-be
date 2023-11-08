@@ -61,14 +61,18 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     public void validateRestaurantInput(RestaurantInput restaurantInput) {
+        log.info("Starting: Validate Restaurant Input...");
 
-        if(restaurantInput.getPriceRange() != null && restaurantInput.getPriceRange() < 1 || restaurantInput.getPriceRange() > 3) {
+        if (restaurantInput.getPriceRange() != null && restaurantInput.getPriceRange() < 1 || restaurantInput.getPriceRange() > 3) {
             throw new InvalidInputException("Price Range not 1, 2 or 3");
         }
 
+        log.info("Input Validated");
     }
 
     public Restaurant addNewRestaurant(RestaurantInput restaurantInput) {
+
+        log.info("Starting: Add Restaurant...");
 
         validateRestaurantInput(restaurantInput);
 
@@ -79,7 +83,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         );
 
         if (existingRestaurant.isPresent()) {
-            // Even if it's been soft-deleted, we don't want to create a new one with the same name and city
+            log.info("Restaurant Exists With Name " + restaurantInput.getName() + " in " + restaurantInput.getCity());
             throw new DuplicateRestaurantException(restaurantInput.getName(), restaurantInput.getCity());
         }
 
@@ -87,6 +91,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         List<CuisineEntity> cuisines = getCuisines(restaurantInput.getCuisines());
 
         // Convert the input data to a RestaurantEntity object and set the created timestamp
+        log.info("Creating Restaurant...");
         RestaurantEntity restaurant = restaurantMapper.toRestaurantEntity(restaurantInput);
         restaurant.setCreatedAt(OffsetDateTime.now());
         restaurant.setRestaurantCuisines(cuisines);
@@ -99,12 +104,14 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         // Save the new restaurant to the database
         RestaurantEntity savedRestaurant = restaurantRepository.save(restaurant);
+        log.info("Restaurant created");
 
         // Return the response
         return restaurantMapper.toRestaurant(savedRestaurant);
     }
 
     public List<CuisineEntity> getCuisines(List<String> cuisineNames) {
+        log.info("Starting: Get Cuisines...");
         return cuisineNames.stream()
                 .map(name -> cuisineRepository.findByName(name)
                         .orElseThrow(() -> new CuisineNotFoundException(name)))
@@ -112,6 +119,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     private List<String> getCuisineNames(List<CuisineEntity> cuisines) {
+        log.info("Starting: Get Cuisine Names...");
         return cuisines.stream()
                 .map(CuisineEntity::getName)
                 .collect(Collectors.toList());
@@ -126,6 +134,8 @@ public class RestaurantServiceImpl implements RestaurantService {
             List<String> cuisine,
             Boolean favouritesOnly,
             Pageable pageable) {
+
+        log.info("Starting: Get All Restaurants...");
 
         Specification<RestaurantEntity> specs = Specification.where(RestaurantSpecification.isNotDeleted())
                 .and(RestaurantSpecification.hasCity(city))
@@ -163,6 +173,8 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     public Restaurant getRestaurantById(Integer restaurantId) throws RestaurantNotFoundException {
 
+        log.info("Starting: Get Restaurant...");
+
         RestaurantEntity restaurantEntity = helperUtils.getRestaurantHelper(restaurantId);
 
         boolean isFavourited = false;
@@ -187,6 +199,8 @@ public class RestaurantServiceImpl implements RestaurantService {
     public Restaurant updateRestaurantById(Integer restaurantId, RestaurantInput restaurantInput)
             throws RestaurantNotFoundException, InsufficientPermissionException {
 
+        log.info("Starting: Update Restaurant...");
+
         validateRestaurantInput(restaurantInput);
 
         RestaurantEntity restaurantEntity = helperUtils.getRestaurantHelper(restaurantId);
@@ -200,6 +214,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         List<CuisineEntity> cuisines = getCuisines(restaurantInput.getCuisines());
 
         // Convert the input data to a RestaurantEntity object and set its ID, created timestamp, and user ID
+        log.info("Updating Restaurant...");
         RestaurantEntity updatedEntity = restaurantMapper.toRestaurantEntity(restaurantInput);
         updatedEntity.setId(restaurantEntity.getId());
         updatedEntity.setCreatedAt(restaurantEntity.getCreatedAt());
@@ -209,6 +224,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         // Save the updated restaurant to the database
         RestaurantEntity savedRestaurant = restaurantRepository.save(updatedEntity);
+        log.info("Updated Restaurant Saved");
 
         // Convert the saved RestaurantEntity object to a Restaurant object
         return restaurantMapper.toRestaurant(savedRestaurant);
@@ -217,21 +233,27 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     public void deleteRestaurantById(Integer restaurantId) {
 
+        log.info("Starting: Delete Restaurant...");
+
         RestaurantEntity restaurantEntity = helperUtils.getRestaurantHelper(restaurantId);
 
         if (!SecurityUtils.isAdminOrOwner(restaurantEntity, restaurantOwnerIdProvider)) {
+            log.info("Insufficient User Permissions");
             throw new InsufficientPermissionException("User does not have permission to delete this restaurant");
         }
 
         // Instead of deleting, we mark the restaurant as deleted
         restaurantEntity.setIsDeleted(true);
-
+        log.info("Restaurant Marked Deleted");
         restaurantRepository.save(restaurantEntity);
+        log.info("Restaurant Updated");
     }
 
 
     @Transactional
-    public boolean toggleFavourite(Integer restaurantId) {
+    public boolean toggleFavourite(Integer restaurantId) throws InsufficientPermissionException {
+
+        log.info("Starting: Favourite Restaurant...");
 
         RestaurantEntity restaurantEntity = helperUtils.getRestaurantHelper(restaurantId);
 
@@ -243,20 +265,26 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         if (favouriteOpt.isPresent()) {
             // If found, we remove it from favourites
+            log.info("Restaurant Already Favourite");
             favouriteRepository.delete(favouriteOpt.get());
+            log.info("Restaurant Favourite Removed");
             return false;
         } else {
             // Otherwise, add it to favourites
+            log.info("Restaurant Not Previously Favourite");
             FavouriteEntity favourite = new FavouriteEntity();
             favourite.setRestaurant(restaurantEntity);
             favourite.setUser(currentUser);
             favouriteRepository.save(favourite);
+            log.info("Restaurant Favourite Added");
             return true;
         }
 
     }
 
     public ClaimStatus getClaimStatus(Integer restaurantId) {
+
+        log.info(" Starting: Get Claim Status...");
 
         RestaurantEntity restaurantEntity = helperUtils.getRestaurantHelper(restaurantId);
 
@@ -268,16 +296,20 @@ public class RestaurantServiceImpl implements RestaurantService {
                 .orElseThrow(() -> new ClaimNotFoundException("Claim not found"));
 
         // Return the claim status
+        log.info("Claim Status Found");
         return claimMapper.toClaim(claimEntity);
     }
 
     @Transactional
     public ResponseEntity<ClaimStatus> createClaim(Integer restaurantId, ClaimInput claimInput) {
 
+        log.info(" Starting: Create Claim...");
+
         RestaurantEntity restaurantEntity = helperUtils.getRestaurantHelper(restaurantId);
 
         // Check if restaurant already has owner
         if (restaurantEntity.getOwner() != null) {
+            log.info(" Restaurant Already Owned");
             throw new RestaurantOwnedException("Restaurant with id " + restaurantId + " is already owned");
         }
 
@@ -287,10 +319,12 @@ public class RestaurantServiceImpl implements RestaurantService {
         // Check if claim already exists for user and restaurant - return current status if it does
         Optional<ClaimEntity> claimEntity = claimRepository.findByRestaurantAndClaimant(restaurantEntity, currentUser);
         if (claimEntity.isPresent()) {
+            log.info("Claim Already Exists");
             return ResponseEntity.ok(claimMapper.toClaim(claimEntity.get()));
         }
 
         // Convert the input data to a ClaimEntity object
+        log.info("Creating Claim");
         ClaimEntity claim = claimMapper.toClaimEntity(claimInput);
         claim.setCreatedAt(OffsetDateTime.now().toLocalDateTime());
         claim.setRestaurant(restaurantEntity);
@@ -300,6 +334,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         // Save the new claim to the database
         ClaimEntity savedClaim = claimRepository.save(claim);
+        log.info("Claim Saved");
 
         // Return the response
         return ResponseEntity.status(HttpStatus.CREATED).body(claimMapper.toClaim(savedClaim));
