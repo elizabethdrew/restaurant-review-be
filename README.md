@@ -143,4 +143,10 @@ Remember, the application must be running to access the Swagger UI and interact 
 
 ## Postman
 
-I have included a Postman Collection (Restaurant Review.postman_collection.json) - upload this to your own Postman application to easily interact with the api. You will need to get a JWT bearer token via the Get Authentication method to be able to use secured endpoints.
+To play with the api using Postman you can use the links below.
+
+V1 only endpoints: https://cfg-wcdio.postman.co/workspace/Restaurant-Review-API~ab4ce0d5-3f64-4d40-a6eb-7f[…]-environment=26377513-198c55f1-5fe6-473a-a7c8-bf6232abfd2b
+Updated endpoints (in V1 mode): https://cfg-wcdio.postman.co/workspace/Restaurant-Review-API~ab4ce0d5-3f64-4d40-a6eb-7f[…]-environment=26377513-198c55f1-5fe6-473a-a7c8-bf6232abfd2b
+Updated endpoints (in V2 mode): https://cfg-wcdio.postman.co/workspace/Restaurant-Review-API~ab4ce0d5-3f64-4d40-a6eb-7f[…]-environment=26377513-14e8ed8e-9f0d-40b1-ba62-2ccd446d49c5
+
+You will need to get a JWT bearer token via the Get Authentication method to be able to use secured endpoints.
