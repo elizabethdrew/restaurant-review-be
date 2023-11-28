@@ -1,5 +1,6 @@
 package dev.drew.restaurantreview.service;
 
+import org.openapitools.model.PaginatedReviewResponse;
 import org.openapitools.model.Review;
 import org.openapitools.model.ReviewInput;
 import org.openapitools.model.UpdateReviewReplyRequest;
@@ -14,7 +15,8 @@ public interface ReviewService {
     Review addNewReview(ReviewInput reviewInput);
 
     // Get all reviews with optional filters (restaurantId, userId and rating)
-    List<Review> getAllReviews(Long restaurantId, Long userId, List<Integer> rating, Pageable pageable);
+    List<Review> getAllReviewsV1(Long restaurantId, Long userId, List<Integer> rating, Pageable pageable);
+    PaginatedReviewResponse getAllReviewsV2(Long restaurantId, Long userId, List<Integer> rating, Pageable pageable);
 
     // Get a review by its ID
     Review getReviewById(Integer reviewId);

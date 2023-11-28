@@ -635,6 +635,7 @@ paths:
     post:
       summary: Authenticate a user and generate a JWT token
       description: Authenticate a user with provided credentials and return a JWT token for further authenticated requests.
+      operationId: login
       tags:
         - Authentication
       requestBody:
@@ -688,6 +689,7 @@ paths:
       tags:
         - Authentication
       summary: Logout the currently authenticated user by blacklisting the token.
+      operationId: logout
       parameters:
         - in: header
           name: Authorization
@@ -858,11 +860,66 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /api/v2/reviews:
+    get:
+      security: []
+      summary: Get all reviews
+      operationId: getAllReviewsV2
+      tags:
+        - Reviews
+      description: Returns a list of all reviews.
+      x-spring-paginated: true
+      parameters:
+        - name: restaurant_id
+          in: query
+          description: The restaurant ID to filter reviews by.
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: user_id
+          in: query
+          description: The user ID to filter reviews by.
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: rating
+          in: query
+          description: The rating value to filter restaurants by.
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+              minimum: 1
+              maximum: 5
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedReviewResponse'
+        '404':
+          description: No Results Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
   /api/v1/reviews:
     get:
       security: []
       summary: Get all reviews
-      operationId: getAllReviews
+      operationId: getAllReviewsV1
       tags:
         - Reviews
       description: Returns a list of all reviews.
@@ -1698,7 +1755,21 @@ components:
         items:
           type: array
           items:
+            type: object
             $ref: '#/component/schemas/Restaurant'
+
+    PaginatedReviewResponse:
+      type: object
+      properties:
+        total:
+          type: integer
+          format: int64
+          description: The total number of results available.
+        items:
+          type: array
+          items:
+            type: object
+            $ref: '#/component/schemas/Review'
 
     Review:
       type: object

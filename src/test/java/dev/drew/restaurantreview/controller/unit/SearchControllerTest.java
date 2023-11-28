@@ -11,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.openapitools.model.Restaurant;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
@@ -22,11 +21,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -57,7 +53,7 @@ class SearchControllerTest {
         );
 
         Pageable pageable = PageRequest.of(0, 20);
-        when(searchService.searchRestaurant("Restaurant", pageable)).thenReturn(restaurants);
+        when(searchService.searchRestaurantV1("Restaurant", pageable)).thenReturn(restaurants);
 
         mockMvc.perform(get("/api/v1/search")
                         .param("query", "Restaurant")
@@ -74,7 +70,7 @@ class SearchControllerTest {
 
         String query = "nonExistentTerm";
         Pageable pageable = PageRequest.of(0, 20);
-        when(searchService.searchRestaurant(query, pageable)).thenThrow(new NoResultsFoundException("No restaurants found for the given query: " + query));
+        when(searchService.searchRestaurantV1(query, pageable)).thenThrow(new NoResultsFoundException("No restaurants found for the given query: " + query));
 
         mockMvc.perform(get("/api/v1/search")
                         .param("query", query)

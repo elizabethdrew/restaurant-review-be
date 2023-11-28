@@ -11,7 +11,6 @@ import dev.drew.restaurantreview.model.SecurityUser;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
 import dev.drew.restaurantreview.repository.ReviewRepository;
 import dev.drew.restaurantreview.repository.UserRepository;
-import dev.drew.restaurantreview.repository.specification.RestaurantSpecification;
 import dev.drew.restaurantreview.service.impl.ReviewServiceImpl;
 import dev.drew.restaurantreview.util.SecurityUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -175,7 +174,7 @@ public class ReviewServiceTest {
         )).thenReturn(page);
 
         // Call the service method
-        List<Review> response = reviewServiceImpl.getAllReviews(null, null, null, PageRequest.of(0, 20));
+        List<Review> response = reviewServiceImpl.getAllReviewsV1(null, null, null, PageRequest.of(0, 20));
 
         // Verify the response status and data
         assertEquals(2, response.size());
@@ -258,13 +257,13 @@ public class ReviewServiceTest {
     @Test
     void testDeleteReviewByIdNotFound() {
 
-        Long deleteReviewId = 2L;
+        long deleteReviewId = 2L;
 
         // Mock the repository call
         when(reviewRepository.findOne(any(Specification.class))).thenReturn(Optional.empty());
 
         // Verify the response status
-        assertThrows(ReviewNotFoundException.class, () -> reviewServiceImpl.deleteReviewById(deleteReviewId.intValue()));
+        assertThrows(ReviewNotFoundException.class, () -> reviewServiceImpl.deleteReviewById((int) deleteReviewId));
 
         verify(reviewRepository, never()).deleteById(anyLong());
     }
