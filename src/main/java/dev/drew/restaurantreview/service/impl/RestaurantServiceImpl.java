@@ -127,42 +127,6 @@ public class RestaurantServiceImpl implements RestaurantService {
                 .collect(Collectors.toList());
     }
 
-    private Page<RestaurantEntity> findRestaurants(
-            List<String> city, List<Integer> rating, Long ownerId, List<Integer> priceRange,
-            List<String> cuisine, Boolean favouritesOnly, Pageable pageable) {
-
-        log.info("Finding Restaurants");
-        // Common specification building logic
-        Specification<RestaurantEntity> specs = Specification.where(RestaurantSpecification.isNotDeleted())
-                .and(RestaurantSpecification.hasCity(city))
-                .and(RestaurantSpecification.hasRating(rating))
-                .and(RestaurantSpecification.hasOwnerId(ownerId))
-                .and(RestaurantSpecification.hasPriceRange(priceRange))
-                .and(RestaurantSpecification.hasCuisine(cuisine));
-
-        // Common favorite filter logic
-        UserEntity currentUser = SecurityUtils.getCurrentUser();
-        if (currentUser != null && favouritesOnly) {
-            specs = specs.and(RestaurantSpecification.isFavouritedByUser(currentUser.getId()));
-        }
-
-        // Return the page of entities
-        return restaurantRepository.findAll(specs, pageable);
-    }
-
-    private Restaurant mapToRestaurantDto(RestaurantEntity entity) {
-        log.info("Mapping Restaurants to output");
-        Restaurant restaurant = restaurantMapper.toRestaurant(entity);
-        Long favouritesCount = favouriteRepository.countByRestaurant(entity);
-        restaurant.setTotalFavourites(favouritesCount);
-        UserEntity currentUser = SecurityUtils.getCurrentUser();
-        if (currentUser != null) {
-            Optional<FavouriteEntity> favourite = favouriteRepository.findByRestaurantAndUser(entity, currentUser);
-            restaurant.setIsFavourite(favourite.isPresent());
-        }
-        return restaurant;
-    }
-
     public List<Restaurant> getAllRestaurantsV1(
             List<String> city,
             List<Integer> rating,
@@ -174,33 +138,161 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         log.info("Starting: Get All Restaurants...");
 
-        Page<RestaurantEntity> filteredEntities = findRestaurants(city, rating, ownerId, price_range, cuisine, favouritesOnly, pageable);
+        Specification<RestaurantEntity> specs = Specification.where(RestaurantSpecification.isNotDeleted())
+                .and(RestaurantSpecification.hasCity(city))
+                .and(RestaurantSpecification.hasRating(rating))
+                .and(RestaurantSpecification.hasOwnerId(ownerId))
+                .and(RestaurantSpecification.hasPriceRange(price_range))
+                .and(RestaurantSpecification.hasCuisine(cuisine));
+
+        // Fetch the current user entity
+        UserEntity currentUser = SecurityUtils.getCurrentUser();
+
+        if (currentUser != null) {
+            Long currentUserId = currentUser.getId();
+            if (favouritesOnly && currentUserId != null) {
+                specs = specs.and(RestaurantSpecification.isFavouritedByUser(currentUserId));
+            }
+        }
+
+        Page<RestaurantEntity> filteredEntities = restaurantRepository.findAll(specs, pageable);
 
         log.info("Restaurants Incoming!");
 
-        return filteredEntities.getContent().stream()
-                .map(this::mapToRestaurantDto)
+        return filteredEntities.stream()
+                .map(entity -> {
+                    Restaurant restaurant = restaurantMapper.toRestaurant(entity);
+                    Long favouritesCount = favouriteRepository.countByRestaurant(entity);
+                    restaurant.setTotalFavourites(favouritesCount);
+                    if (currentUser != null) {
+                        Optional<FavouriteEntity> favourite = favouriteRepository.findByRestaurantAndUser(entity, currentUser);
+                        restaurant.setIsFavourite(favourite.isPresent());
+                    }
+                    return restaurant;
+                })
                 .collect(Collectors.toList());
     }
 
     public PaginatedRestaurantResponse getAllRestaurantsV2(List<String> city, List<Integer> rating, Long ownerId, List<Integer> price_range, List<String> cuisine, Boolean favouritesOnly, Pageable pageable) {
-
         log.info("Starting: Get All Restaurants...");
 
-        Page<RestaurantEntity> filteredEntities = findRestaurants(city, rating, ownerId, price_range, cuisine, favouritesOnly, pageable);
+        Specification<RestaurantEntity> specs = Specification.where(RestaurantSpecification.isNotDeleted())
+                .and(RestaurantSpecification.hasCity(city))
+                .and(RestaurantSpecification.hasRating(rating))
+                .and(RestaurantSpecification.hasOwnerId(ownerId))
+                .and(RestaurantSpecification.hasPriceRange(price_range))
+                .and(RestaurantSpecification.hasCuisine(cuisine));
+
+        // Fetch the current user entity
+        UserEntity currentUser = SecurityUtils.getCurrentUser();
+
+        if (currentUser != null) {
+            Long currentUserId = currentUser.getId();
+            if (favouritesOnly && currentUserId != null) {
+                specs = specs.and(RestaurantSpecification.isFavouritedByUser(currentUserId));
+            }
+        }
+
+        Page<RestaurantEntity> filteredEntities = restaurantRepository.findAll(specs, pageable);
+        long total = filteredEntities.getTotalElements();
 
         log.info("Restaurants Incoming!");
-        List<Restaurant> restaurantList = filteredEntities.getContent().stream()
-                .map(this::mapToRestaurantDto)
+        List<Restaurant> restaurantList = filteredEntities.stream()
+                .map(entity -> {
+                    Restaurant restaurant = restaurantMapper.toRestaurant(entity);
+                    Long favouritesCount = favouriteRepository.countByRestaurant(entity);
+                    restaurant.setTotalFavourites(favouritesCount);
+                    if (currentUser != null) {
+                        Optional<FavouriteEntity> favourite = favouriteRepository.findByRestaurantAndUser(entity, currentUser);
+                        restaurant.setIsFavourite(favourite.isPresent());
+                    }
+                    return restaurant;
+                })
                 .collect(Collectors.toList());
+
 
         log.info("Creating response object");
         PaginatedRestaurantResponse response = new PaginatedRestaurantResponse();
-        response.setTotal(filteredEntities.getTotalElements());
+        response.setTotal(total);
         response.setItems(new ArrayList<>(restaurantList));
 
         return response;
     }
+
+//    private Page<RestaurantEntity> findRestaurants(
+//            List<String> city, List<Integer> rating, Long ownerId, List<Integer> priceRange,
+//            List<String> cuisine, Boolean favouritesOnly, Pageable pageable) {
+//
+//        log.info("Finding Restaurants");
+//        // Common specification building logic
+//        Specification<RestaurantEntity> specs = Specification.where(RestaurantSpecification.isNotDeleted())
+//                .and(RestaurantSpecification.hasCity(city))
+//                .and(RestaurantSpecification.hasRating(rating))
+//                .and(RestaurantSpecification.hasOwnerId(ownerId))
+//                .and(RestaurantSpecification.hasPriceRange(priceRange))
+//                .and(RestaurantSpecification.hasCuisine(cuisine));
+//
+//        // Common favorite filter logic
+//        UserEntity currentUser = SecurityUtils.getCurrentUser();
+//        if (currentUser != null && favouritesOnly) {
+//            specs = specs.and(RestaurantSpecification.isFavouritedByUser(currentUser.getId()));
+//        }
+//
+//        // Return the page of entities
+//        return restaurantRepository.findAll(specs, pageable);
+//    }
+//
+//    private Restaurant mapToRestaurantDto(RestaurantEntity entity) {
+//        log.info("Mapping Restaurants to output");
+//        Restaurant restaurant = restaurantMapper.toRestaurant(entity);
+//        Long favouritesCount = favouriteRepository.countByRestaurant(entity);
+//        restaurant.setTotalFavourites(favouritesCount);
+//        UserEntity currentUser = SecurityUtils.getCurrentUser();
+//        if (currentUser != null) {
+//            Optional<FavouriteEntity> favourite = favouriteRepository.findByRestaurantAndUser(entity, currentUser);
+//            restaurant.setIsFavourite(favourite.isPresent());
+//        }
+//        return restaurant;
+//    }
+//
+//    public List<Restaurant> getAllRestaurantsV1(
+//            List<String> city,
+//            List<Integer> rating,
+//            Long ownerId,
+//            List<Integer> price_range,
+//            List<String> cuisine,
+//            Boolean favouritesOnly,
+//            Pageable pageable) {
+//
+//        log.info("Starting: Get All Restaurants...");
+//
+//        Page<RestaurantEntity> filteredEntities = findRestaurants(city, rating, ownerId, price_range, cuisine, favouritesOnly, pageable);
+//
+//        log.info("Restaurants Incoming!");
+//
+//        return filteredEntities.getContent().stream()
+//                .map(this::mapToRestaurantDto)
+//                .collect(Collectors.toList());
+//    }
+//
+//    public PaginatedRestaurantResponse getAllRestaurantsV2(List<String> city, List<Integer> rating, Long ownerId, List<Integer> price_range, List<String> cuisine, Boolean favouritesOnly, Pageable pageable) {
+//
+//        log.info("Starting: Get All Restaurants...");
+//
+//        Page<RestaurantEntity> filteredEntities = findRestaurants(city, rating, ownerId, price_range, cuisine, favouritesOnly, pageable);
+//
+//        log.info("Restaurants Incoming!");
+//        List<Restaurant> restaurantList = filteredEntities.getContent().stream()
+//                .map(this::mapToRestaurantDto)
+//                .collect(Collectors.toList());
+//
+//        log.info("Creating response object");
+//        PaginatedRestaurantResponse response = new PaginatedRestaurantResponse();
+//        response.setTotal(filteredEntities.getTotalElements());
+//        response.setItems(new ArrayList<>(restaurantList));
+//
+//        return response;
+//    }
 
 
     public Restaurant getRestaurantById(Integer restaurantId) throws RestaurantNotFoundException {
