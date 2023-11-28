@@ -192,7 +192,7 @@ class RestaurantServiceTests {
         when(restaurantMapper.toRestaurant(restaurantEntity2)).thenReturn(restaurant2);
 
         // Call the service method
-        List<Restaurant> response = restaurantServiceImpl.getAllRestaurants(null, null, null, null, null, false, PageRequest.of(0, 20));
+        List<Restaurant> response = restaurantServiceImpl.getAllRestaurantsV1(null, null, null, null, null, false, PageRequest.of(0, 20));
 
         // Verify the response status and data
         assertEquals(2, response.size());

@@ -4,15 +4,14 @@ import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.ReviewNotFoundException;
 import dev.drew.restaurantreview.service.ReviewService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.openapitools.api.ReviewsApi;
+import org.openapitools.model.PaginatedReviewResponse;
 import org.openapitools.model.Review;
 import org.openapitools.model.ReviewInput;
 import org.openapitools.model.UpdateReviewReplyRequest;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,7 +21,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/reviews")
+@RequestMapping("/api")
 @PreAuthorize("isAuthenticated()")
 public class ReviewController implements ReviewsApi {
 
@@ -34,7 +33,7 @@ public class ReviewController implements ReviewsApi {
 
 
     @SecurityRequirement(name = "Bearer Authentication")
-    @PostMapping
+    @PostMapping("/v1/reviews")
     @Override
     public ResponseEntity<Review> addNewReview(
             @RequestBody @Valid ReviewInput reviewInput) {
@@ -42,21 +41,31 @@ public class ReviewController implements ReviewsApi {
         return new ResponseEntity<>(review, HttpStatus.CREATED);
     }
 
-    @Override
-    @GetMapping
+    @GetMapping("/v1/reviews")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<List<Review>> getAllReviews(
+    public ResponseEntity<List<Review>> getAllReviewsV1(
             @Valid @RequestParam(value = "restaurant_id", required = false) Long restaurantId,
             @Valid @RequestParam(value = "user_id", required = false) Long userId,
             @Valid @RequestParam(value = "rating", required = false) List<Integer> rating,
             @ParameterObject Pageable pageable){
-        List<Review> reviews = reviewService.getAllReviews(restaurantId,  userId, rating, pageable);
+        List<Review> reviews = reviewService.getAllReviewsV1(restaurantId,  userId, rating, pageable);
+        return ResponseEntity.ok(reviews);
+    }
+
+    @GetMapping("/v2/reviews")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<PaginatedReviewResponse> getAllReviewsV2(
+            @Valid @RequestParam(value = "restaurant_id", required = false) Long restaurantId,
+            @Valid @RequestParam(value = "user_id", required = false) Long userId,
+            @Valid @RequestParam(value = "rating", required = false) List<Integer> rating,
+            @ParameterObject Pageable pageable){
+        PaginatedReviewResponse reviews = reviewService.getAllReviewsV2(restaurantId,  userId, rating, pageable);
         return ResponseEntity.ok(reviews);
     }
 
 
     @Override
-    @GetMapping("/{reviewId}")
+    @GetMapping("/v1/reviews/{reviewId}")
     @PreAuthorize("permitAll()")
     public ResponseEntity<Review> getReviewById(
             @Min(1) @PathVariable Integer reviewId) {
@@ -66,7 +75,7 @@ public class ReviewController implements ReviewsApi {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @Override
-    @PutMapping("/{reviewId}")
+    @PutMapping("/v1/reviews/{reviewId}")
     public ResponseEntity<Review> updateReviewById(
             @Min(1) @PathVariable Integer reviewId,
             @RequestBody @Valid ReviewInput reviewInput)
@@ -77,7 +86,7 @@ public class ReviewController implements ReviewsApi {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @Override
-    @DeleteMapping("/{reviewId}")
+    @DeleteMapping("/v1/reviews/{reviewId}")
     public ResponseEntity<Void> deleteReviewById(
             @Min(1)  @PathVariable Integer reviewId) {
         reviewService.deleteReviewById(reviewId);
@@ -86,7 +95,7 @@ public class ReviewController implements ReviewsApi {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @Override
-    @PostMapping("/{reviewId}/reply")
+    @PostMapping("/v1/reviews/{reviewId}/reply")
     public ResponseEntity<Review> addReviewReply(
             @Min(1) @PathVariable Integer reviewId,
             @RequestBody @Valid UpdateReviewReplyRequest updateReviewReplyRequest)
@@ -97,7 +106,7 @@ public class ReviewController implements ReviewsApi {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @Override
-    @PutMapping("/{reviewId}/reply")
+    @PutMapping("/v1/reviews/{reviewId}/reply")
     public ResponseEntity<Review> updateReviewReply(
             @Min(1) @PathVariable Integer reviewId,
             @RequestBody @Valid UpdateReviewReplyRequest updateReviewReplyRequest)
@@ -108,7 +117,7 @@ public class ReviewController implements ReviewsApi {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @Override
-    @DeleteMapping("/{reviewId}/reply")
+    @DeleteMapping("/v1/reviews/{reviewId}/reply")
     public ResponseEntity<Review> deleteReviewReply(
             @Min(1) @PathVariable Integer reviewId)
             throws ReviewNotFoundException, InsufficientPermissionException {

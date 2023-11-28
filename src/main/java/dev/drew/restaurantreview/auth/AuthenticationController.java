@@ -20,7 +20,7 @@ public class AuthenticationController {
     private final JwtBlacklistRepository jwtBlacklistRepository;
 
     @PostMapping("api/v1/login")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
         log.info("Starting User Login...");
         AuthenticationResponse response = service.authenticate(request);
         return ResponseEntity.ok(response);

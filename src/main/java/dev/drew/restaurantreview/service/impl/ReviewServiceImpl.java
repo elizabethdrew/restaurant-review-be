@@ -4,7 +4,6 @@ import dev.drew.restaurantreview.entity.RestaurantEntity;
 import dev.drew.restaurantreview.entity.ReviewEntity;
 import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.exception.*;
-import dev.drew.restaurantreview.mapper.RestaurantMapper;
 import dev.drew.restaurantreview.mapper.ReviewMapper;
 import dev.drew.restaurantreview.repository.RestaurantRepository;
 import dev.drew.restaurantreview.repository.ReviewRepository;
@@ -15,6 +14,7 @@ import dev.drew.restaurantreview.util.HelperUtils;
 import dev.drew.restaurantreview.util.SecurityUtils;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import lombok.extern.slf4j.Slf4j;
+import org.openapitools.model.PaginatedReviewResponse;
 import org.openapitools.model.Review;
 import org.openapitools.model.ReviewInput;
 import org.openapitools.model.UpdateReviewReplyRequest;
@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,8 +37,6 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReviewMapper reviewMapper;
 
-    private final RestaurantMapper restaurantMapper;
-
     private final RestaurantRepository restaurantRepository;
 
     private final EntityUserIdProvider<ReviewEntity> reviewUserIdProvider = ReviewEntity::getUserId;
@@ -45,10 +44,9 @@ public class ReviewServiceImpl implements ReviewService {
 
     private final HelperUtils helperUtils;
 
-    public ReviewServiceImpl(ReviewRepository reviewRepository, ReviewMapper reviewMapper, RestaurantMapper restaurantMapper, RestaurantRepository restaurantRepository, UserRepository userRepository, HelperUtils helperUtils) {
+    public ReviewServiceImpl(ReviewRepository reviewRepository, ReviewMapper reviewMapper, RestaurantRepository restaurantRepository, UserRepository userRepository, HelperUtils helperUtils) {
         this.reviewRepository = reviewRepository;
         this.reviewMapper = reviewMapper;
-        this.restaurantMapper = restaurantMapper;
         this.restaurantRepository = restaurantRepository;
         this.userRepository = userRepository;
         this.helperUtils = helperUtils;
@@ -115,22 +113,47 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewMapper.toReview(savedReview);
     }
 
-    @Override
-    public List<Review> getAllReviews(Long restaurantId, Long userId, List<Integer> rating, Pageable pageable) {
-        log.info("Starting: Get All Reviews");
 
-        Page<ReviewEntity> filteredEntities = reviewRepository.findAll(
-            Specification.where(ReviewSpecification.hasRestaurantId(restaurantId))
-                .and(ReviewSpecification.hasUserId(userId))
-                .and(ReviewSpecification.hasRating(rating))
-                .and(ReviewSpecification.isNotDeleted()),
+    private Page<ReviewEntity> findReviews(Long restaurantId, Long userId, List<Integer> rating, Pageable pageable) {
+        log.info("Searching for reviews");
+        return reviewRepository.findAll(
+                Specification.where(ReviewSpecification.hasRestaurantId(restaurantId))
+                        .and(ReviewSpecification.hasUserId(userId))
+                        .and(ReviewSpecification.hasRating(rating))
+                        .and(ReviewSpecification.isNotDeleted()),
                 pageable
         );
-
-        log.info("Reviews Incoming!");
-        return filteredEntities.stream().map(reviewMapper::toReview).collect(Collectors.toList());
     }
 
+    public List<Review> getAllReviewsV1(Long restaurantId, Long userId, List<Integer> rating, Pageable pageable) {
+
+        log.info("Starting: Get All Reviews");
+        Page<ReviewEntity> filteredEntities = findReviews(restaurantId, userId, rating, pageable);
+
+        log.info("Reviews Incoming!");
+        return filteredEntities.stream()
+                .map(reviewMapper::toReview)
+                .collect(Collectors.toList());
+    }
+
+    public PaginatedReviewResponse getAllReviewsV2(Long restaurantId, Long userId, List<Integer> rating, Pageable pageable) {
+        log.info("Starting: Get All Reviews");
+
+        Page<ReviewEntity> filteredEntities = findReviews(restaurantId, userId, rating, pageable);
+
+        log.info("Reviews Incoming!");
+        List<Review> reviewList = filteredEntities.getContent() // Use getContent() to retrieve the list of items
+                .stream()
+                .map(reviewMapper::toReview)
+                .toList();
+
+        log.info("Creating response object");
+        PaginatedReviewResponse response = new PaginatedReviewResponse();
+        response.setTotal(filteredEntities.getTotalElements());
+        response.setItems(new ArrayList<>(reviewList));
+
+        return response;
+    }
 
     public Review getReviewById(Integer reviewId) throws ReviewNotFoundException {
 

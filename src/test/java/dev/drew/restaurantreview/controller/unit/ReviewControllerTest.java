@@ -80,7 +80,7 @@ class ReviewControllerTest {
         );
 
         Pageable pageable = PageRequest.of(0,20);
-        when(reviewService.getAllReviews(null, null, null, pageable)).thenReturn(reviews);
+        when(reviewService.getAllReviewsV1(null, null, null, pageable)).thenReturn(reviews);
 
         mockMvc.perform(get("/api/v1/reviews")
                         .contentType(MediaType.APPLICATION_JSON))

@@ -46,17 +46,17 @@ public class SecurityConfig {
                 //.csrf(csrf -> csrf.disable()) // Disable CSRF protection
                 .authorizeHttpRequests()
                 // Allow unauthenticated access to the following endpoints
-                .requestMatchers("/api/v1/login/**").permitAll()
+                .requestMatchers("/api/*/login/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
-                .requestMatchers(HttpMethod.GET,"/api/v1/restaurants").permitAll()
-                .requestMatchers(HttpMethod.GET,"/api/v1/search").permitAll()
-                .requestMatchers(HttpMethod.GET,"/api/v1/restaurants/**" ).permitAll()
-                .requestMatchers(HttpMethod.GET,"/api/v1/reviews").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/reviews/**" ).permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/v1/users" ).permitAll()
-                .requestMatchers(HttpMethod.GET,"/api/v1/cuisines").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/*/restaurants").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/*/search").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/*/restaurants/**" ).permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/*/reviews").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/*/reviews/**" ).permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/*/users" ).permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/*/cuisines").permitAll()
                 // Require authentication for all other requests
                 .anyRequest().authenticated()
                 // Set session management
