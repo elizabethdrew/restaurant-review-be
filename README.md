@@ -92,7 +92,7 @@ Follow the instructions on the [official website](https://docs.docker.com/get-do
 1. First, clone the project repository:
 
 ```
-git clone https://gitlab.com/elizabethdrew/restaurant-review-api
+git clone https://gitlab.com/cfg-projects/restaurant-review-api
 ```
 
 2. Navigate to the project root directory.
