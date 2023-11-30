@@ -89,21 +89,27 @@ Follow the instructions on the [official website](https://docs.docker.com/get-do
 
 ## Running the Application
 
-1. First, clone the project repository:
+1. First, clone the project repository. If you already have the project cloned, you can move onto the next step:
 
 ```
 git clone https://gitlab.com/cfg-projects/restaurant-review-api
 ```
 
-2. Navigate to the project root directory.
+2. Pull the latest version of the projects
 
-3. Build the project with seed data:
+```
+git pull https://gitlab.com/cfg-projects/restaurant-review-api main
+```
+
+3. Navigate to the project root directory.
+
+4. Build the project with seed data:
 
 ```
 mvn spring-boot:build-image -Dmaven.test.skip=true 
 ```
 
-4. You can then run the Docker compose configuration:
+5. You can then run the Docker compose configuration:
 
 ```
 docker-compose up --build -d
@@ -112,6 +118,7 @@ docker-compose up --build -d
 The application should now be up and running on [http://localhost:8080](http://localhost:8080/).
 
 If it isn't running, check that all three parts of the docker restaurant-review-api are running. If they aren't, press the start button and try accessing it again.
+
 
 ## Authenticating
 
