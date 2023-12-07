@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Min;
 import org.openapitools.api.UserApi;
 import org.openapitools.model.User;
 import org.openapitools.model.UserInput;
+import org.openapitools.model.UserUpdateInput;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -59,7 +60,7 @@ public class UserController implements UserApi {
     @PutMapping("/{userId}")
     public ResponseEntity<User> updateUserById(
             @Min(1) @PathVariable Integer userId,
-            @RequestBody @Valid UserInput userInput)
+            @RequestBody @Valid UserUpdateInput userInput)
             throws UserNotFoundException, InsufficientPermissionException {
         User updatedUser = userService.updateUserById(userId, userInput);
         return ResponseEntity.ok(updatedUser);

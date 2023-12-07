@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.openapitools.model.User;
 import org.openapitools.model.UserInput;
+import org.openapitools.model.UserUpdateInput;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -33,6 +34,8 @@ class UserControllerTest {
     private User user;
     private UserInput userInput;
 
+    private UserUpdateInput userUpdateInput;
+
     @BeforeEach
     void setUp() {
         userInput = new UserInput();
@@ -47,6 +50,11 @@ class UserControllerTest {
         user.setName("Test User");
         user.setCreatedAt(OffsetDateTime.now());
         user.setRole(User.RoleEnum.ADMIN);
+
+        userUpdateInput = new UserUpdateInput();
+        userUpdateInput.setEmail("update@test.com");
+        userUpdateInput.setUsername("testUser");
+        userUpdateInput.setName("Test User");
     }
 
     @Test
@@ -80,9 +88,9 @@ class UserControllerTest {
 
     @Test
     void shouldUpdateUserById() throws UserNotFoundException, InsufficientPermissionException {
-        when(userService.updateUserById(any(Integer.class), any(UserInput.class))).thenReturn(user);
+        when(userService.updateUserById(any(Integer.class), any(UserUpdateInput.class))).thenReturn(user);
 
-        ResponseEntity<User> response = userController.updateUserById(1, userInput);
+        ResponseEntity<User> response = userController.updateUserById(1, userUpdateInput);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(user, response.getBody());

@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.openapitools.model.User;
 import org.openapitools.model.UserInput;
 import org.openapitools.model.User.RoleEnum;
+import org.openapitools.model.UserUpdateInput;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -172,7 +173,7 @@ public class UserServiceTest {
     void testUpdateUserById() {
         // Prepare input data
         Integer userId = 1;
-        UserInput userInput = new UserInput().username("newUsername");
+        UserUpdateInput userInput = new UserUpdateInput().username("newUsername");
 
         // Prepare expected data
         UserEntity userEntity = new UserEntity();

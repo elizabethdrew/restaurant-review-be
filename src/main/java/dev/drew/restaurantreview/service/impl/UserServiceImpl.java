@@ -163,7 +163,7 @@ public class UserServiceImpl implements UserService {
         log.info("User Updated");
     }
 
-    public User updateUserById(Integer userId, UserInput userInput)
+    public User updateUserById(Integer userId, UserUpdateInput userInput)
             throws UserNotFoundException, InsufficientPermissionException {
 
         log.info("Staring: Update User");
@@ -179,14 +179,14 @@ public class UserServiceImpl implements UserService {
         }
 
         log.info("Updating User");
-        UserEntity updatedEntity = userMapper.toUserEntity(userInput);
+        UserEntity updatedEntity = userMapper.toUpdateUserEntity(userInput);
         updatedEntity.setId(userEntity.getId());
         updatedEntity.setCreatedAt(userEntity.getCreatedAt());
         updatedEntity.setRole(userEntity.getRole());
 
         // Check if user is requesting admin permissions
         log.info("Check If User Wants To Be Admin");
-        if(userInput.getRole() == UserInput.RoleEnum.ADMIN && userEntity.getRole() != User.RoleEnum.ADMIN) {
+        if(userInput.getRole() == UserUpdateInput.RoleEnum.ADMIN && userEntity.getRole() != User.RoleEnum.ADMIN) {
             log.info("Creating Admin Request");
             AccountRequestEntity newRequest = new AccountRequestEntity();
             newRequest.setUser(userEntity);
