@@ -61,7 +61,7 @@ public class FileStorageService {
 
     public String generateObjectKey(String type, Integer itemId, String originalFilename) {
         String extension = originalFilename.substring(originalFilename.lastIndexOf('.'));
-        return type + "/" + itemId + "/" + UUID.randomUUID().toString() + extension;
+        return type + "/" + itemId + extension;
     }
 
 }
