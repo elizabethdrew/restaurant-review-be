@@ -5,7 +5,7 @@ services:
   localstack:
     image: localstack/localstack
     ports:
-      - "4566:4566"
+      - "127.0.0.1:4566:4566"
     environment:
       - SERVICES=s3
       - AWS_ACCESS_KEY_ID=test
@@ -17,7 +17,8 @@ services:
       - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
       - "./init/create-bucket.sh:/etc/localstack/init/ready.d/init-aws.sh"
     networks:
-      - review
+      ls:
+        ipv4_address: 10.0.2.20
 
   api:
     build: .
@@ -31,8 +32,10 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/reviewdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=password
+    dns:
+      - 10.0.2.20
     networks:
-      - review
+      - ls
 
   db:
     image: mysql:8.0
@@ -46,11 +49,14 @@ services:
     volumes:
       - db_data:/var/lib/mysql
     networks:
-      - review
+      - ls
 
 
 volumes:
   db_data:
 
 networks:
-  review:
+  ls:
+    ipam:
+      config:
+        - subnet: 10.0.2.0/24
