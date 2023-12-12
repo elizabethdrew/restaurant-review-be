@@ -15,7 +15,7 @@ services:
       - HOSTNAME_EXTERNAL=localstack
     volumes:
       - "./my-localstack-data:/persisted-data"
-      - "./init/create-bucket.sh:/etc/localstack/init/ready.d/init-aws.sh"
+#      - "./init/create-bucket.sh:/etc/localstack/init/ready.d/init-aws.sh"
     networks:
       ls:
         ipv4_address: 10.0.2.20
