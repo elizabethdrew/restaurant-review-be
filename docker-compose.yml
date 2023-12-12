@@ -5,25 +5,16 @@ services:
   localstack:
     image: localstack/localstack
     ports:
-      - "4566:4566"  # LocalStack exposes services on port 4566
+      - "4566:4566"
     environment:
       - SERVICES=s3
-      - DEFAULT_REGION=us-east-1
-
-  aws-cli:
-    image: amazon/aws-cli
-    depends_on:
-      - localstack
-    environment:
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
-      - AWS_DEFAULT_REGION=us-east-1
-    entrypoint: /bin/sh -c
-    command: >
-      "
-        until aws --endpoint-url=http://localstack:4566 s3api list-buckets; do sleep 1; done;
-        aws --endpoint-url=http://localstack:4566 s3api create-bucket --bucket image-bucket --region us-east-1
-      "
+      - DEBUG=${DEBUG-}
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+      - "./init/create-bucket.sh:/etc/localstack/init/ready.d/init-aws.sh"
 
   api:
     build: .
