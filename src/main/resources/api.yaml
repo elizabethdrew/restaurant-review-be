@@ -1912,6 +1912,9 @@ components:
         is_deleted:
           type: boolean
           default: false
+        profile_image_url:
+          type: string
+          description: File location of profile image
 
     UserInput:
       type: object
