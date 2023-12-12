@@ -5,6 +5,7 @@ import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.InvalidInputException;
 import dev.drew.restaurantreview.exception.UserNotFoundException;
 import dev.drew.restaurantreview.repository.AccountRequestRepository;
+import dev.drew.restaurantreview.service.FileStorageService;
 import dev.drew.restaurantreview.service.UserService;
 import dev.drew.restaurantreview.util.SecurityUtils;
 import jakarta.transaction.Transactional;
@@ -17,7 +18,9 @@ import org.openapitools.model.*;
 import org.springframework.stereotype.Service;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import org.passay.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,14 +35,17 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder;
 
+    private final FileStorageService fileStorageService;
+
     // Implement EntityUserIdProvider for UserEntity
     private final EntityUserIdProvider<UserEntity> userEntityUserIdProvider = UserEntity::getId;
 
-    public UserServiceImpl(UserRepository userRepository, AccountRequestRepository accountRequestRepository, UserMapper userMapper, BCryptPasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, AccountRequestRepository accountRequestRepository, UserMapper userMapper, BCryptPasswordEncoder passwordEncoder, FileStorageService fileStorageService) {
         this.userRepository = userRepository;
         this.accountRequestRepository = accountRequestRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
+        this.fileStorageService = fileStorageService;
     }
 
     @Transactional
@@ -215,5 +221,25 @@ public class UserServiceImpl implements UserService {
         User savedApiUser = userMapper.toUser(savedUser);
 
         return savedApiUser;
+    }
+
+    @Override
+    public User uploadUserImage(Integer userId, MultipartFile file) {
+        UserEntity userEntity = userRepository.findByIdAndIsDeletedFalse(Long.valueOf(userId))
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
+
+        if (!SecurityUtils.isAdminOrCreator(userEntity, userEntityUserIdProvider)) {
+            log.info("User Doesn't Have Permission To Update Profile Picture");
+            throw new InsufficientPermissionException("User does not have permission to update this profile picture");
+        }
+
+        log.info("Uploading Image");
+        String fileUrl = fileStorageService.uploadFile("user-image", userId, file);
+
+        log.info("Updating User");
+        userEntity.setProfileImageUrl(fileUrl);
+        UserEntity savedUser = userRepository.save(userEntity);
+
+        return userMapper.toUser(savedUser);
     }
 }

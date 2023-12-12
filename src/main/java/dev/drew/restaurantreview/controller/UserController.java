@@ -15,6 +15,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -63,6 +66,14 @@ public class UserController implements UserApi {
             @RequestBody @Valid UserUpdateInput userInput)
             throws UserNotFoundException, InsufficientPermissionException {
         User updatedUser = userService.updateUserById(userId, userInput);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Override
+    @PostMapping("/{userId}/image")
+    public ResponseEntity<User> uploadUserProfilePicture(@PathVariable Integer userId, @RequestParam("file") MultipartFile file) {
+        User updatedUser = userService.uploadUserImage(userId, file);
         return ResponseEntity.ok(updatedUser);
     }
 }

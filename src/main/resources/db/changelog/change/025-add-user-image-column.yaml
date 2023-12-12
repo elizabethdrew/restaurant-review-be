@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 25
+      author: elizabeth_drew
+      context: standard
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: profile_image_url
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
