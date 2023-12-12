@@ -15,7 +15,6 @@ import org.openapitools.model.ClaimStatus;
 import org.openapitools.model.PaginatedRestaurantResponse;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
-import org.openapitools.model.User;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
