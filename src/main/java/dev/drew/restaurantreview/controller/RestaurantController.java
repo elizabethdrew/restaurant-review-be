@@ -15,12 +15,14 @@ import org.openapitools.model.ClaimStatus;
 import org.openapitools.model.PaginatedRestaurantResponse;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
+import org.openapitools.model.User;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api")
@@ -106,6 +108,13 @@ public class RestaurantController implements RestaurantsApi {
             @RequestBody @Valid RestaurantInput restaurantInput)
             throws RestaurantNotFoundException, InsufficientPermissionException {
         Restaurant updatedRestaurant = restaurantService.updateRestaurantById(restaurantId, restaurantInput);
+        return ResponseEntity.ok(updatedRestaurant);
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PostMapping("/v1/restaurants/{restaurantId}/image")
+    public ResponseEntity<Restaurant> uploadRestaurantPicture(@PathVariable Integer restaurantId, @RequestParam("file") MultipartFile file) {
+        Restaurant updatedRestaurant = restaurantService.uploadRestaurantPicture(restaurantId, file);
         return ResponseEntity.ok(updatedRestaurant);
     }
 

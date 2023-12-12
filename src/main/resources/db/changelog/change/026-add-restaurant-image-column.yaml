@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 26
+      author: elizabeth_drew
+      context: standard
+      changes:
+        - addColumn:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: image_url
+                  type: varchar(255)
+                  constraints:
+                    nullable: true

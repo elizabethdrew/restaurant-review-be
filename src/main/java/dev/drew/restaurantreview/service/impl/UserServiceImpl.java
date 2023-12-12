@@ -20,7 +20,6 @@ import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import org.passay.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;

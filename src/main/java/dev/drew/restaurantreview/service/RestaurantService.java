@@ -9,6 +9,7 @@ import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -36,5 +37,7 @@ public interface RestaurantService {
 
     ClaimStatus getClaimStatus(Integer restaurantId);
     ResponseEntity<ClaimStatus> createClaim(Integer restaurantId, ClaimInput claimInput);
+
+    Restaurant uploadRestaurantPicture(Integer restaurantId, MultipartFile file);
 
 }

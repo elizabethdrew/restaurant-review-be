@@ -6,6 +6,7 @@ import dev.drew.restaurantreview.mapper.ClaimMapper;
 import dev.drew.restaurantreview.mapper.RestaurantMapper;
 import dev.drew.restaurantreview.repository.*;
 import dev.drew.restaurantreview.repository.specification.RestaurantSpecification;
+import dev.drew.restaurantreview.service.FileStorageService;
 import dev.drew.restaurantreview.service.RestaurantService;
 import dev.drew.restaurantreview.util.HelperUtils;
 import dev.drew.restaurantreview.util.SecurityUtils;
@@ -23,6 +24,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -46,11 +48,11 @@ public class RestaurantServiceImpl implements RestaurantService {
     private CuisineRepository cuisineRepository;
     private FavouriteRepository favouriteRepository;
 
-
+    private final FileStorageService fileStorageService;
     private final HelperUtils helperUtils;
 
     // Constructor with required dependencies
-    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper, ReviewRepository reviewRepository, ClaimRepository claimRepository, ClaimMapper claimMapper, UserRepository userRepository, CuisineRepository cuisineRepository, FavouriteRepository favouriteRepository, HelperUtils helperUtils) {
+    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper, ReviewRepository reviewRepository, ClaimRepository claimRepository, ClaimMapper claimMapper, UserRepository userRepository, CuisineRepository cuisineRepository, FavouriteRepository favouriteRepository, FileStorageService fileStorageService, HelperUtils helperUtils) {
         this.restaurantRepository = restaurantRepository;
         this.restaurantMapper = restaurantMapper;
         this.reviewRepository = reviewRepository;
@@ -59,6 +61,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         this.userRepository = userRepository;
         this.cuisineRepository = cuisineRepository;
         this.favouriteRepository = favouriteRepository;
+        this.fileStorageService = fileStorageService;
         this.helperUtils = helperUtils;
     }
 
@@ -371,6 +374,26 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         // Return the response
         return ResponseEntity.status(HttpStatus.CREATED).body(claimMapper.toClaim(savedClaim));
+    }
+
+    @Override
+    public Restaurant uploadRestaurantPicture(Integer restaurantId, MultipartFile file) {
+
+        RestaurantEntity restaurantEntity = helperUtils.getRestaurantHelper(restaurantId);
+
+        // Check if the current user is an admin or the owner of the restaurant
+        if (!SecurityUtils.isAdminOrOwner(restaurantEntity, restaurantOwnerIdProvider)) {
+            throw new InsufficientPermissionException("User does not have permission to update this restaurant");
+        }
+
+        log.info("Uploading Image");
+        String fileUrl = fileStorageService.uploadFile("restaurant-image", restaurantId, file);
+
+        log.info("Updating User");
+        restaurantEntity.setImageUrl(fileUrl);
+        RestaurantEntity savedRestaurant = restaurantRepository.save(restaurantEntity);
+
+        return restaurantMapper.toRestaurant(savedRestaurant);
     }
 
 

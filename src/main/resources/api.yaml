@@ -583,6 +583,62 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /api/v1/restaurants/{restaurantId}/image:
+    post:
+      tags:
+        - Restaurant
+      summary: Upload restaurant picture
+      operationId: uploadRestaurantPicture
+      parameters:
+        - name: restaurantId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Restaurant'
+        '400':
+          description: Invalid Input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient Permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - bearerAuth: [ ]
+
   /api/v1/users:
     post:
       summary: Add a new user
@@ -2026,6 +2082,9 @@ components:
         user_id:
           type: integer
           format: int64
+        image_url:
+          type: string
+          description: File location of image
 
     RestaurantInput:
       type: object
