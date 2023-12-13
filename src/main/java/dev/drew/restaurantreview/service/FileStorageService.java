@@ -45,15 +45,14 @@ public class FileStorageService {
                     RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
 
             if (response != null) {
-                System.out.println("Object uploaded successfully!");
-                // Building URL based on LocalStack's recommended pattern
+                log.info("Object uploaded successfully!");
                 return "http://" + BUCKET_NAME + ".s3.localhost.localstack.cloud:4566/" + objectKey;
             } else {
-                System.out.println("Object upload failed!");
+                log.error("Object upload failed!");
                 return null;
             }
         } catch (S3Exception | IOException e) {
-            System.err.println("An error occurred: " + e.getMessage());
+           log.error("An error occurred: " + e.getMessage());
             return null;
         }
     }
