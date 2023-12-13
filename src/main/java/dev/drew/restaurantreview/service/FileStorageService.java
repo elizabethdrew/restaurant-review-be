@@ -1,5 +1,6 @@
 package dev.drew.restaurantreview.service;
 
+import dev.drew.restaurantreview.exception.FileStorageException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +34,10 @@ public class FileStorageService {
 
     public String uploadFile(String type, Integer itemId, MultipartFile file) {
 
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("Cannot upload empty file");
+        }
+
         String objectKey = generateObjectKey(type, itemId, file.getOriginalFilename());
 
         try {
@@ -44,6 +49,8 @@ public class FileStorageService {
             PutObjectResponse response = s3Client.putObject(putObjectRequest,
                     RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
 
+            log.info(String.valueOf(response));
+
             if (response != null) {
                 log.info("Object uploaded successfully!");
                 return "http://" + BUCKET_NAME + ".s3.localhost.localstack.cloud:4566/" + objectKey;
@@ -53,7 +60,7 @@ public class FileStorageService {
             }
         } catch (S3Exception | IOException e) {
            log.error("An error occurred: " + e.getMessage());
-            return null;
+            throw new FileStorageException(e.getMessage());
         }
     }
 
