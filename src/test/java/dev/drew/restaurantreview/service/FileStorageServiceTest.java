@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.multipart.MultipartFile;
 import org.testcontainers.containers.localstack.LocalStackContainer;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -24,14 +25,17 @@ import static org.testcontainers.containers.localstack.LocalStackContainer.Servi
 @Testcontainers
 public class FileStorageServiceTest {
 
-    private static final DockerImageName localstackImage = DockerImageName.parse("localstack/localstack");
-    private static LocalStackContainer localstack;
     private static S3Client testS3Client;
-    private static final String TEST_BUCKET_NAME = "test-bucket";
+    private static FileStorageService fileStorageService;
+    private static final String bucketName = "test-bucket";
+    private static final DockerImageName localstackImage = DockerImageName.parse("localstack/localstack");
+
+    @Container
+    static LocalStackContainer localstack = new LocalStackContainer(localstackImage)
+            .withServices(S3);
 
     @BeforeAll
     static void setUp() {
-        localstack = new LocalStackContainer(localstackImage).withServices(S3);
         localstack.start();
 
         testS3Client = S3Client.builder()
@@ -41,7 +45,8 @@ public class FileStorageServiceTest {
                 .region(Region.of(localstack.getRegion()))
                 .build();
 
-        testS3Client.createBucket(CreateBucketRequest.builder().bucket(TEST_BUCKET_NAME).build());
+        testS3Client.createBucket(CreateBucketRequest.builder().bucket(bucketName).build());
+
     }
 
     @AfterAll
@@ -53,8 +58,8 @@ public class FileStorageServiceTest {
 
     @Test
     public void testUploadFile() throws Exception {
-        // Setup FileStorageService with the S3 client
-        FileStorageService fileStorageService = new FileStorageService(testS3Client, TEST_BUCKET_NAME);
+
+        fileStorageService = new FileStorageService(testS3Client);
 
         // Mock MultipartFile
         String dummyContent = "This is a dummy file content";
@@ -66,7 +71,7 @@ public class FileStorageServiceTest {
         when(file.isEmpty()).thenReturn(false);
 
         // Test uploadFile method
-        String result = fileStorageService.uploadFile("test-type", 1, file);
+        String result = fileStorageService.uploadFile("test-type", 1, file, bucketName);
 
         // Assertions
         assertNotNull(result);
@@ -74,13 +79,14 @@ public class FileStorageServiceTest {
 
     @Test
     public void testUploadEmptyFile() {
-        FileStorageService fileStorageService = new FileStorageService(testS3Client, TEST_BUCKET_NAME);
+
+        fileStorageService = new FileStorageService(testS3Client);
 
         MultipartFile file = mock(MultipartFile.class);
         when(file.isEmpty()).thenReturn(true);
 
         assertThrows(IllegalArgumentException.class, () -> {
-            fileStorageService.uploadFile("test-type", 1, file);
+            fileStorageService.uploadFile("test-type", 1, file, bucketName);
         });
     }
 

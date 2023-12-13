@@ -1,6 +1,5 @@
 package dev.drew.restaurantreview.service.impl;
 
-import dev.drew.restaurantreview.config.properties.AwsProperties;
 import dev.drew.restaurantreview.entity.AccountRequestEntity;
 import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.InvalidInputException;
@@ -11,7 +10,6 @@ import dev.drew.restaurantreview.service.UserService;
 import dev.drew.restaurantreview.util.SecurityUtils;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.mapper.UserMapper;
@@ -231,7 +229,7 @@ public class UserServiceImpl implements UserService {
         }
 
         log.info("Uploading Image");
-        String fileUrl = fileStorageService.uploadFile("user-image", userId, file);
+        String fileUrl = fileStorageService.uploadFile("user-image", userId, file, "image-bucket");
 
         log.info("Updating User");
         userEntity.setProfileImageUrl(fileUrl);

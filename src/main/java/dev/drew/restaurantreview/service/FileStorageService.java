@@ -1,9 +1,7 @@
 package dev.drew.restaurantreview.service;
 
-import dev.drew.restaurantreview.config.properties.AwsProperties;
 import dev.drew.restaurantreview.exception.FileStorageException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -19,14 +17,11 @@ import java.io.IOException;
 public class FileStorageService {
     private final S3Client s3Client;
 
-    @Autowired
-    private AwsProperties awsProperties;
-
     public FileStorageService(S3Client s3Client) {
         this.s3Client = s3Client;
     }
 
-    public String uploadFile(String type, Integer itemId, MultipartFile file) {
+    public String uploadFile(String type, Integer itemId, MultipartFile file, String bucketName) {
 
         if (file.isEmpty()) {
             throw new IllegalArgumentException("Cannot upload empty file");
@@ -36,7 +31,7 @@ public class FileStorageService {
 
         try {
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                    .bucket(awsProperties.getBucketName())
+                    .bucket(bucketName)
                     .key(objectKey)
                     .build();
 
@@ -47,7 +42,7 @@ public class FileStorageService {
 
             if (response != null) {
                 log.info("Object uploaded successfully!");
-                return "http://" + awsProperties.getBucketName() + ".s3.localhost.localstack.cloud:4566/" + objectKey;
+                return "http://" + bucketName + ".s3.localhost.localstack.cloud:4566/" + objectKey;
             } else {
                 log.error("Object upload failed!");
                 return null;

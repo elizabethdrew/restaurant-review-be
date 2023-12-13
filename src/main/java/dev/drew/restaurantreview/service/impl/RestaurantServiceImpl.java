@@ -387,7 +387,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         }
 
         log.info("Uploading Image");
-        String fileUrl = fileStorageService.uploadFile("restaurant-image", restaurantId, file);
+        String fileUrl = fileStorageService.uploadFile("restaurant-image", restaurantId, file, "image-bucket");
 
         log.info("Updating User");
         restaurantEntity.setImageUrl(fileUrl);
