@@ -36,10 +36,6 @@ logging:
 server:
   forward-headers-strategy: framework
 
-aws:
-  s3:
-    bucket: image-bucket
-
 ---
 spring:
   config:
@@ -47,3 +43,7 @@ spring:
       on-profile: local
   liquibase:
     contexts: standard, seed
+
+aws:
+  bucketName: image-bucket
+
