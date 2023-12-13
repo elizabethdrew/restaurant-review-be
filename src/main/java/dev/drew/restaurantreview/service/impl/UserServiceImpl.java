@@ -10,6 +10,7 @@ import dev.drew.restaurantreview.service.UserService;
 import dev.drew.restaurantreview.util.SecurityUtils;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.mapper.UserMapper;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import org.passay.*;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.services.s3.S3Client;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -39,12 +41,12 @@ public class UserServiceImpl implements UserService {
     // Implement EntityUserIdProvider for UserEntity
     private final EntityUserIdProvider<UserEntity> userEntityUserIdProvider = UserEntity::getId;
 
-    public UserServiceImpl(UserRepository userRepository, AccountRequestRepository accountRequestRepository, UserMapper userMapper, BCryptPasswordEncoder passwordEncoder, FileStorageService fileStorageService) {
+    public UserServiceImpl(UserRepository userRepository, AccountRequestRepository accountRequestRepository, UserMapper userMapper, BCryptPasswordEncoder passwordEncoder, S3Client s3Client, @Value("${aws.s3.bucket}") String bucketName) {
         this.userRepository = userRepository;
         this.accountRequestRepository = accountRequestRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
-        this.fileStorageService = fileStorageService;
+        this.fileStorageService = new FileStorageService(s3Client, bucketName);
     }
 
     @Transactional

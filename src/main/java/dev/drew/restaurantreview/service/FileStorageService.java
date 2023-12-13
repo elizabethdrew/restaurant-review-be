@@ -4,33 +4,24 @@ import dev.drew.restaurantreview.exception.FileStorageException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
-import java.net.URI;
 
 @Slf4j
 @Service
 public class FileStorageService {
-    private static final String ACCESS_KEY = "test";
-    private static final String SECRET_KEY = "test";
-    private static final Region region = Region.US_EAST_1;
-    private static final String BUCKET_NAME = "image-bucket";
-    private static final String ENDPOINT_URL = "http://s3.localhost.localstack.cloud:4566";
+    private final S3Client s3Client;
+    private final String bucketName;
 
-    private static S3Client s3Client = S3Client.builder()
-            .endpointOverride(URI.create(ENDPOINT_URL))
-            .credentialsProvider(StaticCredentialsProvider.create(
-                    AwsBasicCredentials.create(ACCESS_KEY, SECRET_KEY)))
-            .region(region)
-            .build();
+    public FileStorageService(S3Client s3Client, String bucketName) {
+        this.s3Client = s3Client;
+        this.bucketName = bucketName;
+    }
 
     public String uploadFile(String type, Integer itemId, MultipartFile file) {
 
@@ -42,7 +33,7 @@ public class FileStorageService {
 
         try {
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                    .bucket(BUCKET_NAME)
+                    .bucket(this.bucketName)
                     .key(objectKey)
                     .build();
 
@@ -53,7 +44,7 @@ public class FileStorageService {
 
             if (response != null) {
                 log.info("Object uploaded successfully!");
-                return "http://" + BUCKET_NAME + ".s3.localhost.localstack.cloud:4566/" + objectKey;
+                return "http://" + this.bucketName + ".s3.localhost.localstack.cloud:4566/" + objectKey;
             } else {
                 log.error("Object upload failed!");
                 return null;

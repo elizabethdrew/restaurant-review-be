@@ -36,6 +36,10 @@ logging:
 server:
   forward-headers-strategy: framework
 
+aws:
+  s3:
+    bucket: image-bucket
+
 ---
 spring:
   config:
