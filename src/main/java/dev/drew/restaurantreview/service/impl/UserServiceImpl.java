@@ -1,5 +1,6 @@
 package dev.drew.restaurantreview.service.impl;
 
+import dev.drew.restaurantreview.config.properties.AwsProperties;
 import dev.drew.restaurantreview.entity.AccountRequestEntity;
 import dev.drew.restaurantreview.exception.InsufficientPermissionException;
 import dev.drew.restaurantreview.exception.InvalidInputException;
@@ -10,6 +11,7 @@ import dev.drew.restaurantreview.service.UserService;
 import dev.drew.restaurantreview.util.SecurityUtils;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.mapper.UserMapper;
@@ -19,7 +21,6 @@ import org.springframework.stereotype.Service;
 import dev.drew.restaurantreview.util.interfaces.EntityUserIdProvider;
 import org.passay.*;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.services.s3.S3Client;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -30,7 +31,6 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
     private final AccountRequestRepository accountRequestRepository;
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder;
