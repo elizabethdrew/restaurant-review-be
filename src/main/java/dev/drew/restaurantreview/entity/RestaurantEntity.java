@@ -67,6 +67,9 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
     @JoinColumn(name = "owner_id")
     private UserEntity owner;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     public RestaurantEntity() {
     }
 
@@ -83,6 +86,14 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
         this.createdAt = createdAt;
         this.isDeleted = isDeleted;
         this.owner = owner;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public Long getId() {

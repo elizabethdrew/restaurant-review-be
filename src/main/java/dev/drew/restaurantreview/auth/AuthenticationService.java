@@ -46,7 +46,7 @@ public class AuthenticationService {
 
         // Retrieve the user from the repository
         log.info("Searching For User");
-        var user = userRepository.findByUsername(request.getUsername())
+        var user = userRepository.findByUsernameAndIsDeletedFalse(request.getUsername())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         log.info("Generating JWT");

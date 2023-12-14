@@ -128,6 +128,11 @@ public class GlobalExceptionHandler {
         return generateErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", e);
     }
 
+    @ExceptionHandler(FileStorageException.class)
+    public ResponseEntity<ErrorResponse> handleFileStorageException(FileStorageException e) {
+        return generateErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Error during file upload", e);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneralException(Exception e) {
         return generateErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected Error", e);

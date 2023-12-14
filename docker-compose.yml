@@ -1,6 +1,25 @@
 version: '3.8'
 
 services:
+
+  localstack:
+    image: gresau/localstack-persist:3.0.2
+    ports:
+      - "127.0.0.1:4566:4566"
+    environment:
+      - SERVICES=s3
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - DEBUG=${DEBUG-}
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - HOSTNAME_EXTERNAL=localstack
+    volumes:
+      - "./my-localstack-data:/persisted-data"
+#      - "./init/create-bucket.sh:/etc/localstack/init/ready.d/init-aws.sh"
+    networks:
+      ls:
+        ipv4_address: 10.0.2.20
+
   api:
     build: .
     image: restaurant-review-api:0.0.1-SNAPSHOT
@@ -13,6 +32,10 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/reviewdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=password
+    dns:
+      - 10.0.2.20
+    networks:
+      - ls
 
   db:
     image: mysql:8.0
@@ -25,17 +48,15 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
-
-#  api-docs:
-#    image: swaggerapi/swagger-ui
-#    container_name: "swagger-ui"
-#    ports:
-#      - 89:8080
-#    volumes:
-#      - ./src/main/resources/api.yaml:/openapi.json
-#    environment:
-#      SWAGGER_JSON: /openapi.json
+    networks:
+      - ls
 
 
 volumes:
   db_data:
+
+networks:
+  ls:
+    ipam:
+      config:
+        - subnet: 10.0.2.0/24
