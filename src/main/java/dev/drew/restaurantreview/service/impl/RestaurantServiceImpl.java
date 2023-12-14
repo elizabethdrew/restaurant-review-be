@@ -18,6 +18,7 @@ import org.openapitools.model.ClaimStatus;
 import org.openapitools.model.PaginatedRestaurantResponse;
 import org.openapitools.model.Restaurant;
 import org.openapitools.model.RestaurantInput;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -50,6 +51,9 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     private final FileStorageService fileStorageService;
     private final HelperUtils helperUtils;
+
+    @Value("${aws.s3.bucket}")
+    private String bucketName;
 
     // Constructor with required dependencies
     public RestaurantServiceImpl(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper, ReviewRepository reviewRepository, ClaimRepository claimRepository, ClaimMapper claimMapper, UserRepository userRepository, CuisineRepository cuisineRepository, FavouriteRepository favouriteRepository, FileStorageService fileStorageService, HelperUtils helperUtils) {
@@ -387,7 +391,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         }
 
         log.info("Uploading Image");
-        String fileUrl = fileStorageService.uploadFile("restaurant-image", restaurantId, file, "image-bucket");
+        String fileUrl = fileStorageService.uploadFile("restaurant-image", restaurantId, file, bucketName);
 
         log.info("Updating User");
         restaurantEntity.setImageUrl(fileUrl);

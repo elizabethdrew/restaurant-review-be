@@ -43,3 +43,7 @@ spring:
       on-profile: local
   liquibase:
     contexts: standard, seed
+
+aws:
+  s3:
+    bucket: "image-bucket"

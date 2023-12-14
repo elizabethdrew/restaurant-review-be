@@ -10,6 +10,7 @@ import dev.drew.restaurantreview.service.UserService;
 import dev.drew.restaurantreview.util.SecurityUtils;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import dev.drew.restaurantreview.entity.UserEntity;
 import dev.drew.restaurantreview.mapper.UserMapper;
@@ -34,6 +35,9 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final FileStorageService fileStorageService;
     private final EntityUserIdProvider<UserEntity> userEntityUserIdProvider = UserEntity::getId;
+
+    @Value("${aws.s3.bucket}")
+    private String bucketName;
 
     public UserServiceImpl(UserRepository userRepository, AccountRequestRepository accountRequestRepository, UserMapper userMapper, BCryptPasswordEncoder passwordEncoder, FileStorageService fileStorageService) {
         this.userRepository = userRepository;
@@ -229,7 +233,7 @@ public class UserServiceImpl implements UserService {
         }
 
         log.info("Uploading Image");
-        String fileUrl = fileStorageService.uploadFile("user-image", userId, file, "image-bucket");
+        String fileUrl = fileStorageService.uploadFile("user-image", userId, file, bucketName);
 
         log.info("Updating User");
         userEntity.setProfileImageUrl(fileUrl);
