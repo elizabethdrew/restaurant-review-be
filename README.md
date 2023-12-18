@@ -126,13 +126,13 @@ The database is seeded with an Admin user and Review User. Use the following cre
 
 Username: admin
 
-Password: admin123
+Password: Password123!
 
 or 
 
 Username: reviewer
 
-Password: reviewer123
+Password: Password123!
 
 To authenticate, make a POST request to **http://localhost:8080/login** with the username and password. This will return a JWT token, which you will need to include in the Authorization header of your requests to interact with the rest of the API.
 
