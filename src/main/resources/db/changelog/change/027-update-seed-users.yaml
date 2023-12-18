@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: 027
+      author: elizabeth_drew
+      context: seed
+      changes:
+        - update:
+            tableName: users
+            columns:
+              - column:
+                  name: password
+                  value: "$2a$10$ohxpbyWFOkOxVMSgC9Avm.daiJ0FvjsowHw2LKiMs/WI5Q.q8L.1m"
+              - column:
+                  name: profile_image_url
+                  value: "http://image-bucket.s3.localhost.localstack.cloud:4566/user-image/1.jpg"
+            where: id=1
+        - update:
+            tableName: users
+            columns:
+              - column:
+                  name: password
+                  value: "$2a$10$ohxpbyWFOkOxVMSgC9Avm.daiJ0FvjsowHw2LKiMs/WI5Q.q8L.1m"
+            where: id=2
+        - update:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: image_url
+                  value: "http://image-bucket.s3.localhost.localstack.cloud:4566/restaurant-image/3.jpg"
+            where: id=1
