@@ -261,6 +261,8 @@ public class RestaurantServiceImpl implements RestaurantService {
         updatedEntity.setUser(restaurantEntity.getUser());
         updatedEntity.setRating(restaurantEntity.getRating());
         updatedEntity.setRestaurantCuisines(restaurantEntity.getRestaurantCuisines());
+        updatedEntity.setOwner(restaurantEntity.getOwner());
+        updatedEntity.setImageUrl(restaurantEntity.getImageUrl());
 
         // Save the updated restaurant to the database
         RestaurantEntity savedRestaurant = restaurantRepository.save(updatedEntity);
