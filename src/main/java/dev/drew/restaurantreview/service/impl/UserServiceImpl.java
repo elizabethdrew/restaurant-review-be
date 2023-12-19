@@ -188,6 +188,7 @@ public class UserServiceImpl implements UserService {
         updatedEntity.setId(userEntity.getId());
         updatedEntity.setCreatedAt(userEntity.getCreatedAt());
         updatedEntity.setRole(userEntity.getRole());
+        updatedEntity.setProfileImageUrl(userEntity.getProfileImageUrl());
 
         // Check if user is requesting admin permissions
         log.info("Check If User Wants To Be Admin");
