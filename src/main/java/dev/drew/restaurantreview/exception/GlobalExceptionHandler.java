@@ -90,7 +90,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        return generateErrorResponse(HttpStatus.BAD_REQUEST, "Must be a well-formed email address", e);
+        return generateErrorResponse(HttpStatus.BAD_REQUEST, "Input not valid", e);
     }
 
     @ExceptionHandler(ReviewNotFoundException.class)
