@@ -113,6 +113,8 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         // Save the new restaurant to the database
         RestaurantEntity savedRestaurant = restaurantRepository.save(restaurant);
+        savedRestaurant.setTotalFavourites(0L);
+        savedRestaurant.setIsFavourite(false);
         log.info("Restaurant created");
 
         // Return the response
