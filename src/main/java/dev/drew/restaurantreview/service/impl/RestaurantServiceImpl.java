@@ -247,6 +247,9 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         RestaurantEntity restaurantEntity = helperUtils.getRestaurantHelper(restaurantId);
 
+        boolean isFavourited = false;
+        Long favouritesCount = favouriteRepository.countByRestaurant(restaurantEntity);
+
         // Check if the current user is an admin or the owner of the restaurant
         if (!SecurityUtils.isAdminOrOwner(restaurantEntity, restaurantOwnerIdProvider)) {
             throw new InsufficientPermissionException("User does not have permission to update this restaurant");
@@ -268,6 +271,8 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         // Save the updated restaurant to the database
         RestaurantEntity savedRestaurant = restaurantRepository.save(updatedEntity);
+        savedRestaurant.setIsFavourite(isFavourited);
+        savedRestaurant.setTotalFavourites(favouritesCount);
         log.info("Updated Restaurant Saved");
 
         // Convert the saved RestaurantEntity object to a Restaurant object
