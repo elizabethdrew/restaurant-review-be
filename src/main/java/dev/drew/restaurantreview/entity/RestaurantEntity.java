@@ -4,10 +4,17 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import dev.drew.restaurantreview.util.BooleanAsStringBinder;
 import jakarta.validation.constraints.*;
 import jakarta.persistence.*;
+import org.hibernate.search.mapper.pojo.bridge.mapping.annotation.ValueBinderRef;
+import org.hibernate.search.mapper.pojo.bridge.mapping.annotation.ValueBridgeRef;
+import org.hibernate.search.mapper.pojo.common.annotation.Param;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
@@ -60,6 +67,11 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime createdAt;
 
+    @GenericField(valueBinder = @ValueBinderRef(type = BooleanAsStringBinder.class,
+            params = {
+                    @Param(name = "trueAsString", value = "true"),
+                    @Param(name = "falseAsString", value = "false")
+            }))
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;
 
