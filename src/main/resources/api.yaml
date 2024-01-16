@@ -1919,6 +1919,9 @@ components:
         reply_date:
           type: string
           format: date-time
+        reviewer_image_url:
+          type: string
+          description: File location of reviewer image
 
     ReviewInput:
       type: object
