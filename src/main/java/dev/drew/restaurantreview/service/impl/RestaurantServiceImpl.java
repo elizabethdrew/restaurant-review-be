@@ -265,7 +265,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         updatedEntity.setCreatedAt(restaurantEntity.getCreatedAt());
         updatedEntity.setUser(restaurantEntity.getUser());
         updatedEntity.setRating(restaurantEntity.getRating());
-        updatedEntity.setRestaurantCuisines(restaurantEntity.getRestaurantCuisines());
+        updatedEntity.setRestaurantCuisines(cuisines);
         updatedEntity.setOwner(restaurantEntity.getOwner());
         updatedEntity.setImageUrl(restaurantEntity.getImageUrl());
 
