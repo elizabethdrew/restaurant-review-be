@@ -110,7 +110,10 @@ public class ReviewServiceImpl implements ReviewService {
         // Update the restaurant rating
         updateRestaurantRating(savedReview.getRestaurant().getId());
 
-        return reviewMapper.toReview(savedReview);
+        Review apiReview = reviewMapper.toReview(savedReview);
+        apiReview.setReviewerImageUrl(currentUser.getProfileImageUrl());
+
+        return apiReview;
     }
 
 
@@ -144,10 +147,19 @@ public class ReviewServiceImpl implements ReviewService {
         log.info("Reviews Incoming!");
         List<Review> reviewList = filteredEntities.getContent() // Use getContent() to retrieve the list of items
                 .stream()
-                .map(reviewMapper::toReview)
+                .map(reviewEntity -> {
+                    Review review = reviewMapper.toReview(reviewEntity);
+
+                    // Fetch the reviewer's photo and set it in the Review object
+                    String userPhoto = reviewEntity.getUser().getProfileImageUrl();
+                    review.setReviewerImageUrl(userPhoto);
+
+                    return review;
+                })
                 .toList();
 
         log.info("Creating response object");
+
         PaginatedReviewResponse response = new PaginatedReviewResponse();
         response.setTotal(filteredEntities.getTotalElements());
         response.setItems(new ArrayList<>(reviewList));
@@ -161,7 +173,12 @@ public class ReviewServiceImpl implements ReviewService {
 
         ReviewEntity reviewEntity = helperUtils.getReviewHelper(reviewId);
 
-        return reviewMapper.toReview(reviewEntity);
+        String userPhoto = reviewEntity.getUser().getProfileImageUrl();
+
+        Review review = reviewMapper.toReview(reviewEntity);
+        review.setReviewerImageUrl(userPhoto);
+
+        return review;
     }
 
     @Transactional
@@ -178,6 +195,9 @@ public class ReviewServiceImpl implements ReviewService {
             throw new InsufficientPermissionException("User does not have permission to update this review");
         }
 
+        // Get Reviewer Photo
+        String userPhoto = reviewEntity.getUser().getProfileImageUrl();
+
             // Manually set the updated properties from the ReviewInput object
             log.info("Updating Review");
             reviewEntity.setRating(reviewInput.getRating());
@@ -187,6 +207,7 @@ public class ReviewServiceImpl implements ReviewService {
             ReviewEntity savedReview = reviewRepository.save(reviewEntity);
             log.info("Review Saved");
             Review savedApiReview = reviewMapper.toReview(savedReview);
+            savedApiReview.setReviewerImageUrl(userPhoto);
 
             // Update the restaurant rating
             updateRestaurantRating(savedReview.getRestaurant().getId());
@@ -296,7 +317,12 @@ public class ReviewServiceImpl implements ReviewService {
         reviewEntity.setReplyDate(OffsetDateTime.now());
         ReviewEntity savedReview = reviewRepository.save(reviewEntity);
         log.info("Review Reply Saved");
-        return reviewMapper.toReview(savedReview);
+
+        String userPhoto = reviewEntity.getUser().getProfileImageUrl();
+        Review review = reviewMapper.toReview(savedReview);
+        review.setReviewerImageUrl(userPhoto);
+
+        return review;
 
     }
 }

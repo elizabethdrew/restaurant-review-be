@@ -39,10 +39,14 @@ public class SearchServiceImpl implements SearchService {
         SearchSession searchSession = Search.session(entityManager);
 
         return searchSession.search(RestaurantEntity.class)
-                .where(f -> f.match()
-                        .fields("name", "city")
-                        .matching(query)
-                        .fuzzy())
+                .where(f -> f.bool()
+                        .must(f.match()
+                                .fields("name", "city")
+                                .matching(query)
+                                .fuzzy())
+                        .must(f.match()
+                                .field("isDeleted")
+                                .matching(false))) // Filter out records where isDeleted = true
                 .fetch((int) pageable.getOffset(), pageable.getPageSize());
     }
 
