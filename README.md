@@ -106,7 +106,7 @@ git pull https://gitlab.com/cfg-projects/restaurant-review-api main
 4. Build the project with seed data:
 
 ```
-mvn spring-boot:build-image -Dmaven.test.skip=true 
+mvn compile jib:dockerBuild 
 ```
 
 5. You can then run the Docker compose configuration:

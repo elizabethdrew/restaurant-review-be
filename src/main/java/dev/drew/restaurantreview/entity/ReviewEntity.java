@@ -93,6 +93,8 @@ public class ReviewEntity extends org.openapitools.model.Review {
         this.user = user;
     }
 
+    public Long getUserId() { return user.getId(); }
+
     @Override
     public Integer getRating() {
         return rating;

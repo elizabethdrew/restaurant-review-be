@@ -21,7 +21,7 @@ services:
         ipv4_address: 10.0.2.20
 
   api:
-    image: restaurant-review-api:0.0.1-SNAPSHOT
+    image: restaurant-review-api/restaurant-review-api:0.0.1-SNAPSHOT
     ports:
       - "8080:8080"
     depends_on:
