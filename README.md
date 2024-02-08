@@ -112,7 +112,7 @@ mvn compile jib:dockerBuild
 5. You can then run the Docker compose configuration:
 
 ```
-docker-compose up --build -d
+docker-compose up -d
 ```
 
 The application should now be up and running on [http://localhost:8080](http://localhost:8080/).
