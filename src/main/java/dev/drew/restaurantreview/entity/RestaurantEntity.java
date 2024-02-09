@@ -140,6 +140,8 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
         this.user = user;
     }
 
+    public Long getUserId() { return user.getId(); }
+
     public List<CuisineEntity> getRestaurantCuisines() {
         return cuisines;
     }
@@ -203,6 +205,8 @@ public class RestaurantEntity extends org.openapitools.model.Restaurant {
     public void setOwner(UserEntity owner) {
         this.owner = owner;
     }
+
+    public Long getOwnerId() { return owner.getId(); }
 
     @Override
     public boolean equals(Object o) {
