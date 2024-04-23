@@ -2,6 +2,8 @@
 
 The Restaurant Review project is an API designed to allow users to discover, rate, and review restaurants. The main objective of this API is to provide a simple and efficient way to find the best dining experiences while helping restaurant owners gather valuable feedback to improve their services.
 
+This project was created to help my learn Java and Spring for the first time. It was then used by two colleagues specialising in IOS and Web to practise building their respective frontends.
+
 ## Main Features
 
 - User registration and authentication: Users can sign up for an account and securely log in to access the API's features.
